@@ -1,6 +1,6 @@
 from flask import Flask
-from .views.api import api_blueprint
-from .views.auth import auth_blueprint
+from .app.views.api import api_blueprint
+from .app.views.auth import auth_blueprint
 import os
 
 def create_app():
@@ -19,3 +19,5 @@ def create_app():
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
     
     return app
+
+app = create_app()
