@@ -5,5 +5,5 @@ command = ""
 #The ip address gunicorn will expose or be  listened on
 bind = "127.0.0.1:8000"
 
-#WOrkers for gunicorn
-workers= 2
+#Workers for gunicorn
+workers=1
