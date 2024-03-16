@@ -1,11 +1,12 @@
 const Navbar = () => {
     return (
-        <div>
-            <div className="w-20 h-20">
-                <img src="" className="w-full"/>
+        <div className="flex justify-between h-16 max-w-6xl mx-auto px-4">
+            <div className="">
+                <h1 className="font-bold text-3xl">PLD<sup>+</sup></h1>
             </div>
-            <div>
+            <div className="flex">
                 <button>Login</button>
+                <button>Sign up</button>
             </div>
         </div>
     )

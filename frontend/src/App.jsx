@@ -25,7 +25,7 @@ const router = createBrowserRouter(
         </Route>,
         <Route path='/dashboard' element={<DashboardBase/>}>
             <Route index element={<Home/>}/>
-            <Route path='pld' element={<PldGroup/>}/>
+            <Route path='group' element={<PldGroup/>}/>
             <Route path='groups' element={<DiscoverGroup/>}/>
             <Route path='schedule' element={<Schedule/>}/>
             <Route path='resources' element={<Resources/>}/>
