@@ -1,7 +1,11 @@
+import Greet from "../../components/Dashboard-components/Greet"
+import UpcomingCard from "../../components/Dashboard-components/Upcoming"
+
 const Home = () => {
     return (
         <div>
-            <p> Dashboard Home Page</p>
+            <Greet/>
+            <UpcomingCard/>
         </div>
     )
 }

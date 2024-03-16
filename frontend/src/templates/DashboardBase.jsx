@@ -22,7 +22,7 @@ const DashboardBase = () => {
                 <Navbar/>
             </div>
 
-            <div className="flex flex-1">
+            <div className="flex justify-center max-w-6xl mx-auto flex-1">
                 <aside className={isOpen ? `${genStyle} ${show}` : `${genStyle} ${hide}`}>
                     <SideNav/>
                 </aside>
