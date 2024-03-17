@@ -16,6 +16,7 @@ export default {
           red: "#CF4F4F",
           grey: "#333333",
           cream: "#CCCCCC",
+          cream2: "#EBEBEB",
       },
   },
   plugins: [],

@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom"
 import { FaUsers, FaUserFriends, FaUserCircle, FaCalendarAlt } from "react-icons/fa"
-import { GiSpellBook } from "react-icons/gi";
+import { GiSpellBook, GiBookmarklet } from "react-icons/gi";
 import { RiMenuSearchLine } from "react-icons/ri";
 import { IoSpeedometerSharp } from "react-icons/io5";
 import { useState } from "react";
@@ -47,7 +47,7 @@ const SideNav = () => {
                     </li>
                     <li>
                         <NavLink to={`/dashboard/resources`} className={liStyle}>
-                            <GiSpellBook className={riStyle} />Resources
+                            <GiBookmarklet className={riStyle} />Resources
                         </NavLink>
                     </li>
                     <li>
