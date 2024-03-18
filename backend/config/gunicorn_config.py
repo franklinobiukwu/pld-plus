@@ -1,5 +1,7 @@
+#Gunicorn server config file
+
 #command to the gunicorn executable path - which will be found on applcation server
-command = ""
+command = "/pld+/bin/gunicorn"
 
 
 #The ip address gunicorn will expose or be  listened on

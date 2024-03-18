@@ -1,23 +1,39 @@
-from flask import Flask
-from .app.views.api import api_blueprint
-from .app.views.auth import auth_blueprint
-import os
+from flask import Flask, current_app
+from .app.views import api_blueprint, auth_blueprint
+from .config.flask_config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+
+# Create an instance of the database
+db = SQLAlchemy()
 
 def create_app():
-    
-    #CREATED INSTANCE OF APP
+    # Create an instance of the Flask application
     app = Flask(__name__)
     
-    #REGISTERED BLUEPRINTS FOR THE API AND AUTH ROUTES
+    # Register blueprints for the API and auth routes
     app.register_blueprint(api_blueprint)
     app.register_blueprint(auth_blueprint)
     
-    #SETTING SECRET KEY. ON PRODUCTION SERVER MAKE SECRET KEY A ENVIRON VARIABLE 
-    # OR IN OUR OWN ENVIRONMENT 16 HASH TOKEN
+    # Import all Flask App configurations
+    app.config.from_object(Config)
     
-    #APP CONFIGURATIONS GO HERE
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+    # Initialize Bcrypt
+    Bcrypt(app=app)
+    
+    # Expose db to current_app
+    with app.app_context():
+        # Initialize the database with the app
+        db.init_app(app)
+        
+        # Create the tables
+        from backend.models import User, Socials, Schedule, PLDGroups, GroupMember
+        db.create_all()
+        
+        # Expose db to current_app
+        current_app.db = db
     
     return app
 
+# Create the Flask app
 app = create_app()
