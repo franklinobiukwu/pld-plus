@@ -14,26 +14,27 @@ const DashboardBase = () => {
 
     const show = 'left-0'
     const hide = `left-[-100%]`
-    const genStyle = `fixed md:static h-full ease-in-out duration-500 md:col-span-2 lg:col-span-1`
+    const genStyle = `fixed md:static h-full ease-in-out duration-500
+                        md:col-span-2 lg:col-span-2 fixed`
 
 
     return (
         <div className="h-screen flex flex-col">
-            <div>
+            <div className="fixed left-0 right-0 bg-white">
                 <Navbar/>
             </div>
 
-            <div className="max-w-6xl mx-auto md:grid md:grid-cols-8 lg:grid-cols-6">
+            <div className="max-w-[90rem] mx-auto md:grid md:grid-cols-8 lg:grid-cols-12 mt-20 flex-grow">
                 {/* Dashboard SideNav */}
                 <aside className={isOpen ? `${genStyle} ${show}` : `${genStyle} ${hide}`}>
                     <SideNav/>
                 </aside>
                 {/* Dashboard Content */}
-                <div className="bg-gray-100 p-4 md:col-span-6 lg:col-span-4">
+                <div className="bg-gray-100 p-4 md:col-span-6 lg:col-span-8">
                     <Outlet/>
                 </div>
                 {/* Dashboard Aside */}
-                <div className="md:hidden lg:block lg:col-span-1">
+                <div className="md:hidden lg:block lg:col-span-2">
                     <Aside/>
                 </div>
             </div>
