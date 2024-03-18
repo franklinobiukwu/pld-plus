@@ -15,6 +15,7 @@ export default {
           white: "#FFFFFF",
           red: "#CF4F4F",
           grey: "#333333",
+          lightgrey: "#555555",
           cream: "#CCCCCC",
           cream2: "#EBEBEB",
       },

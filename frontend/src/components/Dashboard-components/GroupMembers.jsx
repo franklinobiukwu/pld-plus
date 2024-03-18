@@ -14,7 +14,9 @@ const GroupMembers = () => {
     }
 
     return (
-        <div className="shadow-md border-t-8 rounded-md border-pri">
+        <div>
+            <h3 className="text-xs font-medium border-b border-b-cream2">YOUR GROUP MEMBERS</h3>
+        <div className="shadow-md border-t-8 rounded-md border-pri mt-2">
             <hr className="text-cream2 mt-4"/>
 
         <div className="px-4 pb-8">
@@ -62,6 +64,7 @@ const GroupMembers = () => {
                     Join meet
                 </button>
             </div>
+        </div>
         </div>
         </div>
     )
