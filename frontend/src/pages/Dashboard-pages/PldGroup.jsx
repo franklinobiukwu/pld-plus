@@ -8,7 +8,7 @@ const PldGroup = () => {
             <p>Pld Group Page</p>
             {/* Host PLD */}
         <div className="flex">
-            <div className="flex flex-col shadow-md rounded-md p-2 justify-center items-center">
+            <div className="flex flex-col shadow-md rounded-md p-4 justify-center items-center bg-white2">
                 <div 
                     className="flex rounded-md p-2 bg-green
                         h-10 w-10 items-center justify-center text-white">
@@ -20,7 +20,7 @@ const PldGroup = () => {
 
 
             {/* Groups */}
-            <div className="md:flex gap-4">
+            <div className="md:flex gap-4 mt-10">
                 <div className="flex-grow max-w-md">
                     <GroupMembers/>
                 </div>

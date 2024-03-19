@@ -4,7 +4,7 @@ import { FaCalendarAlt } from "react-icons/fa"
 const UpcomingPldList = (props) => {
 
     return (
-        <div className="shadow-md rounded-md px-6 py-4 mt-1">
+        <div className="shadow-md rounded-md px-6 py-4 mt-1 bg-white2">
             <div>
                 <div className="flex items-center">
                     <RiLightbulbFlashLine className="mr-2"/>

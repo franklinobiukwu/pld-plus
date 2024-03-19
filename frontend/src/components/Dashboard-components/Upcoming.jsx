@@ -3,7 +3,7 @@ import {FaUsers} from "react-icons/fa"
 const UpcomingCard = () => {
     return (
         <div>
-            <div className="rounded-md shadow-md px-6 py-8 flex">
+                <div className="rounded-md shadow-md px-6 py-8 flex bg-white2">
                 {/* First display */}
                 <div className="flex mr-5 border-r border-r-cream2 pr-5">
                     <div 

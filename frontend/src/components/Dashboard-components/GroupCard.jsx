@@ -16,7 +16,7 @@ const GroupCard = (props) => {
     }
 
     return (
-        <div className="shadow-md rounded-md px-4 py-4 mt-2 border-t border-cream2">
+        <div className="shadow-md rounded-md px-4 py-4 mt-2 bg-white2">
             <div className="flex items-center">
                 <FaUsers className="mr-2"/>
                 <span className="font-medium text-md">KKOEGR</span>
