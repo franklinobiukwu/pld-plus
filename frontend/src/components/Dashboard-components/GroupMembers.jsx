@@ -22,7 +22,7 @@ const GroupMembers = () => {
         <div className="px-4 pb-8">
             {/* Title Card */}
             <div
-                className={`shadow-sm rounded-md py-4 px-4 mt-2`}
+                className={`shadow-sm rounded-md py-4 px-4 mt-2 bg-cover`}
                 style={backgroundStyle}
             >
                 <div className="flex items-center text-xl font-medium">

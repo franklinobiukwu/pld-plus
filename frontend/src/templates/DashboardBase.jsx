@@ -15,7 +15,7 @@ const DashboardBase = () => {
     const show = 'left-0'
     const hide = `left-[-100%]`
     const genStyle = `fixed md:static h-full ease-in-out duration-500
-                        md:col-span-2 lg:col-span-2 fixed`
+                        md:col-span-2 lg:col-span-2`
 
 
     return (
@@ -24,19 +24,20 @@ const DashboardBase = () => {
                 <Navbar/>
             </div>
 
-            <div className="max-w-[90rem] mx-auto md:grid md:grid-cols-8 lg:grid-cols-12 mt-20 flex-grow">
+            <div className="max-w-[90rem] md:w-full mx-auto md:grid md:grid-cols-8 lg:grid-cols-12 mt-20 flex-grow">
                 {/* Dashboard SideNav */}
                 <aside className={isOpen ? `${genStyle} ${show}` : `${genStyle} ${hide}`}>
-                    <SideNav/>
+                    <SideNav />
                 </aside>
                 {/* Dashboard Content */}
                 <div className="bg-gray-100 p-4 md:col-span-6 lg:col-span-8">
                     <Outlet/>
                 </div>
                 {/* Dashboard Aside */}
-                <div className="md:hidden lg:block lg:col-span-2">
+        {/*<aside className="relative md:hidden lg:block lg:col-span-2">*/}
+                <aside className="hidden md:relative h-full lg:block col-span-2">
                     <Aside/>
-                </div>
+                </aside>
             </div>
 
             {/* Hamburger Button (for smaller screens)*/}

@@ -16,7 +16,7 @@ const GroupCard = (props) => {
     }
 
     return (
-        <div className="shadow-md rounded-md px-6 py-4 mt-4">
+        <div className="shadow-md rounded-md px-4 py-4 mt-2 border-t border-cream2">
             <div className="flex items-center">
                 <FaUsers className="mr-2"/>
                 <span className="font-medium text-md">KKOEGR</span>
@@ -24,7 +24,7 @@ const GroupCard = (props) => {
             <div>
                 <div className="flex items-center">
                     <RiLightbulbFlashLine className="mr-2"/>
-                    <span className="text-lg font-medium">Introduction to Javascript</span>
+                    <span className="text-lg font-medium text-xh">Introduction to Javascript</span>
                 </div>
                 <div className="ml-6 flex text-lightgrey text-xs">
                     <div className="mr-6">Jun 4, 2024</div>

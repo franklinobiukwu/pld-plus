@@ -9,7 +9,7 @@ const Aside = () => {
     const [value, onChange] = useState(new Date())
 
     return (
-        <div>
+        <div className="fixed max-w-[calc(90rem/12*2)]">
             {/* Calendar */}
             <div>
                 <h3 className="text-xs font-semibold border-b border-b-cream2">CALENDAR</h3>

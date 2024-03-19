@@ -19,12 +19,12 @@ const Home = () => {
                 <QuickActions/>
             </div>
             {/* Group members*/}
-            <div className="lg:flex gap-x-4 col-start-1 col-end-13 mt-10">
-                <div className="max-w-md">
+            <div className="md:flex gap-4 col-start-1 col-end-13 mt-10">
+                <div className="flex-grow max-w-md">
                     <GroupMembers/>
                 </div>
                 {/* Other Group*/}
-                <div className="max-w-md">
+                <div className="mt-10 md:mt-0 max-w-md">
                     <OtherGroups/>
                 </div>
             </div>
