@@ -1,8 +1,13 @@
-from backend import db
+from backend import db, login_manager
 from datetime import datetime
+from flask_login import UserMixin
 
 
-class User(db.Model):
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+class User(db.Model, UserMixin):
     """User Table"""
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(45), unique=True, nullable=False)
@@ -11,7 +16,6 @@ class User(db.Model):
     cohort = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    session_token = db.Column(db.String(25), nullable=True, unique=True)
     reset_token = db.Column(db.String(60), nullable=True, unique=True)
     socials = db.relationship('Socials', backref='user', lazy=True)
     schedules = db.relationship('Schedule', backref='user', lazy=True)

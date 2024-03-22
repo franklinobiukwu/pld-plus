@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, current_app, request, make_response
 from backend.app.views import auth_blueprint 
-from sqlalchemy import text
 from flask_bcrypt import generate_password_hash, check_password_hash
 from secrets import token_hex
+from flask_login import login_user, logout_user
 
 
 #HELPER FUNCTIONS
@@ -18,10 +18,23 @@ def register():
     """User registration"""
     db = current_app.db
     if request.method == "POST":
-        
-        hashed_paswrd = generate_password_hash(request.form['password']).decode('utf-8')
         from backend.models import User
         
+        username=request.form['username']
+        firstname=request.form['lastname']
+        lastname=request.form['lastname']
+        cohort=request.form['cohort']
+        email=request.form['email']
+        password=request.form['password']
+        
+        if not username or not firstname or not lastname or not cohort or not email or not password:
+            return jsonify({'error': 'Missing fields'}), 400
+
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return jsonify({'error': 'Username already exists'}), 400
+        
+        hashed_paswrd = generate_password_hash(request.form['password']).decode('utf-8')
         
         user = User(
             username=request.form['username'],
@@ -51,20 +64,29 @@ def login():
         password = request.form['password']
         remember_me = request.form.get('remember_me')
         
+        
+        if not email or not password:
+            return jsonify({'error': 'missing fields'}), 400
+        
         user = db.session.query(User).filter(User.email == email).first()
         
-        if user and check_password_hash(user.password, password):
-            if remember_me:
-                # Generate a token if "Remember Me" is checked
-                token = user.generate_token()
-                user.session_token = token  # Store the token in the database
-                db.session.commit()
-                response = make_response(jsonify({'message': "Successfully logged in"}), 200)
-                response.set_cookie('session_token', token, max_age=30 * 24 * 60 * 60)  # Expires in 30 days
-                return response
-        return jsonify({'message': "Successfully logged in"}), 200
+        if user:
+            if check_password_hash(user.password, password):
+                login_user(user, remember=remember_me)
+                return jsonify({'message': 'Successfully Logged in'}), 200
+            else:
+                return jsonify({'error': 'Invalid Password'}), 401
+        else:
+            return jsonify({'error': 'User doesnt exist'}), 401
     else:
-        return jsonify({'error': 'Unsuccessfully logged in'}), 401
+        return jsonify({'error': 'Invalid Request'}), 400
+
+@auth_blueprint.route('/auth/logout', strict_slashes=False)
+def logout():
+    """User Log out"""
+    logout_user()
+    return jsonify({'message': 'Logged out'})
+    
 
 @auth_blueprint.route('/auth/forgot-password', methods=['POST'], strict_slashes=False)
 def forgot_password():
