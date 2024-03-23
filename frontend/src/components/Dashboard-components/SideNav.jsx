@@ -17,7 +17,7 @@ const SideNav = () => {
     const trans = `ease-in-out duration-500`
 
     return(
-       <div className="h-full bg-pri text-white md:fixed max-w-[calc(90rem/12*2)]">
+       <div className="h-full bg-pri text-white md:fixed max-w-[calc(90rem/12*2)] z-50">
             <nav className="bg-teal-500 h-full pt-10">
                 <ul>
                     <li>

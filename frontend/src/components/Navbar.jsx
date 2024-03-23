@@ -14,15 +14,20 @@ const Navbar = () => {
                 <button>Login</button>
                 <button>Sign up</button>
             </div>
-            {/* Login Buttons */}
+            {/* Profile Photo */}
             <div className="flex items-center">
                 <Link to="/dashboard/profile">
                     <div className="rounded-full max-w-12 max-h-12 overflow-hidden mr-10">
                         <img src={ProfileImg} alt="profile-photo"/>
                     </div>
                 </Link>
-                <button>
-                    <FaPowerOff className="text-red"/>
+                {/* Logout Buttons */}
+                <button 
+                    className="group flex bg-white2 w-8 h-8 md:w-10 md:h-10 rounded-full text-white2 
+                        justify-center items-center shadow-md hover:bg-red
+                        hover:text-white2"
+                >
+                    <FaPowerOff className="text-red group-hover:text-white2"/>
                 </button>
             </div>
         </div>
