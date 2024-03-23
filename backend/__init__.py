@@ -9,7 +9,7 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 # Initialize Login Manager
 login_manager = LoginManager()
-login_manager.login_view = 'login'
+login_manager.login_view = 'auth.login'
 # Import the load_user function from your models file
 from .models import load_user
 def create_app():

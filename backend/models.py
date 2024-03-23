@@ -1,6 +1,7 @@
 from backend import db, login_manager
 from datetime import datetime
 from flask_login import UserMixin
+import secrets
 
 
 @login_manager.user_loader
@@ -46,25 +47,55 @@ class Schedule(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     topic = db.Column(db.String(100), nullable=False)
     cohort = db.Column(db.Integer, nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    pld_group_id = db.Column(db.Integer, db.ForeignKey('pld_groups.id'), nullable=False)
     
     def __repr__(self):
         return f"Schedule('{self.topic}', '{self.cohort}', '{self.date}')"
-
+    
+    def create_pld_group(self):
+        pld_group = PLDGroups(user_id=self.user_id, schedule_id=self.id)
+        pld_group.generate_unique_id()
+        db.session.add(pld_group) 
+        db.session.commit()
+        db.session.flush()
+        
+    def to_dict(self):
+        """Takes object and makes it a dict"""
+        schedule_dict = {}
+        schedule_dict["id"] = self.id
+        schedule_dict["topic"] = self.topic
+        schedule_dict["cohort"] = self.cohort
+        schedule_dict["date"] = self.date
+        schedule_dict["user_id"] = self.user_id
+        return schedule_dict
+        
 
 class PLDGroups(db.Model):
     """PLD Groups table"""
     id = db.Column(db.Integer, primary_key=True)
-    schedule_id = db.Column(db.Integer, db.ForeignKey('schedule.id'), nullable=False)
+    schedule_id = db.Column(db.Integer, db.ForeignKey('schedule.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     members = db.relationship('User', secondary='group_member', backref='pld_groups_association')
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    group_string = db.Column(db.String(60), nullable=False)
+    unique_group_id = db.Column(db.String(6), unique=True, nullable=False)
+
+    def generate_unique_id(self):
+        """Generates a unique 6-character alphanumeric ID."""
+        while True:
+            unique_id = secrets.token_urlsafe(6)
+            existing_group = PLDGroups.query.filter_by(unique_group_id=unique_id).first()
+            if not existing_group:
+                self.unique_group_id = unique_id
+                return
+
+    def __init__(self, **kwargs):
+        super(PLDGroups, self).__init__(**kwargs)
+        self.generate_unique_id()
 
     def __repr__(self):
         return f"PLDGroups('{self.group_string}')"
+
 
 
 class GroupMember(db.Model):

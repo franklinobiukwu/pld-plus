@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, current_app, request, make_response
-from backend.app.views import auth_blueprint 
+from backend.app.views import auth_blueprint
 from flask_bcrypt import generate_password_hash, check_password_hash
 from secrets import token_hex
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required
 
 
 #HELPER FUNCTIONS
@@ -46,7 +46,9 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
-        
+        login_user(user)
+        #RETURN THE USER OBJECT - firstname, lastname, email, username
+        #RETURN token for login_user
         return jsonify({'message': 'User registered successfully'}), 201
 
     return jsonify({'error': "Invalid Request"}), 400
@@ -73,6 +75,8 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 login_user(user, remember=remember_me)
+                #RETURN THE USER OBJECT - firstname, lastname, email, username
+                #RETURN token for login_user
                 return jsonify({'message': 'Successfully Logged in'}), 200
             else:
                 return jsonify({'error': 'Invalid Password'}), 401
@@ -81,6 +85,7 @@ def login():
     else:
         return jsonify({'error': 'Invalid Request'}), 400
 
+@login_required
 @auth_blueprint.route('/auth/logout', strict_slashes=False)
 def logout():
     """User Log out"""
