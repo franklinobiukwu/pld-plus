@@ -21,7 +21,7 @@ const DashboardBase = () => {
     return (
         <div className="h-screen flex flex-col">
             <div className="fixed left-0 right-0 bg-white">
-                <Navbar/>
+                <Navbar />
             </div>
 
             <div className="max-w-[90rem] md:w-full mx-auto md:grid md:grid-cols-8 lg:grid-cols-12 mt-20 flex-grow">
@@ -30,7 +30,7 @@ const DashboardBase = () => {
                     <SideNav />
                 </aside>
                 {/* Dashboard Content */}
-                <div className="bg-gray-100 p-4 md:col-span-6 lg:col-span-8">
+                <div className="bg-gray-100 md:col-span-6 lg:col-span-8">
                     <Outlet/>
                 </div>
                 {/* Dashboard Aside */}

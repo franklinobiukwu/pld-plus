@@ -1,3 +1,4 @@
+import "../src/App.css"
 import { 
             Route, RouterProvider, createBrowserRouter,
             createRoutesFromElements
@@ -13,9 +14,9 @@ import DashboardBase from './templates/DashboardBase';
 import Home from './pages/Dashboard-pages/Home';
 import PldGroup from './pages/Dashboard-pages/PldGroup';
 import DiscoverGroup from './pages/Dashboard-pages/DiscoverGroup';
-import Schedule from './pages/Dashboard-pages/Schedule';
+import Schedule, { scheduleLoader } from './pages/Dashboard-pages/Schedule';
 import Resources from './pages/Dashboard-pages/Resources';
-import Profile from './pages/Dashboard-pages/Profile';
+import Profile, { loadUsers } from './pages/Dashboard-pages/Profile';
 
 
 const router = createBrowserRouter(
@@ -24,12 +25,23 @@ const router = createBrowserRouter(
             <Route index element={<LandingPage/>}/>
         </Route>,
         <Route path='/dashboard' element={<DashboardBase/>}>
-            <Route index element={<Home/>}/>
+            <Route
+                index
+                element={<Home/>}
+            />
             <Route path='group' element={<PldGroup/>}/>
             <Route path='groups' element={<DiscoverGroup/>}/>
-            <Route path='schedule' element={<Schedule/>}/>
+            <Route
+                path='schedule'
+                element={<Schedule/>}
+                loader={scheduleLoader}
+            />
             <Route path='resources' element={<Resources/>}/>
-            <Route path='profile' element={<Profile/>}/>
+            <Route
+                path='profile'
+                element={<Profile/>}
+                loader={loadUsers}
+            />
         </Route>
     ])
 )

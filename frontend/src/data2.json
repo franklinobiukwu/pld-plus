@@ -1,0 +1,241 @@
+{
+  "groups": [
+    {
+      "group_id": "GRP001",
+      "topic": "Biochemistry",
+      "datetime": "2024-03-21T09:00:00",
+      "member_count": 5,
+      "members": [
+        {"firstname": "John", "lastname": "Doe", "cohort": 1, "role": "host"},
+        {"firstname": "Jane", "lastname": "Smith", "cohort": 2, "role": "member"},
+        {"firstname": "Alice", "lastname": "Johnson", "cohort": 3, "role": "member"},
+        {"firstname": "Bob", "lastname": "Brown", "cohort": 4, "role": "member"},
+        {"firstname": "Emma", "lastname": "Davis", "cohort": 5, "role": "member"}
+      ]
+    },
+    {
+      "group_id": "GRP002",
+      "topic": "Neuroscience",
+      "datetime": "2024-03-22T10:00:00",
+      "member_count": 4,
+      "members": [
+        {"firstname": "Sarah", "lastname": "Jones", "cohort": 1, "role": "host"},
+        {"firstname": "Michael", "lastname": "Williams", "cohort": 2, "role": "member"},
+        {"firstname": "David", "lastname": "Wilson", "cohort": 3, "role": "member"},
+        {"firstname": "Olivia", "lastname": "Martinez", "cohort": 4, "role": "member"}
+      ]
+    },
+    {
+      "group_id": "GRP003",
+      "topic": "Genetics",
+      "datetime": "2024-03-23T11:00:00",
+      "member_count": 3,
+      "members": [
+        {"firstname": "James", "lastname": "Taylor", "cohort": 1, "role": "host"},
+        {"firstname": "Sophia", "lastname": "Anderson", "cohort": 2, "role": "member"},
+        {"firstname": "William", "lastname": "Thomas", "cohort": 3, "role": "member"}
+      ]
+    },
+    {
+      "group_id": "GRP004",
+      "topic": "Microbiology",
+      "datetime": "2024-03-24T12:00:00",
+      "member_count": 2,
+      "members": [
+        {"firstname": "Ethan", "lastname": "White", "cohort": 1, "role": "host"},
+        {"firstname": "Isabella", "lastname": "Garcia", "cohort": 2, "role": "member"}
+      ]
+    },
+    {
+      "group_id": "GRP005",
+      "topic": "Chemistry",
+      "datetime": "2024-03-25T13:00:00",
+      "member_count": 6,
+      "members": [
+        {"firstname": "Mia", "lastname": "Moore", "cohort": 1, "role": "host"},
+        {"firstname": "Elijah", "lastname": "Lopez", "cohort": 2, "role": "member"},
+        {"firstname": "Ava", "lastname": "Hill", "cohort": 3, "role": "member"},
+        {"firstname": "Logan", "lastname": "Scott", "cohort": 4, "role": "member"},
+        {"firstname": "Charlotte", "lastname": "Green", "cohort": 5, "role": "member"},
+        {"firstname": "Liam", "lastname": "Adams", "cohort": 6, "role": "member"}
+      ]
+    },
+    {
+      "group_id": "GRP006",
+      "topic": "Physics",
+      "datetime": "2024-03-26T14:00:00",
+      "member_count": 3,
+      "members": [
+        {"firstname": "Amelia", "lastname": "Baker", "cohort": 1, "role": "host"},
+        {"firstname": "Lucas", "lastname": "Evans", "cohort": 2, "role": "member"},
+        {"firstname": "Lily", "lastname": "Parker", "cohort": 3, "role": "member"}
+      ]
+    },
+    {
+      "group_id": "GRP007",
+      "topic": "Ecology",
+      "datetime": "2024-03-27T15:00:00",
+      "member_count": 4,
+      "members": [
+        {"firstname": "Noah", "lastname": "Rivera", "cohort": 1, "role": "host"},
+        {"firstname": "Benjamin", "lastname": "Roberts", "cohort": 2, "role": "member"},
+        {"firstname": "Sofia", "lastname": "Cook", "cohort": 3, "role": "member"},
+        {"firstname": "Mason", "lastname": "Morgan", "cohort": 4, "role": "member"}
+      ]
+    },
+    {
+      "group_id": "GRP008",
+      "topic": "Immunology",
+      "datetime": "2024-03-28T16:00:00",
+      "member_count": 5,
+      "members": [
+        {"firstname": "Harper", "lastname": "Hughes", "cohort": 1, "role": "host"},
+        {"firstname": "Evelyn", "lastname": "Perez", "cohort": 2, "role": "member"},
+        {"firstname": "Alexander", "lastname": "Long", "cohort": 3, "role": "member"},
+        {"firstname": "Mila", "lastname": "Bell", "cohort": 4, "role": "member"},
+        {"firstname": "Daniel", "lastname": "Cooper", "cohort": 5, "role": "member"}
+      ]
+    },
+    {
+      "group_id": "GRP009",
+      "topic": "Cell Biology",
+      "datetime": "2024-03-29T17:00:00",
+      "member_count": 4,
+      "members": [
+        {"firstname": "Scarlett", "lastname": "Gonzalez", "cohort": 1, "role": "host"},
+        {"firstname": "Madison", "lastname": "Morales", "cohort": 2, "role": "member"},
+        {"firstname": "Jack", "lastname": "Sanchez", "cohort": 3, "role": "member"},
+        {"firstname": "Eleanor", "lastname": "Nelson", "cohort": 4, "role": "member"}
+      ]
+    },
+    {
+      "group_id": "GRP010",
+      "topic": "Botany",
+      "datetime": "2024-03-30T18:00:00",
+      "member_count": 3,
+      "members": [
+        {"firstname": "William", "lastname": "Russell", "cohort": 1, "role": "host"},
+        {"firstname": "Chloe", "lastname": "Gomez", "cohort": 2, "role": "member"},
+        {"firstname": "Andrew", "lastname": "Reed", "cohort": 3, "role": "member"},
+        {"firstname": "Grace", "lastname": "Cook", "cohort": 4, "role": "member"}
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "group_id": "GRP109",
+      "cohort": 1,
+      "topic": "Mathematics",
+      "datetime": "2024-03-21T09:00:00"
+    },
+    {
+      "group_id": "GRP108",
+      "cohort": 2,
+      "topic": "Computer Science",
+      "datetime": "2024-03-22T10:00:00"
+    },
+    {
+      "group_id": "GRP107",
+      "cohort": 3,
+      "topic": "Data Analysis",
+      "datetime": "2024-03-23T11:00:00"
+    },
+    {
+      "group_id": "GRP106",
+      "cohort": 4,
+      "topic": "Artificial Intelligence",
+      "datetime": "2024-03-24T12:00:00"
+    },
+    {
+      "group_id": "GRP105",
+      "cohort": 5,
+      "topic": "Machine Learning",
+      "datetime": "2024-03-25T13:00:00"
+    },
+    {
+      "group_id": "GRP104",
+      "cohort": 6,
+      "topic": "Robotics",
+      "datetime": "2024-03-26T14:00:00"
+    },
+    {
+      "group_id": "GRP103",
+      "cohort": 7,
+      "topic": "Ethical Hacking",
+      "datetime": "2024-03-27T15:00:00"
+    },
+    {
+      "group_id": "GRP102",
+      "cohort": 8,
+      "topic": "Web Development",
+      "datetime": "2024-03-28T16:00:00"
+    },
+    {
+      "group_id": "GRP100",
+      "cohort": 9,
+      "topic": "Mobile App Development",
+      "datetime": "2024-03-29T17:00:00"
+    },
+    {
+      "group_id": "GRP101",
+      "cohort": 10,
+      "topic": "Software Engineering",
+      "datetime": "2024-03-30T18:00:00"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "firstName": "Alice",
+      "lastName": "Johnson",
+      "username": "alicej",
+      "cohort": 1,
+      "email": "alice.johnson@example.com",
+      "socials": {
+            "github":"franklinobiukwu",
+            "discord": "",
+            "whatsapp": "8149497670",
+            "facebook": "CFranklinObiukwu",
+            "linkedin": "franklinobiukwu",
+            "twitter": "OfrankC"
+      },
+      "password": "hashed_password",
+      "token": "user_token"
+    },
+    {
+      "id": 2,
+      "firstName": "Bob",
+      "lastName": "Smith",
+      "username": "bobsmith",
+      "cohort": 2,
+      "email": "bob.smith@example.com",
+      "password": "hashed_password",
+      "token": "user_token"
+    }
+  ],
+  "contacts": [
+    {
+      "id": 1,
+      "phoneNumber": "1234567890",
+      "discord": "alice#1234",
+      "github": "aliceGithub",
+      "whatsapp": "1234567890",
+      "twitter": "@alice",
+      "linkedIn": "linkedin.com/in/alice",
+      "medium": "medium.com/@alice",
+      "userId": 1
+    },
+    {
+      "id": 2,
+      "phoneNumber": "0987654321",
+      "discord": "bob#5678",
+      "github": "bobGithub",
+      "whatsapp": "0987654321",
+      "twitter": "@bob",
+      "linkedIn": "linkedin.com/in/bob",
+      "medium": "medium.com/@bob",
+      "userId": 2
+    }
+  ]
+}
+

@@ -28,16 +28,16 @@ const SideNav = () => {
                     <li onClick={handleDrop}>
                         <span className={`${liStyle} hover:cursor-pointer`}><FaUsers className={riStyle}/>PLD Groups</span>
                         <div className={drop ? `h-auto ${trans}`:`h-0 overflow-hidden ${trans}`} >
-                            <li>
+                            <div>
                                 <NavLink to={`/dashboard/group`} className={liStyle}>
                                     <FaUserFriends className={`${riStyle} ml-4`}/>My Groups
                                 </NavLink>
-                            </li>
-                            <li>
+                            </div>
+                            <div>
                                 <NavLink to={`/dashboard/groups`} className={liStyle}>
                                     <RiMenuSearchLine className={`${riStyle} ml-4`}/>Discover Groups
                                 </NavLink>
-                            </li>
+                            </div>
                         </div>
                     </li>
                     <li>

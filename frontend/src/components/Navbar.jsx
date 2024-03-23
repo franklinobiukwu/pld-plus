@@ -1,12 +1,29 @@
+import { FaPowerOff } from "react-icons/fa"
+import ProfileImg from "../images/girl.png"
+import { Link } from "react-router-dom"
+
 const Navbar = () => {
     return (
-        <div className="flex justify-between h-16 max-w-[90rem] mx-auto px-4 items-center shadow-sm">
+        <div className="flex justify-between h-16 max-w-[90rem] mx-auto px-4 items-center shadow-sm z-50">
             <div className="">
                 <h1 className="font-bold text-3xl">PLD<sup>+</sup></h1>
             </div>
+
+            {/* Login Buttons*/}
             <div className="flex">
                 <button>Login</button>
                 <button>Sign up</button>
+            </div>
+            {/* Login Buttons */}
+            <div className="flex items-center">
+                <Link to="/dashboard/profile">
+                    <div className="rounded-full max-w-12 max-h-12 overflow-hidden mr-10">
+                        <img src={ProfileImg} alt="profile-photo"/>
+                    </div>
+                </Link>
+                <button>
+                    <FaPowerOff className="text-red"/>
+                </button>
             </div>
         </div>
     )

@@ -1,10 +1,33 @@
+import Skeleton from "react-loading-skeleton";
 import GroupCard from "./GroupCard.jsx";
+import { useEffect, useState } from "react";
+import 'react-loading-skeleton/dist/skeleton.css'
 
 
 const OtherGroups = () => {
+    const [groups, setGroups] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    const endpoint = `${import.meta.env.VITE_BASE_API}/groups`
+
+    {/* Load Groups Data From Backend Database */}
+    useEffect(()=>{
+        const getGroup = async () => {
+            const res = await fetch(endpoint)
+            if (!res.ok){
+                setIsLoading(false)
+                throw new Error("Couldn't load groups")
+            }
+            const data = await res.json()
+            setGroups(data)
+            setIsLoading(false)
+        }
+
+        getGroup()
+    }, [])
 
     return (
-        <div>
+        <div className="min-w-72">
             <h3 className="text-xs font-medium
                     border-b border-b-cream2">OTHER GROUPS</h3>
             <div className="border-t-8 rounded-md border-pri mt-2">
@@ -12,11 +35,11 @@ const OtherGroups = () => {
 
                 <div>
                     {/* Group Member List*/}
-                    <div className="mt-4">
-                        <GroupCard members="7"/>
-                        <GroupCard members="4"/>
-                        <GroupCard members="10"/>
-                    </div>
+                    {isLoading ? (
+                        <Skeleton count={3}/>
+                    ):groups.map((group, id) => {
+                        return <GroupCard group={group} key={id}/>
+                    })}
                 </div>
             </div>
         </div>

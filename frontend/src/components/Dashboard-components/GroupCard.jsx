@@ -4,7 +4,7 @@ import { FaPlus } from "react-icons/fa"
 
 const GroupCard = (props) => {
 
-    const groupMembers = parseInt(props.members)
+    const groupMembers = parseInt(props.group.member_count)
     let labelColor
 
     if (groupMembers <= 5){
@@ -16,19 +16,19 @@ const GroupCard = (props) => {
     }
 
     return (
-        <div className="shadow-md rounded-md px-4 py-4 mt-2 bg-white2">
+        <div className="shadow-md rounded-md px-4 py-4 mt-2 bg-white2 max-w-sm">
             <div className="flex items-center">
                 <FaUsers className="mr-2"/>
-                <span className="font-medium text-md">KKOEGR</span>
+                <span className="font-medium text-md">{props.group.group_id}</span>
             </div>
             <div>
                 <div className="flex items-center">
                     <RiLightbulbFlashLine className="mr-2"/>
-                    <span className="text-lg font-medium text-xh">Introduction to Javascript</span>
+                    <span className="text-lg font-medium text-xh">{props.group.topic}</span>
                 </div>
                 <div className="ml-6 flex text-lightgrey text-xs">
-                    <div className="mr-6">Jun 4, 2024</div>
-                    <div>10:30 am</div>
+                    <div className="mr-6">{props.group.datetime}</div>
+                    <div>{props.group.datetime}</div>
                 </div>
                 <div className="flex justify-between items-center">
                     <span className={`${labelColor} ml-6 text-xs rounded-md
