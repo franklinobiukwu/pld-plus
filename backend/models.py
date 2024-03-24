@@ -24,6 +24,17 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"User('{self.first_name}', '{self.last_name}', '{self.cohort}', '{self.image_file}')"
+    
+    def to_dict(self):
+        """Takes object and makes it a dict"""
+        user_dict = {}
+        user_dict["id"] = self.id
+        user_dict["username"] = self.username
+        user_dict["cohort"] = self.cohort
+        user_dict["firstname"] = self.firstname
+        user_dict["lastname"] = self.lastname
+        user_dict["email"] = self.email
+        return user_dict
 
 
 class Socials(db.Model):

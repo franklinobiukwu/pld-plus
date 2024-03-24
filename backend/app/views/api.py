@@ -28,6 +28,7 @@ def create_schedule():
     from backend.models import PLDGroups
     db = current_app.db
 
+    #CHECK THE REQUEST AND CHECK IF ITS THE CURRENT USER
     data = request.form
     topic = data.get('topic')
     cohort = data.get('cohort')
@@ -63,3 +64,9 @@ def create_schedule():
         db.session.rollback()
         print(f"Error creating schedule: {str(e)}")
         return jsonify({'error': 'Failed to create schedule'}), 500
+    
+
+@api_blueprint.route('/dashboard/schedule', methods=['POST'])
+@login_required
+def update_schedule():
+    pass
