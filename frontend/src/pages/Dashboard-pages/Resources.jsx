@@ -5,7 +5,7 @@ const Resources = () => {
             "https://www.freecodecamp.org/", "https://www.w3schools.com/"]
     return (
         <div>
-            <h2 className="text-2xl font-semibold mb-2 m-auto">Helpful Resources</h2>
+            <h2 className="text-2xl font-semibold mb-2 text-center">Helpful Resources</h2>
             {resources.map((resource, id) => {
                 return <LinkThumbnail url={resource} key={id}/>
             })}
