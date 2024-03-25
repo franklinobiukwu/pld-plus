@@ -52,7 +52,7 @@ def register():
         user_dict = user.to_dict()
         secret_key = os.environ.get('SECRET_KEY')
         token = jwt.encode({'User Object': user_dict}, secret_key)
-        return jsonify({'message': 'User registered successfully'}, {'token': token}), 201
+        return jsonify({'message': 'User registered successfully', 'token': token}), 201
 
     return jsonify({'error': "Invalid Request"}), 400
 
@@ -81,13 +81,13 @@ def login():
                 user_dict = user.to_dict()
                 secret_key = os.environ.get('SECRET_KEY')
                 token = jwt.encode({'User Object': user_dict}, secret_key)
-                return jsonify({'message': 'User registered successfully'}, {'token': token}), 201
+                return jsonify({'message': 'User logged in successfully', 'token': token}), 201
             else:
                 return jsonify({'error': 'Invalid Password'}), 401
         else:
             return jsonify({'error': 'User doesnt exist'}), 401
     else:
-        return jsonify({'error': 'Invalid Request'}), 400
+        return jsonify({'error': 'Invalid Request'}), 405
 
 @login_required
 @auth_blueprint.route('/auth/logout', strict_slashes=False)
