@@ -3,7 +3,6 @@ import { FaCalendarAlt } from "react-icons/fa"
 
 const UpcomingPldList = (props) => {
 
-    console.log(props)
     return (
         <div className="shadow-md rounded-md px-6 py-4 mt-1 bg-white2">
             <div>

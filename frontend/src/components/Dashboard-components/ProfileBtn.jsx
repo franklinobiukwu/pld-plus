@@ -1,25 +1,34 @@
 import { useState } from "react"
+import { FaEdit } from "react-icons/fa"
+import { IoCheckmarkDoneCircle } from "react-icons/io5"
+import { MdCancel } from "react-icons/md"
 
-const ProfileBtns = () => {
+
+const ProfileBtns = (props) => {
     const [edit, setEdit] = useState(false)
 
     
     {/* Button Function Handlers */}
     const handleAccountEdit = () => {
-        setAccountEdit(true)
+        props.gather()
+        setEdit(true)
+        props.setFormEdit(true)
     }
     const handleAccountCancel = () => {
-        setAccountEdit(false)
+        setEdit(false)
+        props.setFormEdit(false)
+        props.cancel()
     }
     const handleAccountSave = () => {
-        setAccountEdit(false)
-    }
-
-    const backgroundStyle = {
-        backgroundImage: `url(${ProfileBg})`
+        setEdit(false)
+        props.setFormEdit(false)
     }
 
 
+    const btnStyle = `px-4 py-1 bg-gradient-to-t rounded-md font-medium
+    text-white flex items-center`
+
+    
     return (
         <div className="flex justify-end mt-5 md:mt-10">
 
@@ -30,7 +39,7 @@ const ProfileBtns = () => {
                         onClick={() => handleAccountCancel()}
                     >
                         <span className="flex justify-center items-center">
-                            <IoCheckmarkDoneCircle className="mr-2"/>
+                            <MdCancel className="mr-2" />
                             <span>Cancel</span>
                         </span>
                     </button>

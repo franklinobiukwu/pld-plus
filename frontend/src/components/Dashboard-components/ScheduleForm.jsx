@@ -2,7 +2,6 @@ import { Form } from "react-router-dom"
 import { AiFillSchedule } from "react-icons/ai";
 import { MdCancel } from "react-icons/md";
 import { useState } from "react";
-import { IoCheckmarkDoneCircle } from "react-icons/io5";
 
 const ScheduleForm = (props) => {
     const [cohort, setCohort] = useState("")
