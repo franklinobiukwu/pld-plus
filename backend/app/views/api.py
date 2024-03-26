@@ -219,12 +219,10 @@ def delete_schedule(schedule_id):
             return jsonify({'error': 'Unauthorized Access'}), 403
         
         try:
-            # Delete associated groups first
             pld_groups = db.session.query(PLDGroups).filter_by(schedule_id=schedule_id).all()
             for group in pld_groups:
                 db.session.delete(group)
             
-            # Then delete the schedule
             db.session.delete(schedule)
             db.session.commit()
             return jsonify({'message': 'Schedule deleted'}), 200
@@ -237,3 +235,137 @@ def delete_schedule(schedule_id):
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
 
+
+#GROUPS API
+
+@api_blueprint.route('/dashboard/discover-groups', methods=['GET'])
+@login_required
+@token_required
+def get_groups():
+    """Gets all Schedules in Database"""
+    from backend.models import Schedule
+    from backend.models import PLDGroups
+    from backend.models import GroupMember
+    db = current_app.db 
+
+    if request.method == 'GET':
+        try:
+            schedules = Schedule.query.all()
+
+            if not schedules:
+                return jsonify({'error': 'No Schedules found'}), 404
+
+            schedules_list = []
+            for schedule in schedules:
+                pld_group = PLDGroups.query.filter_by(schedule_id=schedule.id).first()
+                unique_group_id = pld_group.unique_group_id if pld_group else None
+                
+                member_count = GroupMember.query.filter_by(pld_group_id=pld_group.id).count()
+
+                schedule_dict = schedule.to_dict()
+                schedule_dict.update({'unique_group_id': unique_group_id, 'member_count': member_count})
+                schedules_list.append(schedule_dict)
+
+            return jsonify({'schedules': schedules_list}), 200
+        except Exception as e:
+            print(f"Error retrieving schedules: {str(e)}")
+            return jsonify({'error': 'Failed to retrieve schedules'}), 500
+    
+    return jsonify({'error': 'Invalid Request Method'}), 405
+
+
+@api_blueprint.route('/dashboard/pld-group/<int:pld_group_id>/add', methods=['POST'])
+@login_required
+@token_required
+def add_member(pld_group_id):
+    """Adds someone to a pld group based on the unique id of group"""
+    from backend.models import PLDGroups
+    db = current_app.db
+
+    if request.method == 'POST':
+        # Retrieve the PLD group
+        group = PLDGroups.query.get(pld_group_id)
+        if not group:
+            return jsonify({'error': 'PLD group not found'}), 404
+
+        # Call the add_member function from the PLDGroups model
+        result = group.add_member(pld_group_id, current_user.id)
+        if 'error' in result:
+            return jsonify(result), 400
+
+        return jsonify({'message': 'Member added successfully', 'group': result}), 200
+
+    else:
+        return jsonify({'error': 'Invalid Request Method'}), 405
+       
+
+@api_blueprint.route('/dashboard/pld-group/<int:pld_group_id>/delete', methods=['DELETE'])
+@login_required
+@token_required
+def delete_member(pld_group_id):
+    """Delete ones self on the group"""
+    from backend.models import PLDGroups
+    db = current_app.db
+
+    if request.method == 'DELETE':
+        group = PLDGroups.query.get(pld_group_id)
+        if not group:
+            return jsonify({'error': 'PLD group not found'}), 404
+
+        result = group.delete_member(pld_group_id, current_user.id)
+        if 'error' in result:
+            return jsonify(result), 400
+        
+        updated_group = PLDGroups.query.get(pld_group_id)
+        if not updated_group:
+            return jsonify({'error': 'PLD group not found after deletion'}), 404
+
+        group_data = updated_group.to_dict()
+        return jsonify({'message': 'Member deleted successfully', 'group': group_data}), 200
+
+    else:
+        return jsonify({'error': 'Invalid Request Method'}), 405
+    
+
+@api_blueprint.route('/dashboard/pld-group/<string:unique_group_id>', methods=['GET'])
+@login_required
+@token_required
+def get_unique_pld_group(unique_group_id):
+    """Gets a PLD group based on the unique group id passed to it"""
+    db = current_app.db
+    from backend.models import PLDGroups, GroupMember
+    from backend.models import User
+
+    if request.method == 'GET':
+        group = db.session.query(PLDGroups).filter_by(unique_group_id=unique_group_id).first()
+
+        if not group:
+            return jsonify({'error': 'PLD group not Found'}), 404
+
+        members = db.session.query(GroupMember).filter_by(pld_group_id=group.id).limit(10).all()
+        members_data = []
+        
+        for member in members:
+            member_dict = member.to_dict() 
+            user = db.session.query(User).get(member.user_id) 
+            if user:
+                member_dict['user'] = user.to_dict() 
+            else:
+                member_dict['user'] = None 
+            members_data.append(member_dict)
+
+        
+        group_data = group.to_dict()
+        group_data['members'] = members_data
+
+        return jsonify(group_data), 200
+
+    else:
+        return jsonify({'error': 'Invalid request'}), 405
+
+#PROFILE ROUTES
+@api_blueprint.route('/dashboard/profile/edit', methods=['GET'])
+@login_required
+@token_required
+def edit_socials():
+    pass

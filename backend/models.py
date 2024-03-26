@@ -1,7 +1,8 @@
 from backend import db, login_manager
 from datetime import datetime
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 import secrets
+
 
 
 @login_manager.user_loader
@@ -26,14 +27,14 @@ class User(db.Model, UserMixin):
         return f"User('{self.first_name}', '{self.last_name}', '{self.cohort}', '{self.image_file}')"
     
     def to_dict(self):
-        """Takes object and makes it a dict"""
-        user_dict = {}
-        user_dict["id"] = self.id
-        user_dict["username"] = self.username
-        user_dict["cohort"] = self.cohort
-        user_dict["firstname"] = self.firstname
-        user_dict["lastname"] = self.lastname
-        user_dict["email"] = self.email
+        user_dict = {
+            "id": self.id,
+            "username": self.username,
+            "cohort": self.cohort,
+            "firstname": self.firstname,
+            "lastname": self.lastname,
+            "email": self.email,
+        }
         return user_dict
 
 
@@ -51,6 +52,19 @@ class Socials(db.Model):
 
     def __repr__(self):
         return f"Socials('{self.discord}')"
+    
+    def to_dict(self):
+        socials_dict = {
+        'id': self.id,
+        'phone_number' : self.phone_number,
+        'discord' : self.discord,
+        'github' : self.github,
+        'whatsapp' : self.whatsapp,
+        'linkedin' : self.linkedin,
+        'medium' : self.medium,
+        'user_id' : self.user_id
+        }
+        return socials_dict
 
 
 class Schedule(db.Model):
@@ -67,18 +81,23 @@ class Schedule(db.Model):
     def create_pld_group(self):
         pld_group = PLDGroups(user_id=self.user_id, schedule_id=self.id)
         pld_group.generate_unique_id()
-        db.session.add(pld_group) 
+        db.session.add(pld_group)
         db.session.commit()
         db.session.flush()
-        
+
+        group_member = GroupMember(user_id=self.user_id, pld_group_id=pld_group.id, role="Host")
+        db.session.add(group_member)
+        db.session.commit()
+
     def to_dict(self):
         """Takes object and makes it a dict"""
-        schedule_dict = {}
-        schedule_dict["id"] = self.id
-        schedule_dict["topic"] = self.topic
-        schedule_dict["cohort"] = self.cohort
-        schedule_dict["date"] = self.date
-        schedule_dict["user_id"] = self.user_id
+        schedule_dict = {
+        "id" : self.id,
+        "topic" : self.topic,
+        "cohort" : self.cohort,
+        "date": self.date,
+        "user_id" : self.user_id
+        }
         return schedule_dict
         
 
@@ -99,14 +118,69 @@ class PLDGroups(db.Model):
             if not existing_group:
                 self.unique_group_id = unique_id
                 return
+            
+    def add_member(self, pld_group_id, user_id):
+        """Add a member to the Group Member"""
+        from backend.models import GroupMember
 
-    def __init__(self, **kwargs):
-        super(PLDGroups, self).__init__(**kwargs)
-        self.generate_unique_id()
+        if len(self.members) >= 10:
+            return {"error": "PLD Group already has the maximum of 10 members"}
+
+        # Check if user is already a member of the group
+        existing_member = GroupMember.query.filter_by(
+            user_id=user_id, pld_group_id=pld_group_id
+        ).first()
+
+        if existing_member:
+            return {"error": "User is already a member of this PLD Group"}
+
+        new_member = GroupMember(
+            user_id=user_id, pld_group_id=pld_group_id
+        )
+        db.session.add(new_member)
+        db.session.commit()
+
+        # Return updated group information
+        members = GroupMember.query.filter_by(pld_group_id=pld_group_id).all()
+        members_data = [member.to_dict() for member in members]
+
+        group_data = self.to_dict()
+        group_data['members'] = members_data
+
+        return group_data
+        
+    def delete_member(self, pld_group_id, user_id):
+        """Delete a member from the Group Member"""
+        from backend.models import GroupMember
+
+        if not self.members:
+            return {'error': 'No members in PLD group'}
+
+        existing_member = GroupMember.query.filter_by(
+            user_id=user_id, pld_group_id=pld_group_id
+        ).first()
+
+        if existing_member:
+            db.session.delete(existing_member)
+            db.session.commit()
+            # Update to return message and group dictionary
+            return {'message': 'Member deleted successfully', 'group': self.to_dict()}
+        else:
+            return {'error': 'Member does not exist in group'}
+
 
     def __repr__(self):
         return f"PLDGroups('{self.group_string}')"
-
+    
+    def to_dict(self):
+        pld_group_dict = {
+            'id': self.id,
+            'schedule_id': self.schedule_id,
+            'date': self.date,
+            'unique_group_id': self.unique_group_id,
+            'members': [member.id for member in self.members] 
+        }
+        return pld_group_dict
 
 
 class GroupMember(db.Model):
@@ -115,3 +189,15 @@ class GroupMember(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     pld_group_id = db.Column(db.Integer, db.ForeignKey('pld_groups.id'), primary_key=True)
     role = db.Column(db.String(25), nullable=True, default="Member")
+    members = db.Column(db.Integer, nullable=False, default=1)
+    
+
+    
+    def to_dict(self):
+        group_member_dict = {
+        'members' : self.members,
+        'pld_group_id' : self.pld_group_id,
+        'role' : self.role,
+        'user_id' : self.user_id
+        }
+        return group_member_dict
