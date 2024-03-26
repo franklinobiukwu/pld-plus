@@ -274,7 +274,7 @@ def get_groups():
     return jsonify({'error': 'Invalid Request Method'}), 405
 
 
-@api_blueprint.route('/dashboard/pld-group/<int:pld_group_id>/add', methods=['POST'])
+@api_blueprint.route('/dashboard/pld-group/<int:pld_group_id>/add', methods=['POST', 'PUT'])
 @login_required
 @token_required
 def add_member(pld_group_id):
@@ -282,7 +282,7 @@ def add_member(pld_group_id):
     from backend.models import PLDGroups
     db = current_app.db
 
-    if request.method == 'POST':
+    if request.method == 'POST' or request.method == 'PUT':
         # Retrieve the PLD group
         group = PLDGroups.query.get(pld_group_id)
         if not group:
@@ -364,8 +364,101 @@ def get_unique_pld_group(unique_group_id):
         return jsonify({'error': 'Invalid request'}), 405
 
 #PROFILE ROUTES
-@api_blueprint.route('/dashboard/profile/edit', methods=['GET'])
+@api_blueprint.route('/dashboard/profile/edit-profile', methods=['POST'])
 @login_required
 @token_required
-def edit_socials():
-    pass
+def add_socials():
+    """Add or update socials for the current user."""
+    from backend.models import Socials
+    db = current_app.db
+
+    if request.method == 'POST':
+        data = request.form
+
+        phone_number = data.get('phone_number')
+        discord = data.get('discord')
+        github = data.get('github')
+        whatsapp = data.get('whatsapp')
+        twitter = data.get('twitter')
+        linkedin = data.get('linkedin')
+        medium = data.get('medium')
+
+        try:
+            socials = Socials.query.filter_by(user_id=current_user.id).first()
+
+            if socials:
+                # If socials already exist for the user, update them
+                socials.phone_number = phone_number
+                socials.discord = discord
+                socials.github = github
+                socials.whatsapp = whatsapp
+                socials.twitter = twitter
+                socials.linkedin = linkedin
+                socials.medium = medium
+            else:
+                # If socials don't exist, create new ones
+                socials = Socials(
+                    phone_number=phone_number,
+                    discord=discord,
+                    github=github,
+                    whatsapp=whatsapp,
+                    twitter=twitter,
+                    linkedin=linkedin,
+                    medium=medium,
+                    user_id=current_user.id
+                )
+                db.session.add(socials)
+
+            db.session.commit()
+            socials_dict = socials.to_dict()
+            return jsonify({'message': 'Socials updated successfully!', 'socials': socials_dict}), 200
+
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error updating socials: {str(e)}")
+            return jsonify({'error': 'Failed to update socials'}), 500
+
+    else:
+        return jsonify({'error': 'Invalid Request Method'}), 405
+
+
+@api_blueprint.route('/dashboard/profile/edit-profile', methods=['PUT'])
+@login_required
+@token_required
+def update_user():
+    """Update User information."""
+    from backend.models import User
+    db = current_app.db
+
+    if request.method == 'PUT':
+        data = request.form
+
+        username = data.get('username')
+        firstname = data.get('firstname')
+        lastname = data.get('lastname')
+        cohort = data.get('cohort')
+        email = data.get('email')
+
+        try:
+            user = User.query.get(current_user.id)
+
+            if not user:
+                return jsonify({'error': 'User not found'}), 404
+
+            user.username = username
+            user.firstname = firstname
+            user.lastname = lastname
+            user.cohort = cohort
+            user.email = email
+
+            db.session.commit()
+            user_dict = user.to_dict()
+            return jsonify({'message': 'User updated successfully!', 'user': user_dict}), 200
+
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error updating user: {str(e)}")
+            return jsonify({'error': 'Failed to update user'}), 500
+
+    else:
+        return jsonify({'error': 'Invalid Request Method'}), 405
