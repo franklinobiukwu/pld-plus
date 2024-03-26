@@ -23,7 +23,7 @@ def register():
         from backend.models import User
         
         username=request.form['username']
-        firstname=request.form['lastname']
+        firstname=request.form['firstname']
         lastname=request.form['lastname']
         cohort=request.form['cohort']
         email=request.form['email']
@@ -35,6 +35,7 @@ def register():
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             return jsonify({'error': 'Username already exists'}), 400
+        
         
         hashed_paswrd = generate_password_hash(request.form['password']).decode('utf-8')
         
@@ -52,7 +53,7 @@ def register():
         user_dict = user.to_dict()
         secret_key = os.environ.get('SECRET_KEY')
         token = jwt.encode({'User Object': user_dict}, secret_key)
-        return jsonify({'message': 'User registered successfully', 'token': token}), 201
+        return jsonify({'message': 'User registered successfully', 'token': token, 'user' : user_dict}), 201
 
     return jsonify({'error': "Invalid Request"}), 400
 
@@ -81,7 +82,7 @@ def login():
                 user_dict = user.to_dict()
                 secret_key = os.environ.get('SECRET_KEY')
                 token = jwt.encode({'User Object': user_dict}, secret_key)
-                return jsonify({'message': 'User logged in successfully', 'token': token}), 201
+                return jsonify({'message': 'User logged in successfully', 'token': token, 'user': user_dict}), 201
             else:
                 return jsonify({'error': 'Invalid Password'}), 401
         else:
