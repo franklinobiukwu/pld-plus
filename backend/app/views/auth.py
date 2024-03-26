@@ -53,7 +53,7 @@ def register():
         user_dict = user.to_dict()
         secret_key = os.environ.get('SECRET_KEY')
         token = jwt.encode({'User Object': user_dict}, secret_key)
-        return jsonify({'message': 'User registered successfully', 'token': token, 'user_dict' : user_dict}), 201
+        return jsonify({'message': 'User registered successfully', 'token': token, 'user' : user_dict}), 201
 
     return jsonify({'error': "Invalid Request"}), 400
 
@@ -82,7 +82,7 @@ def login():
                 user_dict = user.to_dict()
                 secret_key = os.environ.get('SECRET_KEY')
                 token = jwt.encode({'User Object': user_dict}, secret_key)
-                return jsonify({'message': 'User logged in successfully', 'token': token}), 201
+                return jsonify({'message': 'User logged in successfully', 'token': token, 'user': user_dict}), 201
             else:
                 return jsonify({'error': 'Invalid Password'}), 401
         else:

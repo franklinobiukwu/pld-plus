@@ -139,7 +139,7 @@ def update_schedule(schedule_id):
 @api_blueprint.route('/dashboard/schedule/<int:schedule_id>', methods=['GET'])
 @login_required
 @token_required
-def get_schedule(schedule_id):
+def get_single_schedule(schedule_id):
     """Get Schedule based on ID"""
     from backend.models import Schedule
     from backend.models import PLDGroups
@@ -238,6 +238,48 @@ def delete_schedule(schedule_id):
 
 #GROUPS API
 
+@api_blueprint.route('/dashboard/discover-groups/search-bar/', methods=['POST'])
+@login_required
+@token_required
+def get_schedul_via_search_bar():
+    """Get Schedule based on ID"""
+    db = current_app.db
+    from backend.models import PLDGroups
+    from backend.models import Schedule
+    
+
+    if request.method == 'POST':
+        data = request.form
+        unique_id = data.get('unique_group_id')
+
+        if unique_id:
+            # Query PLDGroups table to get the group with the provided unique_id
+            pld_group = PLDGroups.query.filter_by(unique_group_id=unique_id).first()
+
+            if pld_group:
+                # Retrieve schedule associated with the found PLD group
+                schedule = Schedule.query.get(pld_group.schedule_id)
+                
+                if schedule:
+                    # Convert schedule and PLD group objects to dictionaries
+                    schedule_dict = schedule.to_dict()
+                    pld_group_dict = pld_group.to_dict()
+
+                    # Include schedule and PLD group data in the response
+                    response_data = {
+                        "schedule": schedule_dict,
+                        "pld_group": pld_group_dict
+                    }
+                    return jsonify(response_data), 200
+                else:
+                    return jsonify({"error": "Schedule not found"}), 404
+            else:
+                return jsonify({"error": "PLD Group not found"}), 404
+        else:
+            return jsonify({"error": "Missing unique_group_id parameter"}), 400
+    else:
+        return jsonify({"error": "Method not allowed"}), 405
+
 @api_blueprint.route('/dashboard/discover-groups', methods=['GET'])
 @login_required
 @token_required
@@ -332,36 +374,41 @@ def delete_member(pld_group_id):
 @token_required
 def get_unique_pld_group(unique_group_id):
     """Gets a PLD group based on the unique group id passed to it"""
+    from backend.models import Schedule, GroupMember, PLDGroups, User
     db = current_app.db
-    from backend.models import PLDGroups, GroupMember
-    from backend.models import User
 
     if request.method == 'GET':
-        group = db.session.query(PLDGroups).filter_by(unique_group_id=unique_group_id).first()
+        group = PLDGroups.query.filter_by(unique_group_id=unique_group_id).first()
 
         if not group:
             return jsonify({'error': 'PLD group not Found'}), 404
 
-        members = db.session.query(GroupMember).filter_by(pld_group_id=group.id).limit(10).all()
+        schedule = Schedule.query.get(group.schedule_id)
+
+        if not schedule:
+            return jsonify({'error': 'No Schedule associated with group'}), 404
+
+        members = GroupMember.query.filter_by(pld_group_id=group.id).limit(10).all()
         members_data = []
-        
+
         for member in members:
-            member_dict = member.to_dict() 
-            user = db.session.query(User).get(member.user_id) 
+            member_dict = member.to_dict()
+            user = User.query.get(member.user_id)
             if user:
-                member_dict['user'] = user.to_dict() 
+                member_dict['user'] = user.to_dict()
             else:
-                member_dict['user'] = None 
+                member_dict['user'] = None
             members_data.append(member_dict)
 
-        
         group_data = group.to_dict()
+        group_data['schedule'] = schedule.to_dict()  
         group_data['members'] = members_data
 
         return jsonify(group_data), 200
 
     else:
         return jsonify({'error': 'Invalid request'}), 405
+
 
 #PROFILE ROUTES
 @api_blueprint.route('/dashboard/profile/edit-profile', methods=['POST'])
