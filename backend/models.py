@@ -24,7 +24,7 @@ class User(db.Model, UserMixin):
     pld_groups = db.relationship('PLDGroups', backref='user', lazy=True)
 
     def __repr__(self):
-        return f"User('{self.first_name}', '{self.last_name}', '{self.cohort}', '{self.image_file}')"
+        return f"User('{self.firstname}', '{self.lastname}', '{self.cohort}')"
     
     def to_dict(self):
         user_dict = {

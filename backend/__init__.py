@@ -15,7 +15,6 @@ from .models import load_user
 def create_app():
     # Create an instance of the Flask application
     app = Flask(__name__)
-    
     # Register blueprints for the API and auth routes
     app.register_blueprint(api_blueprint)
     app.register_blueprint(auth_blueprint)

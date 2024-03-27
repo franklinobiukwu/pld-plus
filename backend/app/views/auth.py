@@ -14,31 +14,29 @@ def generate_tokens():
     return token
 
 
-#ROUTES FOR AUTHORISATION
-@auth_blueprint.route('/auth/register', methods=['GET','POST'], strict_slashes=False)
+# ROUTES FOR AUTHORISATION
+@auth_blueprint.route('/auth/register', methods=['GET', 'POST'], strict_slashes=False)
 def register():
     """User registration"""
     db = current_app.db
     if request.method == "POST":
         from backend.models import User
-        
-        username=request.form['username']
-        firstname=request.form['firstname']
-        lastname=request.form['lastname']
-        cohort=request.form['cohort']
-        email=request.form['email']
-        password=request.form['password']
-        
+
+        username = request.form['username']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        cohort = request.form['cohort']
+        email = request.form['email']
+        password = request.form['password']
         if not username or not firstname or not lastname or not cohort or not email or not password:
             return jsonify({'error': 'Missing fields'}), 400
-
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             return jsonify({'error': 'Username already exists'}), 400
-        
-        
+
+
         hashed_paswrd = generate_password_hash(request.form['password']).decode('utf-8')
-        
+
         user = User(
             username=request.form['username'],
             firstname=request.form['firstname'],
@@ -47,12 +45,14 @@ def register():
             email=request.form['email'],
             password=hashed_paswrd,
         )
+
         db.session.add(user)
         db.session.commit()
         login_user(user)
         user_dict = user.to_dict()
         secret_key = os.environ.get('SECRET_KEY')
-        token = jwt.encode({'User Object': user_dict}, secret_key)
+        token = jwt.encode({'User Object': user_dict}, secret_key).decode('utf-8')
+
         return jsonify({'message': 'User registered successfully', 'token': token, 'user' : user_dict}), 201
 
     return jsonify({'error': "Invalid Request"}), 400
@@ -60,28 +60,36 @@ def register():
 @auth_blueprint.route('/auth/login', methods=['GET', 'POST'], strict_slashes=False)
 def login():
     """User Login"""
-    
+
     db = current_app.db
-    
+    print("Hello")
+
     if request.method == 'POST':
+        print("Hello 0")
         from backend.models import User
-        #STORE REQUEST INFORMATION
+        print("Hello 00")
+        # STORE REQUEST INFORMATION
+        print(request.form)
         email = request.form['email']
         password = request.form['password']
         remember_me = request.form.get('remember_me')
-        
-        
+        print("Hello 000")
+
+
         if not email or not password:
             return jsonify({'error': 'missing fields'}), 400
-        
+
+        print("Hello 1")
+        print(User.email)
         user = db.session.query(User).filter(User.email == email).first()
-        
+        print(user)
+
         if user:
             if check_password_hash(user.password, password):
                 login_user(user, remember=remember_me)
                 user_dict = user.to_dict()
                 secret_key = os.environ.get('SECRET_KEY')
-                token = jwt.encode({'User Object': user_dict}, secret_key)
+                token = jwt.encode({'User Object': user_dict}, secret_key).decode('utf-8')
                 return jsonify({'message': 'User logged in successfully', 'token': token, 'user': user_dict}), 201
             else:
                 return jsonify({'error': 'Invalid Password'}), 401
