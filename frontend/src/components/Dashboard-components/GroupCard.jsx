@@ -15,6 +15,23 @@ const GroupCard = (props) => {
         labelColor = "bg-red mt-2"
     }
 
+    const group_id = "temp stuff"
+    const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/pld-group/${group_id}/add`
+
+    const handleAddToGroup = () => {
+
+        const addToGroup = async () => {
+            const res = await fetch(endpoint, {
+                method: "POST",
+                body: JSON.stringify(),
+                header: {
+                    "content-type": "application/json",
+                    "Authorization": `Bearer ${user.token}`
+                }
+            })
+        }
+    }
+
     return (
         <div className="shadow-md rounded-md px-4 py-4 mt-2 bg-white2 max-w-sm">
             <div className="flex items-center">
@@ -36,7 +53,7 @@ const GroupCard = (props) => {
                         {`${groupMembers}/10`}
                     </span>
                     { groupMembers === 10 ? "":
-                    <button className="shadow-md p-2 rounded-full bg-pri">
+                    <button className="shadow-md p-2 rounded-full bg-pri" onClick={handleAddToGroup}>
                         <FaPlus className="text-white"/>
                     </button>
                     }

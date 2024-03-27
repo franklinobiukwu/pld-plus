@@ -11,8 +11,8 @@ const Navbar = () => {
 
             {/* Login Buttons*/}
             <div className="flex">
-                <button>Login</button>
-                <button>Sign up</button>
+                <Link to="/login"><button>Login</button></Link>
+                <Link to="/signup"><button>Sign up</button></Link>
             </div>
             {/* Profile Photo */}
             <div className="flex items-center">

@@ -4,8 +4,16 @@ import Navbar from "../components/Navbar.jsx";
 const Base = () => {
     return (
         <div>
-            <Navbar/>
-            <Outlet/>
+            <div className="flex flex-col h-screen">
+            {/* Header */}
+            <div>
+                <Navbar/>
+            </div>
+            {/* Body */}
+            <div className="grow">
+                <Outlet/>
+            </div>
+            </div>
         </div>
     )
 }
