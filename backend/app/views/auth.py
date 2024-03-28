@@ -5,9 +5,10 @@ from secrets import token_hex
 from flask_login import login_user, logout_user, login_required
 import jwt
 import os
+from flask_cors import cross_origin
 
 
-#HELPER FUNCTIONS
+# HELPER FUNCTIONS
 
 def generate_tokens():
     token = token_hex(16)
@@ -58,31 +59,24 @@ def register():
     return jsonify({'error': "Invalid Request"}), 400
 
 @auth_blueprint.route('/auth/login', methods=['GET', 'POST'], strict_slashes=False)
+@cross_origin()
 def login():
     """User Login"""
 
     db = current_app.db
-    print("Hello")
 
     if request.method == 'POST':
-        print("Hello 0")
         from backend.models import User
-        print("Hello 00")
         # STORE REQUEST INFORMATION
-        print(request.form)
-        email = request.form['email']
-        password = request.form['password']
-        remember_me = request.form.get('remember_me')
-        print("Hello 000")
-
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+        remember_me = data.get('remember_me')
 
         if not email or not password:
             return jsonify({'error': 'missing fields'}), 400
 
-        print("Hello 1")
-        print(User.email)
         user = db.session.query(User).filter(User.email == email).first()
-        print(user)
 
         if user:
             if check_password_hash(user.password, password):
@@ -98,13 +92,15 @@ def login():
     else:
         return jsonify({'error': 'Invalid Request'}), 405
 
+
 @login_required
 @auth_blueprint.route('/auth/logout', strict_slashes=False)
+@cross_origin()
 def logout():
     """User Log out"""
     logout_user()
     return jsonify({'message': 'Logged out'})
-    
+
 
 @auth_blueprint.route('/auth/forgot-password', methods=['POST'], strict_slashes=False)
 def forgot_password():

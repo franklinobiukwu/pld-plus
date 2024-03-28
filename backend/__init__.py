@@ -4,6 +4,7 @@ from .config.flask_config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from flask_cors import CORS, cross_origin
 
 # Create an instance of the database
 db = SQLAlchemy()
@@ -15,16 +16,18 @@ from .models import load_user
 def create_app():
     # Create an instance of the Flask application
     app = Flask(__name__)
+    # Enable Cross-Origin Resource Sharing
+    cors = CORS(app)
     # Register blueprints for the API and auth routes
     app.register_blueprint(api_blueprint)
     app.register_blueprint(auth_blueprint)
-    
+
     # Import all Flask App configurations
     app.config.from_object(Config)
-    
+
     # Initialize Bcrypt
     Bcrypt(app=app)
-    
+
     # Initialize Flask-Login
     login_manager.init_app(app)
 
@@ -35,14 +38,14 @@ def create_app():
     with app.app_context():
         # Initialize the database with the app
         db.init_app(app)
-        
+
         # Create the tables
         from backend.models import User, Socials, Schedule, PLDGroups, GroupMember
         db.create_all()
-        
+
         # Expose db to current_app
         current_app.db = db
-    
+
     return app
 
 # Create the Flask app

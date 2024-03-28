@@ -6,7 +6,8 @@ from sqlalchemy.exc import IntegrityError
 import jwt
 import os
 from functools import wraps
-    
+from flask_cors import cross_origin
+
 
 def token_required(f):
     @wraps(f)
@@ -20,7 +21,9 @@ def token_required(f):
                 token = parts[1]
 
         if not token:
-            return jsonify({'error': 'Token is missing or improperly formatted'}), 401
+            return jsonify({
+                'error': 'Token is missing or improperly formatted'
+                }), 401
 
         try:
             secret_key = os.environ.get('SECRET_KEY')
@@ -37,7 +40,8 @@ def token_required(f):
 
 
 @api_blueprint.route('/dashboard/schedule/create', methods=['POST'])
-@login_required
+@cross_origin()
+#@login_required
 @token_required
 def create_schedule():
     """Creates PLD Schedule"""
@@ -46,28 +50,31 @@ def create_schedule():
     db = current_app.db
 
     if request.method == 'POST':
-        data = request.form
+        data = request.get_json()
+        print(data)
         topic = data.get('topic')
         cohort = data.get('cohort')
-        date_time_str = data.get('date')
+        date_time_str = data.get('datetime')
+        user_id = data.get('user_id')
 
         if not topic or not cohort or not date_time_str:
             return jsonify({'error': 'Missing required fields'}), 400
 
         try:
-            date_time = datetime.strptime(date_time_str, "%d/%m/%Y, %H:%M")
+            date_time = datetime.strptime(date_time_str, "%Y-%m-%dT%H:%M")
         except ValueError:
             return jsonify({'error': 'Invalid date and time format'}), 400
 
+        print(user_id)
         try:
             # Create schedule with the obtained PLD group ID
             schedule = Schedule(
                 topic=topic,
                 cohort=cohort,
                 date=date_time,
-                user=current_user,
+                user_id=user_id,
             )
-            
+
             # Add both to session and commit
             db.session.add(schedule)
             db.session.commit()
@@ -76,14 +83,17 @@ def create_schedule():
             pld_group = db.session.query(PLDGroups).filter(PLDGroups.schedule_id == schedule.id).first()
             unique_id = pld_group.unique_group_id
             schedule_dict.update({'Unique_group_id': unique_id})
-            return jsonify({'message': 'Schedule created successfully!', 'schedule': schedule_dict}), 201
+            return jsonify({
+                'message': 'Schedule created successfully!',
+                'schedule': schedule_dict
+                }), 201
         except Exception as e:
             db.session.rollback()
             print(f"Error creating schedule: {str(e)}")
             return jsonify({'error': 'Failed to create schedule'}), 500
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
-        
+
 
 @api_blueprint.route('/dashboard/schedule/update/<int:schedule_id>', methods=['PUT'])
 @login_required
@@ -93,13 +103,13 @@ def update_schedule(schedule_id):
     from backend.models import Schedule
     from backend.models import PLDGroups
     db = current_app.db
-    
+
     if request.method == 'PUT':
         data = request.form
         topic = data.get('topic')
         cohort = data.get('cohort')
         date = data.get('date')
-        
+
         if not topic or not cohort or not date:
             return jsonify({'error': 'Missing required fields fields'}), 400
         try:
@@ -167,18 +177,22 @@ def get_single_schedule(schedule_id):
         
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
-    
+
+
 @api_blueprint.route('/dashboard/schedules', methods=['GET'])
-@login_required
+@cross_origin()
+#@login_required
 @token_required
 def get_schedules():
     """Gets all Schedules in Database"""
     from backend.models import Schedule
     from backend.models import PLDGroups
     db = current_app.db 
+    print("In schedules route")
 
     if request.method == 'GET':
         try:
+            print("About to get schedules")
             schedules = Schedule.query.all()
 
             if not schedules:
@@ -199,7 +213,7 @@ def get_schedules():
             return jsonify({'error': 'Failed to retrieve schedules'}), 500
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
-    
+
 @api_blueprint.route('/dashboard/schedule/delete/<int:schedule_id>', methods=['DELETE'])
 @login_required
 @token_required
@@ -208,37 +222,38 @@ def delete_schedule(schedule_id):
     from backend.models import Schedule
     from backend.models import PLDGroups
     db = current_app.db
-    
+
     if request.method == 'DELETE':
         schedule = db.session.query(Schedule).get(schedule_id)
-        
+
         if not schedule:
             return jsonify({'error': "Schedule doesn't exist"}), 404
-        
+
         if schedule.user != current_user:
             return jsonify({'error': 'Unauthorized Access'}), 403
-        
+
         try:
             pld_groups = db.session.query(PLDGroups).filter_by(schedule_id=schedule_id).all()
             for group in pld_groups:
                 db.session.delete(group)
-            
+
             db.session.delete(schedule)
             db.session.commit()
             return jsonify({'message': 'Schedule deleted'}), 200
         except IntegrityError as e:
             db.session.rollback()
-            return jsonify({'error': f"Error deleting schedule: {str(e)}"}), 500  
+            return jsonify({'error': f"Error deleting schedule: {str(e)}"}), 500
         except Exception as e:
             db.session.rollback()
-            return jsonify({'error': f"Unexpected error: {str(e)}"}), 500  
+            return jsonify({'error': f"Unexpected error: {str(e)}"}), 500
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
 
 
-#GROUPS API
+# GROUPS API
 
 @api_blueprint.route('/dashboard/discover-groups/search-bar/', methods=['POST'])
+@cross_origin()
 @login_required
 @token_required
 def get_schedul_via_search_bar():
@@ -246,7 +261,7 @@ def get_schedul_via_search_bar():
     db = current_app.db
     from backend.models import PLDGroups
     from backend.models import Schedule
-    
+
 
     if request.method == 'POST':
         data = request.form
@@ -259,7 +274,7 @@ def get_schedul_via_search_bar():
             if pld_group:
                 # Retrieve schedule associated with the found PLD group
                 schedule = Schedule.query.get(pld_group.schedule_id)
-                
+
                 if schedule:
                     # Convert schedule and PLD group objects to dictionaries
                     schedule_dict = schedule.to_dict()
@@ -280,7 +295,9 @@ def get_schedul_via_search_bar():
     else:
         return jsonify({"error": "Method not allowed"}), 405
 
+
 @api_blueprint.route('/dashboard/discover-groups', methods=['GET'])
+@cross_origin()
 @login_required
 @token_required
 def get_groups():
@@ -301,22 +318,25 @@ def get_groups():
             for schedule in schedules:
                 pld_group = PLDGroups.query.filter_by(schedule_id=schedule.id).first()
                 unique_group_id = pld_group.unique_group_id if pld_group else None
-                
+
                 member_count = GroupMember.query.filter_by(pld_group_id=pld_group.id).count()
 
                 schedule_dict = schedule.to_dict()
-                schedule_dict.update({'unique_group_id': unique_group_id, 'member_count': member_count})
+                schedule_dict.update({
+                    'unique_group_id': unique_group_id,
+                    'member_count': member_count})
                 schedules_list.append(schedule_dict)
 
             return jsonify({'schedules': schedules_list}), 200
         except Exception as e:
             print(f"Error retrieving schedules: {str(e)}")
             return jsonify({'error': 'Failed to retrieve schedules'}), 500
-    
+
     return jsonify({'error': 'Invalid Request Method'}), 405
 
 
 @api_blueprint.route('/dashboard/pld-group/<int:pld_group_id>/add', methods=['POST', 'PUT'])
+@cross_origin()
 @login_required
 @token_required
 def add_member(pld_group_id):
@@ -335,13 +355,16 @@ def add_member(pld_group_id):
         if 'error' in result:
             return jsonify(result), 400
 
-        return jsonify({'message': 'Member added successfully', 'group': result}), 200
+        return jsonify({
+            'message': 'Member added successfully',
+            'group': result
+            }), 200
 
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
-       
 
 @api_blueprint.route('/dashboard/pld-group/<int:pld_group_id>/delete', methods=['DELETE'])
+@cross_origin()
 @login_required
 @token_required
 def delete_member(pld_group_id):
@@ -357,19 +380,25 @@ def delete_member(pld_group_id):
         result = group.delete_member(pld_group_id, current_user.id)
         if 'error' in result:
             return jsonify(result), 400
-        
+
         updated_group = PLDGroups.query.get(pld_group_id)
         if not updated_group:
-            return jsonify({'error': 'PLD group not found after deletion'}), 404
+            return jsonify({
+                'error': 'PLD group not found after deletion'
+                }), 404
 
         group_data = updated_group.to_dict()
-        return jsonify({'message': 'Member deleted successfully', 'group': group_data}), 200
+        return jsonify({
+            'message': 'Member deleted successfully',
+            'group': group_data
+            }), 200
 
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
-    
+
 
 @api_blueprint.route('/dashboard/pld-group/<string:unique_group_id>', methods=['GET'])
+@cross_origin()
 @login_required
 @token_required
 def get_unique_pld_group(unique_group_id):
@@ -401,7 +430,7 @@ def get_unique_pld_group(unique_group_id):
             members_data.append(member_dict)
 
         group_data = group.to_dict()
-        group_data['schedule'] = schedule.to_dict()  
+        group_data['schedule'] = schedule.to_dict()
         group_data['members'] = members_data
 
         return jsonify(group_data), 200
@@ -410,7 +439,7 @@ def get_unique_pld_group(unique_group_id):
         return jsonify({'error': 'Invalid request'}), 405
 
 
-#PROFILE ROUTES
+# PROFILE ROUTES
 @api_blueprint.route('/dashboard/profile/edit-profile', methods=['POST'])
 @login_required
 @token_required
@@ -458,7 +487,10 @@ def add_socials():
 
             db.session.commit()
             socials_dict = socials.to_dict()
-            return jsonify({'message': 'Socials updated successfully!', 'socials': socials_dict}), 200
+            return jsonify({
+                'message': 'Socials updated successfully!',
+                'socials': socials_dict
+                }), 200
 
         except Exception as e:
             db.session.rollback()
@@ -500,7 +532,10 @@ def update_user():
 
             db.session.commit()
             user_dict = user.to_dict()
-            return jsonify({'message': 'User updated successfully!', 'user': user_dict}), 200
+            return jsonify({
+                'message': 'User updated successfully!',
+                'user': user_dict
+                }), 200
 
         except Exception as e:
             db.session.rollback()
