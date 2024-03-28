@@ -1,18 +1,54 @@
 import ScheduleForm from "../../components/Dashboard-components/ScheduleForm"
 import ScheduleCard from "../../components/Dashboard-components/ScheduleCard"
 import { FaPlus } from "react-icons/fa"
-import { useEffect, useMemo, useRef, useState } from "react"
-import { useLoaderData } from "react-router-dom"
+import { useEffect, useMemo, useState } from "react"
 import EditScheduleForm from "../../components/Dashboard-components/EditScheduleForm.jsx"
 import SearchBar from "../../components/Dashboard-components/SearchBar.jsx";
+import { useSelector } from "react-redux"
 
 const Schedule = () => {
     const [openForm, setOpenForm] = useState(false)
     const [openEdit, setOpenEdit] = useState(false)
     const [formData, setFormData] = useState({})
+    const [loading, setLoading] = useState(true)
     const [query, setQuery] = useState("")
+    const [schedules, setSchedules] = useState([])
 
-    const schedules = useLoaderData()
+    const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/schedules`
+
+    const user = useSelector(state => state.user.user)
+
+    useEffect(()=>{
+        const getSchedules = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/dashboard/schedules", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${user.token}`
+                    }
+                })
+
+                const temp = await response.json()
+                console.log(temp)
+
+                if (!response.ok){
+                    setLoading(false)
+                    throw Error("Error getting Schedule")
+                }
+
+                const data = await response.json()
+                 // Set Schedule
+                console.log(data)
+                setSchedules(data)
+                setLoading(false)
+            } catch (error) {
+                console.error("Error fetching schedules:", error.message)
+            }
+        }
+        getSchedules()
+    }, [])
+    
 
     const filteredSchedules = useMemo(() => {
         return schedules.filter(schedule => {
@@ -21,10 +57,11 @@ const Schedule = () => {
     })}, [schedules, query])
 
     const handleOpenForm = () => {
-        setOpenForm(!openForm)
+        setOpenForm(prevOpenForm => !prevOpenForm)
     }
     const handleEdit = (schedule) => {
         setFormData(schedule)
+        setOpenEdit(true)
     }
 
     const genStyle = `ease-in-out duration-500`
@@ -81,10 +118,3 @@ const Schedule = () => {
 }
 
 export default Schedule
-
-export const scheduleLoader = async () => {
-    const api = `${import.meta.env.VITE_BASE_API}/schedules`
-    const res = await fetch(api)
-
-    return res.json()
-}

@@ -2,6 +2,7 @@ import { Form } from "react-router-dom"
 import { AiFillSchedule } from "react-icons/ai";
 import { MdCancel } from "react-icons/md";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const ScheduleForm = (props) => {
     const [cohort, setCohort] = useState("")
@@ -14,13 +15,18 @@ const ScheduleForm = (props) => {
         cohorts.push(i)
     }
 
+    const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/schedule/create`
+    const user = useSelector(state => state.user.user)
+
     {/* Submit Schedule */}
     const handleSibmitSchedule = () => {
+
         if (cohort && topic && datetime) {
             const newSchedule = {
                 cohort: cohort,
                 topic: topic,
-                datetime: datetime
+                datetime: datetime,
+                user_id: user.id
             }
 
             {/* Delete this block: Testing Block*/}
@@ -28,7 +34,20 @@ const ScheduleForm = (props) => {
             alert("Fake Post! Posting Form Details")
 
             {/* Post newSchedule to backend*/}
+            const postNewSchedule = async () =>{
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${user.token}`,
+                    },
+                    body: JSON.stringify(newSchedule)
+                })
 
+                const data = await response.json()
+                console.log(data)
+            }
+            postNewSchedule()
             {/* Reset form fields */}
             setCohort("")
             setTopic("")
@@ -36,7 +55,7 @@ const ScheduleForm = (props) => {
 
             {/* Close Form View */}
             props.openForm(false)
-        }
+        } else return
 
     }
 

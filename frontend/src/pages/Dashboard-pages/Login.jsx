@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { FaEnvelope, FaLock } from "react-icons/fa6";
+import useLogin from "../../hooks/useLogin";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
 
@@ -8,6 +9,8 @@ const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [rememberMe, setRememberMe] = useState(false)
+    // login hook
+    const {login, isLoading, error} = useLogin()
 
     const [validEmail, setValidEmail] = useState(false)
 
@@ -16,13 +19,9 @@ const Login = () => {
     }, [email])
 
     const handleSubmit = (e) => {
+        console.log(email, password)
         e.preventDefault()
-        const formData = {
-            "email": email,
-            "password": password
-        }
-
-        console.log(formData)
+        login(email, password)
     }
     
     return (

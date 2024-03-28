@@ -14,11 +14,14 @@ import DashboardBase from './templates/DashboardBase';
 import Home from './pages/Dashboard-pages/Home';
 import PldGroup from './pages/Dashboard-pages/PldGroup';
 import DiscoverGroup from './pages/Dashboard-pages/DiscoverGroup';
-import Schedule, { scheduleLoader } from './pages/Dashboard-pages/Schedule';
+import Schedule from './pages/Dashboard-pages/Schedule';
 import Resources from './pages/Dashboard-pages/Resources';
 import Profile, { loadUsers } from './pages/Dashboard-pages/Profile';
 import Login from "./pages/Dashboard-pages/Login.jsx";
 import Signup from "./pages/Dashboard-pages/Signup.jsx";
+import { Provider } from "react-redux";
+import store from "./store/store.jsx";
+import RequireAuth from "./features/RequireAuth.jsx";
 
 
 const router = createBrowserRouter(
@@ -28,24 +31,25 @@ const router = createBrowserRouter(
             <Route path='login' element={<Login/>} />
             <Route path='signup' element={<Signup/>} />
         </Route>,
-        <Route path='/dashboard' element={<DashboardBase/>}>
-            <Route
-                index
-                element={<Home/>}
-            />
-            <Route path='group' element={<PldGroup/>}/>
-            <Route path='groups' element={<DiscoverGroup/>}/>
-            <Route
-                path='schedule'
-                element={<Schedule/>}
-                loader={scheduleLoader}
-            />
-            <Route path='resources' element={<Resources/>}/>
-            <Route
-                path='profile'
-                element={<Profile/>}
-                loader={loadUsers}
-            />
+        <Route path='/dashboard' element={<RequireAuth/>}>
+            <Route element={<DashboardBase/>}>
+                <Route
+                    index
+                    element={<Home/>}
+                />
+                <Route path='group' element={<PldGroup/>}/>
+                <Route path='groups' element={<DiscoverGroup/>}/>
+                <Route
+                    path='schedule'
+                    element={<Schedule/>}
+                />
+                <Route path='resources' element={<Resources/>}/>
+                <Route
+                    path='profile'
+                    element={<Profile/>}
+                    loader={loadUsers}
+                />
+            </Route>
         </Route>
     ])
 )
@@ -53,7 +57,9 @@ const router = createBrowserRouter(
 const App = () => {
 
   return (
-        <RouterProvider router={router}/>
+        <Provider store={store}>
+            <RouterProvider router={router}/>
+        </Provider>
   )
 }
 
