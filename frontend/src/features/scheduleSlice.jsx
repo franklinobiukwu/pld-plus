@@ -14,6 +14,12 @@ const scheduleSlice = createSlice({
         addSchedule: (state, action) => {
             state.schedules = [...state.schedules, action.payload]
         },
+        updateSchedule: (state, action) =>{
+            const updatedSchedule = action.payload
+            state.schedules = state.schedules.map(schedule => {
+                return schedule.id === updatedSchedule.id?{...updatedSchedule} : schedule
+            })
+        },
         deleteSchedule: (state, action) => {
             const deletedScheduleId = action.payload
             state.schedules = state.schedules.filter(schedule => schedule.id != deletedScheduleId)
@@ -21,5 +27,5 @@ const scheduleSlice = createSlice({
     }
 })
 
-export const { setSchedule, addSchedule, deleteSchedule } = scheduleSlice.actions
+export const { setSchedule, addSchedule, updateSchedule, deleteSchedule } = scheduleSlice.actions
 export default scheduleSlice.reducer

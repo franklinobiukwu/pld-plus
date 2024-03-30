@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import useDispatchUser from "../../hooks/useDispatchUser";
+import { updateSchedule } from "../../features/scheduleSlice.jsx";
+import { Hourglass } from "react-loader-spinner";
 
 const EditScheduleForm = (props) => {
     console.log(props.formData)
@@ -18,11 +20,11 @@ const EditScheduleForm = (props) => {
 
     useEffect(() => {
         if (props.formData) {
-            setCohort(cohort?cohort:props.formData.cohort || "")
-            setTopic(topic?topic:props.formData.topic || "")
-            setDatetime(datetime?datetime:formattedDataString)
+            setCohort(props.formData.cohort || "")
+            setTopic(props.formData.topic || "")
+            setDatetime(formattedDataString)
         }
-    }, [props.formData, cohort, topic, datetime])
+    }, [props.formData])
 
     // Set Cohorts
     const cohorts = []
@@ -67,7 +69,12 @@ const EditScheduleForm = (props) => {
                 }
 
                 const data = await response.json()
+                dispatch(updateSchedule({...data.schedule, datetime: data.schedule.date}))
                 console.log("Edited!!", data.schedule)
+                // Reset form fields
+                setCohort("")
+                setTopic("")
+                setDatetime("")
                 // Close Form View
                 props.openForm(false)
                 setLoading(false)
@@ -79,10 +86,6 @@ const EditScheduleForm = (props) => {
         }
         editSchedule()
 
-        // Reset form fields
-        setCohort("")
-        setTopic("")
-        setDatetime("")
 
 
     }
@@ -141,9 +144,18 @@ const EditScheduleForm = (props) => {
                                 <MdCancel className="mr-2" />
                                 Cancel
                             </button>
-                            <button onClick={handleEditSchedule} className="flex items-center bg-blue text-white px-4 py-1 rounded-md justify-end">
+                            <button
+                                onClick={handleEditSchedule} 
+                                className={`flex items-center bg-blue text-white px-4 py-1 rounded-md justify-end ${loading?"bg-grey":""}`}
+                                disabled={loading ? true : false}
+                            >
+                                { loading ? (
+                                <Hourglass visible={true} height={15} width={15} colors={["#ffffff", "#000000"]}/>
+                                ):(
+                                    <>
                                 <IoCheckmarkDoneCircle className="mr-2"/>
                                 Done
+                                </>)}
                             </button>
                         </div>
                     </div>

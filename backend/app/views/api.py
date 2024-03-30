@@ -80,7 +80,7 @@ def create_schedule():
             schedule_dict = schedule.to_dict()
             pld_group = db.session.query(PLDGroups).filter(PLDGroups.schedule_id == schedule.id).first()
             unique_id = pld_group.unique_group_id
-            schedule_dict.update({'Unique_group_id': unique_id})
+            schedule_dict.update({'unique_group_id': unique_id})
             return jsonify({
                 'message': 'Schedule created successfully!',
                 'schedule': schedule_dict
@@ -136,7 +136,7 @@ def update_schedule(schedule_id):
             schedule_dict = schedule.to_dict()
             pld_group = db.session.query(PLDGroups).filter(PLDGroups.schedule_id == schedule.id).first()
             unique_id = pld_group.unique_group_id
-            schedule_dict.update({'Unique_group_id': unique_id})
+            schedule_dict.update({'unique_group_id': unique_id})
 
             return jsonify({'message': 'Schedule updated successfully!', 'schedule': schedule_dict}), 200
         except Exception as e:

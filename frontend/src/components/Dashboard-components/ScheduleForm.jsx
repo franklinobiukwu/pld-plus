@@ -50,8 +50,7 @@ const ScheduleForm = (props) => {
                     }
 
                     const data = await response.json()
-                    dispatch(addSchedule(newSchedule))
-                    console.log("",data)
+                    dispatch(addSchedule({...data.schedule, datetime: data.schedule.date}))
                 } catch (error) {
                     console.error(error.message)
                 }

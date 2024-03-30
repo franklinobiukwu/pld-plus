@@ -87,7 +87,7 @@ const Schedule = () => {
                 </button>
             </div>
             {/* Schedule Cards*/}
-            <div className="md:grid sm:grid-cols-2 gap-4 mt-10">
+            <div className="md:grid sm:grid-cols-2 gap-4 mt-10 ease-in-out duration-300">
                 {loading?(
                     <Skeleton count={3}/>
                 ):(
