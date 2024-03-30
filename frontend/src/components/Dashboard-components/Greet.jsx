@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux"
 import greetImg from "../../images/greetImg.png"
+import { ReactTyped } from "react-typed"
 
 const Greet = () => {
 
@@ -17,7 +18,15 @@ const Greet = () => {
                             py-3 bg-cover bg-center bg-white2`}
                 style={backgroundStyle}
             >
-                <h1 className="font-medium text-2xl">{`Hello, ${user.firstname}`}</h1>
+                <h1 className="font-medium text-2xl">
+                    <ReactTyped 
+                        startWhenVisible
+                        strings={[`Hello, ${user.firstname}`]}
+                        typeSpeed={40}
+                        onComplete={(self) => self.cursor.remove()}
+                        //showCursor={false}
+                    />
+                </h1>
             </div>
         </div>
     )

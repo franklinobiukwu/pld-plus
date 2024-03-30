@@ -4,7 +4,10 @@ import { FaPlus } from "react-icons/fa"
 import { useEffect, useMemo, useState } from "react"
 import EditScheduleForm from "../../components/Dashboard-components/EditScheduleForm.jsx"
 import SearchBar from "../../components/Dashboard-components/SearchBar.jsx";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import useDispatchUser from "../../hooks/useDispatchUser.jsx"
+import {setSchedule} from "../../features/scheduleSlice.jsx"
+import Skeleton from "react-loading-skeleton"
 
 const Schedule = () => {
     const [openForm, setOpenForm] = useState(false)
@@ -12,16 +15,17 @@ const Schedule = () => {
     const [formData, setFormData] = useState({})
     const [loading, setLoading] = useState(true)
     const [query, setQuery] = useState("")
-    const [schedules, setSchedules] = useState([])
+    const dispatch = useDispatch()
 
     const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/schedules`
+    const schedules = useSelector(state => state.schedules.schedules)
 
-    const user = useSelector(state => state.user.user)
+    const {user} = useDispatchUser()
 
     useEffect(()=>{
         const getSchedules = async () => {
             try {
-                const response = await fetch("http://127.0.0.1:8000/dashboard/schedules", {
+                const response = await fetch(endpoint, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -29,18 +33,20 @@ const Schedule = () => {
                     }
                 })
 
-                const temp = await response.json()
-                console.log(temp)
-
                 if (!response.ok){
                     setLoading(false)
                     throw Error("Error getting Schedule")
                 }
 
                 const data = await response.json()
+                console.log(data.schedules)
+                const allSchedules = data.schedules.map(item => {
+                    const {date, ...rest} = item
+                    return {...rest, datetime: date}
+                })
+                console.log(allSchedules)
                  // Set Schedule
-                console.log(data)
-                setSchedules(data)
+                dispatch(setSchedule(allSchedules))
                 setLoading(false)
             } catch (error) {
                 console.error("Error fetching schedules:", error.message)
@@ -52,8 +58,8 @@ const Schedule = () => {
 
     const filteredSchedules = useMemo(() => {
         return schedules.filter(schedule => {
-        return (schedule.group_id.toLowerCase().includes(query.toLowerCase()) ||
-            schedule.topic.toLowerCase().includes(query.toLowerCase()))
+        return (String(schedule.unique_group_id).toLowerCase().includes(query.toLowerCase()) ||
+            String(schedule.topic).toLowerCase().includes(query.toLowerCase()) || String(schedule.cohort).toLowerCase().includes(query.toLowerCase()))
     })}, [schedules, query])
 
     const handleOpenForm = () => {
@@ -82,14 +88,17 @@ const Schedule = () => {
             </div>
             {/* Schedule Cards*/}
             <div className="md:grid sm:grid-cols-2 gap-4 mt-10">
-                {filteredSchedules?filteredSchedules.map((schedule) => {
-                   return (<ScheduleCard
-                                schedule={schedule}
-                                openForm={setOpenEdit}
-                                handleEdit={handleEdit}
-                                key={schedule.id}
-                            />)
-                }):"No Schedule"}
+                {loading?(
+                    <Skeleton count={3}/>
+                ):(
+                    filteredSchedules?filteredSchedules.map((schedule) => {
+                        return (<ScheduleCard
+                                    schedule={schedule}
+                                    openForm={setOpenEdit}
+                                    handleEdit={handleEdit}
+                                    key={schedule.id}
+                                />)
+                }):"No Schedule")}
             </div>
             {/* Schedule Form */}
             <div  className={openForm?`${genStyle} absolute top-0 bg-[#ffffffe6] w-full h-full flex

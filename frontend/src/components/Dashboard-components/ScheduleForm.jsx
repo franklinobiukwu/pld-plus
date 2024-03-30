@@ -2,12 +2,15 @@ import { Form } from "react-router-dom"
 import { AiFillSchedule } from "react-icons/ai";
 import { MdCancel } from "react-icons/md";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addSchedule } from "../../features/scheduleSlice";
 
 const ScheduleForm = (props) => {
     const [cohort, setCohort] = useState("")
     const [topic, setTopic] = useState("")
     const [datetime, setDatetime] = useState("")
+
+    const dispatch = useDispatch()
 
     {/* Set Cohorts */}
     const cohorts = []
@@ -29,23 +32,29 @@ const ScheduleForm = (props) => {
                 user_id: user.id
             }
 
-            {/* Delete this block: Testing Block*/}
-            console.log(newSchedule)
-            alert("Fake Post! Posting Form Details")
 
             {/* Post newSchedule to backend*/}
             const postNewSchedule = async () =>{
-                const response = await fetch(endpoint, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${user.token}`,
-                    },
-                    body: JSON.stringify(newSchedule)
-                })
+                try{
+                   const response = await fetch(endpoint, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${user.token}`,
+                        },
+                        body: JSON.stringify(newSchedule)
+                    })
 
-                const data = await response.json()
-                console.log(data)
+                    if (!response.ok){
+                        throw new Error("Couldn't create schedule")
+                    }
+
+                    const data = await response.json()
+                    dispatch(addSchedule(newSchedule))
+                    console.log("",data)
+                } catch (error) {
+                    console.error(error.message)
+                }
             }
             postNewSchedule()
             {/* Reset form fields */}

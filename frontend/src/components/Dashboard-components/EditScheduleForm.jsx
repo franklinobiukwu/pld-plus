@@ -2,19 +2,27 @@ import {Form} from "react-router-dom"
 import { MdCancel } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import useDispatchUser from "../../hooks/useDispatchUser";
 
 const EditScheduleForm = (props) => {
+    console.log(props.formData)
+    const utcDateString = props.formData.datetime
+    const formattedDataString = utcDateString?new Date(utcDateString).toISOString().slice(0, 16):""
+
     const [cohort, setCohort] = useState(props.formData.cohort || "")
     const [topic, setTopic] = useState(props.formData.topic || "")
-    const [datetime, setDatetime] = useState(props.formData.datetime || "")
+    const [datetime, setDatetime] = useState(formattedDataString)
+    const [loading, setLoading] = useState(false)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (props.formData) {
-            setCohort(props.formData.cohort || "")
-            setTopic(props.formData.topic || "")
-            setDatetime(props.formData.datetime || "")
+            setCohort(cohort?cohort:props.formData.cohort || "")
+            setTopic(topic?topic:props.formData.topic || "")
+            setDatetime(datetime?datetime:formattedDataString)
         }
-    }, [props.formData])
+    }, [props.formData, cohort, topic, datetime])
 
     // Set Cohorts
     const cohorts = []
@@ -22,28 +30,60 @@ const EditScheduleForm = (props) => {
         cohorts.push(i)
     }
 
+
+    const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/schedule/update/${props.formData.id}`
+    const {user} = useDispatchUser()
+
+
     {/* Edit Schedule Handler */}
     const handleEditSchedule = () => {
+        setLoading(true)
         const updatedSchedule = {
-            group_id: props.formData.group_id,
-            cohort: cohort,
-            topic: topic,
-            datetime: datetime,
-            id: props.formData.id,
+            cohort: cohort?cohort:props.formData.cohort,
+            topic: topic?topic:props.formData.topic,
+            date: datetime?datetime:formattedDataString,
+            current_user_id: props.formData.user_id
         }
             
         {/* Delete this block: Testing Block */}
-        console.log(updatedSchedule)
+        console.log("updated schedule", updatedSchedule)
 
         // Post newSchedule to backend
+        const editSchedule = async () => {
+            try{
+               const response = await fetch(endpoint, {
+                    method: "PUT",
+                   headers: {
+                        "Content-Type": "application/json",
+                       "Authorization": `Bearer ${user.token}`
+                   },
+                   body: JSON.stringify(updatedSchedule)
+               }) 
+
+                if (!response.ok){
+                    const err = await response.json()
+                    setLoading(false)
+                    throw new Error("Sorry, couldn't edit schedule", err)
+                }
+
+                const data = await response.json()
+                console.log("Edited!!", data.schedule)
+                // Close Form View
+                props.openForm(false)
+                setLoading(false)
+            } catch (error) {
+                setLoading(false)
+                console.error(error.message)
+                console.log(error.message)
+            }
+        }
+        editSchedule()
 
         // Reset form fields
         setCohort("")
         setTopic("")
         setDatetime("")
 
-        // Close Form View
-        props.openForm(false)
 
     }
 
@@ -54,6 +94,7 @@ const EditScheduleForm = (props) => {
             setDatetime("")
             props.openForm(false)
     }
+
 
     return (
         <div>

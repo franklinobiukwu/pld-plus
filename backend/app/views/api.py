@@ -50,12 +50,11 @@ def create_schedule():
     db = current_app.db
 
     if request.method == 'POST':
-        data = request.get_json()
-        print(data)
-        topic = data.get('topic')
-        cohort = data.get('cohort')
-        date_time_str = data.get('datetime')
-        user_id = data.get('user_id')
+        formData = request.get_json()
+        topic = formData.get('topic')
+        cohort = formData.get('cohort')
+        date_time_str = formData.get('datetime')
+        user_id = formData.get('user_id')
 
         if not topic or not cohort or not date_time_str:
             return jsonify({'error': 'Missing required fields'}), 400
@@ -65,7 +64,6 @@ def create_schedule():
         except ValueError:
             return jsonify({'error': 'Invalid date and time format'}), 400
 
-        print(user_id)
         try:
             # Create schedule with the obtained PLD group ID
             schedule = Schedule(
@@ -96,7 +94,7 @@ def create_schedule():
 
 
 @api_blueprint.route('/dashboard/schedule/update/<int:schedule_id>', methods=['PUT'])
-@login_required
+# @login_required
 @token_required
 def update_schedule(schedule_id):
     """Updates Schedule"""
@@ -104,66 +102,69 @@ def update_schedule(schedule_id):
     from backend.models import PLDGroups
     db = current_app.db
 
+    print("In edit")
     if request.method == 'PUT':
-        data = request.form
+        data = request.get_json()
         topic = data.get('topic')
         cohort = data.get('cohort')
         date = data.get('date')
+        current_user_id = data.get('current_user_id')
 
+        print("edit details", data)
         if not topic or not cohort or not date:
             return jsonify({'error': 'Missing required fields fields'}), 400
         try:
-            date_time = datetime.strptime(date, "%d/%m/%Y, %H:%M")
+            date_time = datetime.strptime(date, "%Y-%m-%dT%H:%M")
         except ValueError:
             return jsonify({'error': 'Invalid date and time format'}), 400
-        
+
         schedule = db.session.query(Schedule).filter(Schedule.id == schedule_id).first()
-        
+
         if not schedule:
             return jsonify({'error': 'Schedule not found'}), 404
-        
-        if schedule.user != current_user:
+
+        if schedule.user.id != current_user_id:
             return jsonify({'error': 'Unauthorized access'}), 403
-        
+
         try:
             schedule.topic = topic
             schedule.cohort = cohort
             schedule.date = date_time
-            
+
             db.session.commit()
-            
+
             schedule_dict = schedule.to_dict()
             pld_group = db.session.query(PLDGroups).filter(PLDGroups.schedule_id == schedule.id).first()
             unique_id = pld_group.unique_group_id
             schedule_dict.update({'Unique_group_id': unique_id})
-            
+
             return jsonify({'message': 'Schedule updated successfully!', 'schedule': schedule_dict}), 200
         except Exception as e:
             db.session.rollback()
             print(f"Error updating schedule: {str(e)}")
             return jsonify({'error': 'Failed to update schedule'}), 500       
-        
+
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
-    
+
+
 @api_blueprint.route('/dashboard/schedule/<int:schedule_id>', methods=['GET'])
-@login_required
 @token_required
 def get_single_schedule(schedule_id):
     """Get Schedule based on ID"""
     from backend.models import Schedule
     from backend.models import PLDGroups
-    db = current_app.db 
-    
+    db = current_app.db
+
     if request.method == 'GET':
         schedule = db.session.query(Schedule).filter(Schedule.id == schedule_id).first()
-        
+
         if not schedule:
             return jsonify({'error': 'Schedule not found'}), 404
-        
+
         if schedule.user != current_user:
             return jsonify({'error': 'Unauthorized access'}), 403
-    
+
         try:
             schedule_dict = schedule.to_dict()
             pld_group = db.session.query(PLDGroups).filter(PLDGroups.schedule_id == schedule.id).first()
@@ -174,25 +175,22 @@ def get_single_schedule(schedule_id):
                 db.session.rollback()
                 print(f"Error updating schedule: {str(e)}")
                 return jsonify({'error': 'Failed to update schedule'}), 500 
-        
+
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
 
 
 @api_blueprint.route('/dashboard/schedules', methods=['GET'])
 @cross_origin()
-#@login_required
 @token_required
 def get_schedules():
     """Gets all Schedules in Database"""
     from backend.models import Schedule
     from backend.models import PLDGroups
     db = current_app.db 
-    print("In schedules route")
 
     if request.method == 'GET':
         try:
-            print("About to get schedules")
             schedules = Schedule.query.all()
 
             if not schedules:
@@ -214,8 +212,9 @@ def get_schedules():
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
 
+
 @api_blueprint.route('/dashboard/schedule/delete/<int:schedule_id>', methods=['DELETE'])
-@login_required
+@cross_origin()
 @token_required
 def delete_schedule(schedule_id):
     """Deletes specified Schedule"""
@@ -223,13 +222,16 @@ def delete_schedule(schedule_id):
     from backend.models import PLDGroups
     db = current_app.db
 
+    print("About to delete", schedule_id)
     if request.method == 'DELETE':
         schedule = db.session.query(Schedule).get(schedule_id)
+        formData = request.get_json()
+        current_user_id = formData.get('current_user_id')
 
         if not schedule:
             return jsonify({'error': "Schedule doesn't exist"}), 404
 
-        if schedule.user != current_user:
+        if schedule.user.id != current_user_id:
             return jsonify({'error': 'Unauthorized Access'}), 403
 
         try:

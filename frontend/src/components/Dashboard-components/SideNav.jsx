@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom"
 import { FaUsers, FaUserFriends, FaUserCircle, FaCalendarAlt } from "react-icons/fa"
-import { GiSpellBook, GiBookmarklet } from "react-icons/gi";
+import { GiBookmarklet } from "react-icons/gi";
 import { RiMenuSearchLine } from "react-icons/ri";
-import { IoSpeedometerSharp } from "react-icons/io5";
+import {HiPresentationChartBar} from "react-icons/hi"
 import { useState } from "react";
 
 const SideNav = () => {
@@ -22,7 +22,7 @@ const SideNav = () => {
                 <ul>
                     <li>
                         <NavLink to={`/dashboard`} className={liStyle}>
-                            <IoSpeedometerSharp className={riStyle}/>Dashboard
+                            <HiPresentationChartBar className={riStyle}/>Dashboard
                         </NavLink>
                     </li>
                     <li onClick={handleDrop}>
