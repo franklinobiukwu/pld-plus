@@ -51,9 +51,13 @@ const Signup = () => {
                 }
 
                 const data = await response.json()
-                console.log(data)
-                localStorage.setItem("user", JSON.stringify(data.user))
-                dispatch(loginState(data.user))
+                const user = data.user
+                user['token'] = data.token
+                // Store user in local storage
+                console.log("Registered user", user)
+                localStorage.setItem("user", JSON.stringify(user))
+                // update global user
+                dispatch(loginState(user))
                 setLoading(false)
                 navigate("/dashboard")
             } catch (error){

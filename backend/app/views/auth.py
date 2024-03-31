@@ -23,8 +23,6 @@ def register():
     db = current_app.db
     if request.method == "POST":
         from backend.models import User
-        print("In register")
-        print(request.get_json())
 
         username = request.get_json().get('username')
         firstname = request.get_json().get('firstname')
@@ -32,18 +30,14 @@ def register():
         cohort = request.get_json().get('cohort')
         email = request.get_json().get('email')
         password = request.get_json().get('password')
-        print(f"{username}, {firstname}, {lastname}, {cohort}, {email}, {password}")
         if not username or not firstname or not lastname or not cohort or not email or not password:
             return jsonify({'error': 'Missing fields'}), 400
-        print("Keep going")
         existing_user = User.query.filter_by(email=email).first()
-        print("Keep going 1")
         if existing_user:
-            return jsonify({'error': 'Username already exists'}), 400
+            return jsonify({'error': 'Email already exists'}), 400
 
         hashed_paswrd = generate_password_hash(password).decode('utf-8')
 
-        print("Keep going 2")
         user = User(
             username=request.get_json().get('username'),
             firstname=request.get_json().get('firstname'),
@@ -52,7 +46,6 @@ def register():
             email=request.get_json().get('email'),
             password=hashed_paswrd,
         )
-        print(user)
 
         db.session.add(user)
         db.session.commit()
@@ -113,13 +106,13 @@ def logout():
 def forgot_password():
     """User forgot password"""
     db = current_app.db
-    
+
     if request.method == 'POST':
         from backend.models import User
         user_email = request.form['email']
-        
+
         user = db.session.query(User).filter(User.email == user_email).first()
-        
+
         if user:
             reset_token = generate_tokens()
             user.reset_token = reset_token
@@ -135,28 +128,28 @@ def forgot_password():
 def reset_password_page():
     """Set New Password"""
     db = current_app.db
-    
+
     if request.method == 'POST':
         from backend.models import User
         user_reset_token = request.form['reset_token']
         new_password = request.form['new_password']
         confirm_password = request.form['confirm_password']
-        
+
         if not user_reset_token:
             return jsonify({'error': 'Reset token is required'}), 400
-        
+
         user = db.session.query(User).filter(User.reset_token == user_reset_token).first()
-        
+
         if user:
             if new_password != confirm_password:
                 return jsonify({'error': 'Passwords do not match'}), 400
 
             user.password = generate_password_hash(new_password).decode('utf-8')
-            
+
             user.reset_token = None
-            
+
             db.session.commit()
-            
+
             return jsonify({'message': 'Password reset successful'}), 200
         else:
             return jsonify({'error': 'Invalid reset token'}), 404

@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom"
 import { loginState } from "../features/userSlice"
 
 const useLogin = () => {
-    const [isLoading, setIsLoading] = useState(null)
-    const [error, setError] = useState()
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState('')
 
     // redux store redux
     const dispatch = useDispatch()
@@ -18,7 +18,7 @@ const useLogin = () => {
 
     const login = async (email, password) => {
         setIsLoading(true)
-        setError(null)
+        setError('')
 
         const response = await fetch(endpoint, {
             method: "POST",
@@ -31,7 +31,7 @@ const useLogin = () => {
         const json = await response.json()
 
         if (!response.ok){
-            setIsLoading(null)
+            setIsLoading(false)
             setError(json.error)
         }
 
@@ -44,7 +44,7 @@ const useLogin = () => {
             // update global user
             dispatch(loginState(user))
 
-            setIsLoading(null)
+            setIsLoading(false)
             navigate("/dashboard")
         }
     }

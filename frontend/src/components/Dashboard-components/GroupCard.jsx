@@ -4,8 +4,13 @@ import { FaPlus } from "react-icons/fa"
 import useDispatchUser from "../../hooks/useDispatchUser"
 import { useState } from "react"
 import { FaMinus } from "react-icons/fa6";
+import { useDispatch } from "react-redux"
+import { addMember, deleteMember } from "../../features/pldGroupsSlice"
 
 const GroupCard = (props) => {
+    const dispatch = useDispatch()
+
+    const {user} = useDispatchUser()
 
     const groupMembers = parseInt(props.group.member_count)
     const [joined, setJoined] = useState(false)
@@ -44,7 +49,7 @@ const GroupCard = (props) => {
                     throw new Error("Error adding you to group")
                 }
                 const data = await response.json()
-                console.log("Id of added member", data.added_member.user_id)
+                dispatch(addMember({"user_id": user.id, "pld_group_id": data.added_member.pld_group_id}))
                 setJoined(true)
             } catch (error) {
             console.error(error)
@@ -69,12 +74,11 @@ const GroupCard = (props) => {
 
                 if (!response.ok){
                     const data = await response.json()
-                    console.log(data)
-                    throw new Error("Couldn't remove you from group")
+                    throw new Error("Couldn't remove you from group", data)
                 }
 
                 const data = await response.json()
-                console.log("User id of deleted member", data.deleted_member.user_id)
+                dispatch(deleteMember({"user_id": user.id, "pld_group_id": data.deleted_member.deleted_member.pld_group_id}))
                 setJoined(false)
             } catch (error) {
                 console.error(error)
@@ -97,7 +101,6 @@ const GroupCard = (props) => {
     const datePart = utcDateObject.toLocaleDateString(undefined, options)
     const timePart = utcDateObject.toLocaleTimeString(undefined, { hour12:true })
 
-    const { user } = useDispatchUser()
 
 
     return (

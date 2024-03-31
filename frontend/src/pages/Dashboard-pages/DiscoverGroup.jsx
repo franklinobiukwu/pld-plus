@@ -2,13 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import GroupCard from "../../components/Dashboard-components/GroupCard.jsx";
 import SearchBar from "../../components/Dashboard-components/SearchBar.jsx";
 import useDispatchUser from "../../hooks/useDispatchUser.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { setGroups } from "../../features/pldGroupsSlice.jsx";
 
 const DiscoverGroup = () => {
     const [loading, setLoading] = useState(true)
-    const [groups, setGroups] = useState([])
     const [query, setQuery] = useState("")
 
     const {user} = useDispatchUser()
+    const dispatch = useDispatch()
+
+    const groups = useSelector(state => state.pldGroups.pldGroups)
 
     const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/discover-groups`
 
@@ -41,7 +45,7 @@ const DiscoverGroup = () => {
                 const { date, ...rest } = schedule
                 return {...rest, datetime: date}
             })
-            setGroups(allGroup)
+            dispatch(setGroups(allGroup))
             setLoading(false)
         }
 
