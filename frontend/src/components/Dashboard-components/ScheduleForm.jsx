@@ -9,6 +9,7 @@ const ScheduleForm = (props) => {
     const [cohort, setCohort] = useState("")
     const [topic, setTopic] = useState("")
     const [datetime, setDatetime] = useState("")
+    const [meetingLink,setMeetingLink] = useState("")
 
     const dispatch = useDispatch()
 
@@ -29,7 +30,8 @@ const ScheduleForm = (props) => {
                 cohort: cohort,
                 topic: topic,
                 datetime: datetime,
-                user_id: user.id
+                user_id: user.id,
+                meeting_link: meetingLink
             }
 
 
@@ -60,6 +62,7 @@ const ScheduleForm = (props) => {
             setCohort("")
             setTopic("")
             setDatetime("")
+            setMeetingLink("")
 
             {/* Close Form View */}
             props.openForm(false)
@@ -72,6 +75,7 @@ const ScheduleForm = (props) => {
             setCohort("")
             setTopic("")
             setDatetime("")
+            setMeetingLink("")
             props.openForm(false)
     }
 
@@ -112,6 +116,15 @@ const ScheduleForm = (props) => {
                             type="datetime-local"
                             onChange={(e)=>setDatetime(e.target.value)}
                             value={datetime}
+                        />
+
+                        <label htmlFor="meeting_link">Meeting Link</label>
+                        <input
+                            name="meeting_link"
+                            className="px-2 border border-cream rounded-md w-full mb-10"
+                            type="text"
+                            onChange={(e)=>setMeetingLink(e.target.value)}
+                            value={meetingLink}
                         />
         
                         {/* Form Buttons */}

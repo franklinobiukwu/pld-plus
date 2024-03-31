@@ -16,7 +16,7 @@ import PldGroup from './pages/Dashboard-pages/PldGroup';
 import DiscoverGroup from './pages/Dashboard-pages/DiscoverGroup';
 import Schedule from './pages/Dashboard-pages/Schedule';
 import Resources from './pages/Dashboard-pages/Resources';
-import Profile, { loadUsers } from './pages/Dashboard-pages/Profile';
+import Profile from './pages/Dashboard-pages/Profile';
 import Login from "./pages/Dashboard-pages/Login.jsx";
 import Signup from "./pages/Dashboard-pages/Signup.jsx";
 import { Provider } from "react-redux";
@@ -47,7 +47,6 @@ const router = createBrowserRouter(
                 <Route
                     path='profile'
                     element={<Profile/>}
-                    loader={loadUsers}
                 />
             </Route>
         </Route>

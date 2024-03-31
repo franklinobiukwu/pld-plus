@@ -7,9 +7,10 @@ import { useState } from "react";
 
 const ProfileInfo = (props) => {
     const user = props.user
+    console.log(user)
 
-    const [firstName, setFirstName] = useState(user.firstName || "")
-    const [lastName, setLastName] = useState(user.lastName || "")
+    const [firstname, setFirstname] = useState(user.firstname || "")
+    const [lastname, setLastname] = useState(user.lastname || "")
     const [username, setUsername] = useState(user.username || "")
     const [cohort, setCohort] = useState(user.cohort || "")
     const [profileEdit, setProfileEdit] = useState(false)
@@ -22,13 +23,13 @@ const ProfileInfo = (props) => {
 
 
     const gatherProfileInfo = () => {
-        setProfileInfo({"firstName":firstName, "lastName":lastName, "username":username})
+        setProfileInfo({"firstname":firstname, "lastname":lastname, "username":username})
     }
 
 
     const cancelProfileEdit = () => {
-        setFirstName(profileInfo["firstName"])
-        setLastName(profileInfo["lastName"])
+        setFirstname(profileInfo["firstname"])
+        setLastname(profileInfo["lastname"])
         setUsername(profileInfo["username"])
     }
 
@@ -57,31 +58,31 @@ const ProfileInfo = (props) => {
                         <div className="flex">
                             {/* First Name */}
                             <div>
-                                {profileEdit?<span><label htmlFor="firstName" className="font-medium">First name</label><br/></span> : ""}
+                                {profileEdit?<span><label htmlFor="firstname" className="font-medium">First name</label><br/></span> : ""}
                                 <input
-                                    name="firstName"
-                                    id="firstName"
+                                    name="firstname"
+                                    id="firstname"
                                     className={profileEdit?"mr-4":`text-2xl font-semibold`}
                                     placeholder="Franklin"
-                                    value={firstName}
+                                    value={firstname}
                                     disabled={profileEdit ? "" : "disabled"}
-                                    onChange={(e)=>setFirstName(e.target.value)}
+                                    onChange={(e)=>setFirstname(e.target.value)}
                                 />
                             </div>
 
                             {/* Last Name */}
                             <div>
-                                {profileEdit?<span><label htmlFor="lastName" className="font-medium">Last name</label><br/></span> : ""}
+                                {profileEdit?<span><label htmlFor="lastname" className="font-medium">Last name</label><br/></span> : ""}
                                 <input
                                     className={profileEdit ? "" : "text-2xl font-semibold"}
                                     placeholder="Mdima"
-                                    value={lastName}
+                                    value={lastname}
                                     disabled={profileEdit ? "" : "disabled"}
-                                    onChange={(e)=>setLastName(e.target.value)}
+                                    onChange={(e)=>setLastname(e.target.value)}
                                 />
                             </div>
                         </div> : ""}
-                        {profileEdit?"":<h3 className="text-2xl font-semibold">{firstName} {lastName}</h3>}
+                        {profileEdit?"":<h3 className="text-2xl font-semibold">{firstname} {lastname}</h3>}
             
                         {/* Username */}
                         <div>

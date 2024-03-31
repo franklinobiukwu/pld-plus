@@ -15,6 +15,7 @@ const EditScheduleForm = (props) => {
     const [cohort, setCohort] = useState(props.formData.cohort || "")
     const [topic, setTopic] = useState(props.formData.topic || "")
     const [datetime, setDatetime] = useState(formattedDataString)
+    const [meetingLink, setMeetingLink] = useState(props.formData.meeting_link || "")
     const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
 
@@ -23,6 +24,7 @@ const EditScheduleForm = (props) => {
             setCohort(props.formData.cohort || "")
             setTopic(props.formData.topic || "")
             setDatetime(formattedDataString)
+            setMeetingLink(props.formData.meeting_link || "")
         }
     }, [props.formData])
 
@@ -33,7 +35,7 @@ const EditScheduleForm = (props) => {
     }
 
 
-    const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/schedule/update/${props.formData.id}`
+    const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/schedule/update`
     const {user} = useDispatchUser()
 
 
@@ -44,7 +46,9 @@ const EditScheduleForm = (props) => {
             cohort: cohort?cohort:props.formData.cohort,
             topic: topic?topic:props.formData.topic,
             date: datetime?datetime:formattedDataString,
-            current_user_id: props.formData.user_id
+            current_user_id: props.formData.user_id,
+            schedule_id: props.formData.id,
+            meeting_link: props.formData.meeting_link
         }
             
         {/* Delete this block: Testing Block */}
@@ -75,6 +79,7 @@ const EditScheduleForm = (props) => {
                 setCohort("")
                 setTopic("")
                 setDatetime("")
+                setMeetingLink("")
                 // Close Form View
                 props.openForm(false)
                 setLoading(false)
@@ -92,9 +97,10 @@ const EditScheduleForm = (props) => {
 
     const cancelSchedule = () => {
             // Reset form fields
-            setCohort("")
-            setTopic("")
-            setDatetime("")
+            //setCohort("")
+            //setTopic("")
+            //setDatetime("")
+            //setMeetingLink("")
             props.openForm(false)
     }
 
@@ -138,6 +144,15 @@ const EditScheduleForm = (props) => {
                             value={datetime}
                         />
         
+                        <label htmlFor="meeting_link">Meeting Link</label>
+                        <input
+                            name="meeting_link"
+                            className="px-2 border border-cream rounded-md w-full mb-10"
+                            type="text"
+                            onChange={(e)=>setMeetingLink(e.target.value)}
+                            value={meetingLink}
+                        />
+
                         {/* Form Buttons */}
                         <div className="flex justify-end">
                             <button onClick={cancelSchedule} className="flex items-center bg-red text-white px-4 py-1 rounded-md justify-end mr-4">
