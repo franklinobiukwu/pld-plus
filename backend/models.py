@@ -25,7 +25,7 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"User('{self.firstname}', '{self.lastname}', '{self.cohort}')"
-    
+
     def to_dict(self):
         user_dict = {
             "id": self.id,
@@ -52,7 +52,7 @@ class Socials(db.Model):
 
     def __repr__(self):
         return f"Socials('{self.discord}')"
-    
+
     def to_dict(self):
         socials_dict = {
         'id': self.id,
@@ -74,10 +74,10 @@ class Schedule(db.Model):
     cohort = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    
+
     def __repr__(self):
         return f"Schedule('{self.topic}', '{self.cohort}', '{self.date}')"
-    
+
     def create_pld_group(self):
         pld_group = PLDGroups(user_id=self.user_id, schedule_id=self.id)
         pld_group.generate_unique_id()
@@ -92,14 +92,14 @@ class Schedule(db.Model):
     def to_dict(self):
         """Takes object and makes it a dict"""
         schedule_dict = {
-        "id" : self.id,
-        "topic" : self.topic,
-        "cohort" : self.cohort,
-        "date": self.date,
-        "user_id" : self.user_id
+            "id": self.id,
+            "topic": self.topic,
+            "cohort": self.cohort,
+            "date": self.date,
+            "user_id": self.user_id
         }
         return schedule_dict
-        
+
 
 class PLDGroups(db.Model):
     """PLD Groups table"""
@@ -118,7 +118,7 @@ class PLDGroups(db.Model):
             if not existing_group:
                 self.unique_group_id = unique_id
                 return
-            
+
     def add_member(self, pld_group_id, user_id):
         """Add a member to the Group Member"""
         from backend.models import GroupMember
@@ -134,10 +134,10 @@ class PLDGroups(db.Model):
         if existing_member:
             return {"error": "User is already a member of this PLD Group"}
 
-        new_member = GroupMember(
+        added_member = GroupMember(
             user_id=user_id, pld_group_id=pld_group_id
         )
-        db.session.add(new_member)
+        db.session.add(added_member)
         db.session.commit()
 
         # Return updated group information
@@ -147,8 +147,9 @@ class PLDGroups(db.Model):
         group_data = self.to_dict()
         group_data['members'] = members_data
 
-        return group_data
-        
+        # return group_data
+        return added_member.to_dict()
+
     def delete_member(self, pld_group_id, user_id):
         """Delete a member from the Group Member"""
         from backend.models import GroupMember
@@ -164,21 +165,21 @@ class PLDGroups(db.Model):
             db.session.delete(existing_member)
             db.session.commit()
             # Update to return message and group dictionary
-            return {'message': 'Member deleted successfully', 'group': self.to_dict()}
+            return {'message': 'Member deleted successfully', 'deleted_member': existing_member.to_dict()}
         else:
             return {'error': 'Member does not exist in group'}
 
 
     def __repr__(self):
         return f"PLDGroups('{self.group_string}')"
-    
+
     def to_dict(self):
         pld_group_dict = {
             'id': self.id,
             'schedule_id': self.schedule_id,
             'date': self.date,
             'unique_group_id': self.unique_group_id,
-            'members': [member.id for member in self.members] 
+            'members': [member.id for member in self.members]
         }
         return pld_group_dict
 
@@ -190,14 +191,12 @@ class GroupMember(db.Model):
     pld_group_id = db.Column(db.Integer, db.ForeignKey('pld_groups.id'), primary_key=True)
     role = db.Column(db.String(25), nullable=True, default="Member")
     members = db.Column(db.Integer, nullable=False, default=1)
-    
 
-    
     def to_dict(self):
         group_member_dict = {
-        'members' : self.members,
-        'pld_group_id' : self.pld_group_id,
-        'role' : self.role,
-        'user_id' : self.user_id
+            'members': self.members,
+            'pld_group_id': self.pld_group_id,
+            'role': self.role,
+            'user_id': self.user_id
         }
         return group_member_dict

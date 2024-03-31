@@ -41,7 +41,6 @@ def token_required(f):
 
 @api_blueprint.route('/dashboard/schedule/create', methods=['POST'])
 @cross_origin()
-#@login_required
 @token_required
 def create_schedule():
     """Creates PLD Schedule"""
@@ -94,7 +93,7 @@ def create_schedule():
 
 
 @api_blueprint.route('/dashboard/schedule/update/<int:schedule_id>', methods=['PUT'])
-# @login_required
+@cross_origin()
 @token_required
 def update_schedule(schedule_id):
     """Updates Schedule"""
@@ -102,7 +101,6 @@ def update_schedule(schedule_id):
     from backend.models import PLDGroups
     db = current_app.db
 
-    print("In edit")
     if request.method == 'PUT':
         data = request.get_json()
         topic = data.get('topic')
@@ -110,7 +108,6 @@ def update_schedule(schedule_id):
         date = data.get('date')
         current_user_id = data.get('current_user_id')
 
-        print("edit details", data)
         if not topic or not cohort or not date:
             return jsonify({'error': 'Missing required fields fields'}), 400
         try:
@@ -149,6 +146,7 @@ def update_schedule(schedule_id):
 
 
 @api_blueprint.route('/dashboard/schedule/<int:schedule_id>', methods=['GET'])
+@cross_origin()
 @token_required
 def get_single_schedule(schedule_id):
     """Get Schedule based on ID"""
@@ -222,7 +220,6 @@ def delete_schedule(schedule_id):
     from backend.models import PLDGroups
     db = current_app.db
 
-    print("About to delete", schedule_id)
     if request.method == 'DELETE':
         schedule = db.session.query(Schedule).get(schedule_id)
         formData = request.get_json()
@@ -256,7 +253,6 @@ def delete_schedule(schedule_id):
 
 @api_blueprint.route('/dashboard/discover-groups/search-bar/', methods=['POST'])
 @cross_origin()
-@login_required
 @token_required
 def get_schedul_via_search_bar():
     """Get Schedule based on ID"""
@@ -300,14 +296,13 @@ def get_schedul_via_search_bar():
 
 @api_blueprint.route('/dashboard/discover-groups', methods=['GET'])
 @cross_origin()
-@login_required
 @token_required
 def get_groups():
     """Gets all Schedules in Database"""
     from backend.models import Schedule
     from backend.models import PLDGroups
     from backend.models import GroupMember
-    db = current_app.db 
+    db = current_app.db
 
     if request.method == 'GET':
         try:
@@ -322,11 +317,18 @@ def get_groups():
                 unique_group_id = pld_group.unique_group_id if pld_group else None
 
                 member_count = GroupMember.query.filter_by(pld_group_id=pld_group.id).count()
+                members = GroupMember.query.filter_by(pld_group_id=pld_group.id).all()
+                members_array = []
+                for member in members:
+                    if member.pld_group_id == pld_group.id:
+                        members_array.append(member.user_id)
 
                 schedule_dict = schedule.to_dict()
                 schedule_dict.update({
                     'unique_group_id': unique_group_id,
-                    'member_count': member_count})
+                    'member_count': member_count,
+                    'members_id': members_array
+                })
                 schedules_list.append(schedule_dict)
 
             return jsonify({'schedules': schedules_list}), 200
@@ -337,62 +339,61 @@ def get_groups():
     return jsonify({'error': 'Invalid Request Method'}), 405
 
 
-@api_blueprint.route('/dashboard/pld-group/<int:pld_group_id>/add', methods=['POST', 'PUT'])
+@api_blueprint.route('/dashboard/pld-group/add', methods=['POST', 'PUT'])
 @cross_origin()
-@login_required
 @token_required
-def add_member(pld_group_id):
+def add_member():
     """Adds someone to a pld group based on the unique id of group"""
     from backend.models import PLDGroups
     db = current_app.db
 
     if request.method == 'POST' or request.method == 'PUT':
         # Retrieve the PLD group
+        data = request.get_json()
+        pld_group_id = data.get('pld_group_id')
+        current_user_id = data.get('current_user_id')
+
         group = PLDGroups.query.get(pld_group_id)
         if not group:
             return jsonify({'error': 'PLD group not found'}), 404
 
         # Call the add_member function from the PLDGroups model
-        result = group.add_member(pld_group_id, current_user.id)
+        result = group.add_member(pld_group_id, current_user_id)
         if 'error' in result:
             return jsonify(result), 400
 
         return jsonify({
             'message': 'Member added successfully',
-            'group': result
+            'added_member': result
             }), 200
 
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
 
-@api_blueprint.route('/dashboard/pld-group/<int:pld_group_id>/delete', methods=['DELETE'])
+
+@api_blueprint.route('/dashboard/pld-group/delete', methods=['DELETE'])
 @cross_origin()
-@login_required
 @token_required
-def delete_member(pld_group_id):
+def delete_member():
     """Delete ones self on the group"""
     from backend.models import PLDGroups
     db = current_app.db
 
     if request.method == 'DELETE':
+        data = request.get_json()
+        pld_group_id = data.get('pld_group_id')
+        current_user_id = data.get('current_user_id')
         group = PLDGroups.query.get(pld_group_id)
         if not group:
             return jsonify({'error': 'PLD group not found'}), 404
 
-        result = group.delete_member(pld_group_id, current_user.id)
+        result = group.delete_member(pld_group_id, current_user_id)
         if 'error' in result:
             return jsonify(result), 400
 
-        updated_group = PLDGroups.query.get(pld_group_id)
-        if not updated_group:
-            return jsonify({
-                'error': 'PLD group not found after deletion'
-                }), 404
-
-        group_data = updated_group.to_dict()
         return jsonify({
             'message': 'Member deleted successfully',
-            'group': group_data
+            'deleted_member': result
             }), 200
 
     else:
@@ -401,7 +402,6 @@ def delete_member(pld_group_id):
 
 @api_blueprint.route('/dashboard/pld-group/<string:unique_group_id>', methods=['GET'])
 @cross_origin()
-@login_required
 @token_required
 def get_unique_pld_group(unique_group_id):
     """Gets a PLD group based on the unique group id passed to it"""
@@ -443,7 +443,7 @@ def get_unique_pld_group(unique_group_id):
 
 # PROFILE ROUTES
 @api_blueprint.route('/dashboard/profile/edit-profile', methods=['POST'])
-@login_required
+@cross_origin()
 @token_required
 def add_socials():
     """Add or update socials for the current user."""
@@ -504,7 +504,7 @@ def add_socials():
 
 
 @api_blueprint.route('/dashboard/profile/edit-profile', methods=['PUT'])
-@login_required
+@cross_origin()
 @token_required
 def update_user():
     """Update User information."""

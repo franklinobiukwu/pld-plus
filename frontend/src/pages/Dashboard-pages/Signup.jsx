@@ -1,4 +1,7 @@
 import { useState } from "react"
+import { useDispatch } from "react-redux"
+import { loginState } from "../../features/userSlice"
+import { useNavigate } from "react-router-dom"
 
 const Signup = () => {
     const [firstname, setFirstname] = useState("")
@@ -8,10 +11,18 @@ const Signup = () => {
     const [cohort, setCohort] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [loading, setLoading] = useState(false)
+    const dispatch = useDispatch()
+
+    const navigate = useNavigate()
 
     const genInputStyle = `rounded-md mt-4`
 
+    const endpoint = `${import.meta.env.VITE_BASE_API}/auth/register`
+//    console.log(endpoint)
+
     const handleSubmit = (e) => {
+        setLoading(true)
         e.preventDefault()
         const formData = {
             "firstname": firstname,
@@ -22,6 +33,36 @@ const Signup = () => {
             "password": password
         }
         
+        const registerUser = async () => {
+            try{
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData)
+                })
+
+                if (!response.ok){
+                    setLoading(false)
+                    const data = await response.json()
+                    console.log(data)
+                    throw new Error("Sorry, couldn't register you")
+                }
+
+                const data = await response.json()
+                console.log(data)
+                localStorage.setItem("user", JSON.stringify(data.user))
+                dispatch(loginState(data.user))
+                setLoading(false)
+                navigate("/dashboard")
+            } catch (error){
+                console.error(error.message)
+            }
+        }
+
+        registerUser()
+
         console.log(formData)
     }
 

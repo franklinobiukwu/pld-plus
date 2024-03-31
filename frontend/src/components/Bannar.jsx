@@ -19,7 +19,7 @@ const Banner = () => {
                     className="text-white text-center w-full h-full flex flex-col
                     items-center mt-[50%] md:mt-[20%] lg:mt-[15%]">
                     <h1
-                        className="text-2xl md:text-3xl font-bold">
+                        className="text-2xl md:text-3xl font-bold lg:text-6xl lg:leading-[1.3]">
                         Coordinate and Conduct<br/>
                         <span className="bg-white text-pri rounded-md px-2 mr-1">
                             <ReactTyped

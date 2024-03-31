@@ -17,35 +17,42 @@ def generate_tokens():
 
 # ROUTES FOR AUTHORISATION
 @auth_blueprint.route('/auth/register', methods=['GET', 'POST'], strict_slashes=False)
+@cross_origin()
 def register():
     """User registration"""
     db = current_app.db
     if request.method == "POST":
         from backend.models import User
+        print("In register")
+        print(request.get_json())
 
-        username = request.form['username']
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        cohort = request.form['cohort']
-        email = request.form['email']
-        password = request.form['password']
+        username = request.get_json().get('username')
+        firstname = request.get_json().get('firstname')
+        lastname = request.get_json().get('lastname')
+        cohort = request.get_json().get('cohort')
+        email = request.get_json().get('email')
+        password = request.get_json().get('password')
+        print(f"{username}, {firstname}, {lastname}, {cohort}, {email}, {password}")
         if not username or not firstname or not lastname or not cohort or not email or not password:
             return jsonify({'error': 'Missing fields'}), 400
+        print("Keep going")
         existing_user = User.query.filter_by(email=email).first()
+        print("Keep going 1")
         if existing_user:
             return jsonify({'error': 'Username already exists'}), 400
 
+        hashed_paswrd = generate_password_hash(password).decode('utf-8')
 
-        hashed_paswrd = generate_password_hash(request.form['password']).decode('utf-8')
-
+        print("Keep going 2")
         user = User(
-            username=request.form['username'],
-            firstname=request.form['firstname'],
-            lastname=request.form['lastname'],
-            cohort=request.form['cohort'],
-            email=request.form['email'],
+            username=request.get_json().get('username'),
+            firstname=request.get_json().get('firstname'),
+            lastname=request.get_json().get('lastname'),
+            cohort=request.get_json().get('cohort'),
+            email=request.get_json().get('email'),
             password=hashed_paswrd,
         )
+        print(user)
 
         db.session.add(user)
         db.session.commit()

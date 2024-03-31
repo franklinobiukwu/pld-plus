@@ -17,8 +17,6 @@ const ScheduleCard = (props) => {
     const dispatch = useDispatch()
 
     const utcDateString = props.schedule.datetime
-    console.log(props.schedule.topic, utcDateString)
-    console.log(props.schedule)
     const utcDateObject = new Date(utcDateString)
     // Define options for formatting the date
     const options = {
@@ -69,7 +67,6 @@ const ScheduleCard = (props) => {
 
     }
 
-    console.log(props.schedule)
     return (
         <div>
             <div className="bg-white2 rounded-md p-4 shadow-md mb-4 max-w-sm">

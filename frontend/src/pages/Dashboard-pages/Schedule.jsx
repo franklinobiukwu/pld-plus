@@ -39,12 +39,10 @@ const Schedule = () => {
                 }
 
                 const data = await response.json()
-                console.log(data.schedules)
                 const allSchedules = data.schedules.map(item => {
                     const {date, ...rest} = item
                     return {...rest, datetime: date}
                 })
-                console.log(allSchedules)
                  // Set Schedule
                 dispatch(setSchedule(allSchedules))
                 setLoading(false)
