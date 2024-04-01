@@ -29,18 +29,20 @@ const Navbar = () => {
             ${location.pathname == "/" ? "": "bg-pri"}`}
         >
             {/* Login Logo */}
-            <div onClick={goHome} className="cursor-pointer">
+            <div onClick={goHome} className="cursor-pointer mr-5 md:mr-0">
                 <h1 className="font-bold text-3xl">PLD<sup>+</sup></h1>
             </div>
 
             {/* Navigation Bar */}
-            <div>
+            {location.pathname === '/'? (
+            <div className="hidden md:block">
                 <nav className="flex list-none gap-4">
                     <Link className="hover:text-blue ease-in-out duration-300"><li>Home</li></Link>
                     <Link className="hover:text-yellow ease-in-out duration-300"><li>About</li></Link>
                     <Link className="hover:text-green ease-in-out duration-300"><li>How it works</li></Link>
                 </nav>
-            </div>
+            </div>) : ("")
+            }
 
             {/* Login Buttons*/}
             { !user ? (

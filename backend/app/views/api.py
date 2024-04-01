@@ -54,6 +54,7 @@ def create_schedule():
         cohort = formData.get('cohort')
         date_time_str = formData.get('datetime')
         user_id = formData.get('user_id')
+        meeting_link = formData.get('meeting_link')
 
         if not topic or not cohort or not date_time_str:
             return jsonify({'error': 'Missing required fields'}), 400
@@ -70,6 +71,7 @@ def create_schedule():
                 cohort=cohort,
                 date=date_time,
                 user_id=user_id,
+                meeting_link=meeting_link
             )
 
             # Add both to session and commit
@@ -92,10 +94,10 @@ def create_schedule():
         return jsonify({'error': 'Invalid Request Method'}), 405
 
 
-@api_blueprint.route('/dashboard/schedule/update/<int:schedule_id>', methods=['PUT'])
+@api_blueprint.route('/dashboard/schedule/update', methods=['PUT'])
 @cross_origin()
 @token_required
-def update_schedule(schedule_id):
+def update_schedule():
     """Updates Schedule"""
     from backend.models import Schedule
     from backend.models import PLDGroups
@@ -107,6 +109,8 @@ def update_schedule(schedule_id):
         cohort = data.get('cohort')
         date = data.get('date')
         current_user_id = data.get('current_user_id')
+        meeting_link = data.get('meeting_link'),
+        schedule_id = data.get('schedule_id')
 
         if not topic or not cohort or not date:
             return jsonify({'error': 'Missing required fields fields'}), 400
@@ -127,6 +131,7 @@ def update_schedule(schedule_id):
             schedule.topic = topic
             schedule.cohort = cohort
             schedule.date = date_time
+            schedule.meeting_link = meeting_link
 
             db.session.commit()
 

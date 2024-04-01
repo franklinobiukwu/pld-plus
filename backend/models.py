@@ -74,6 +74,7 @@ class Schedule(db.Model):
     cohort = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    meeting_link = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
         return f"Schedule('{self.topic}', '{self.cohort}', '{self.date}')"
@@ -96,7 +97,8 @@ class Schedule(db.Model):
             "topic": self.topic,
             "cohort": self.cohort,
             "date": self.date,
-            "user_id": self.user_id
+            "user_id": self.user_id,
+            "meeting_link": self.meeting_link
         }
         return schedule_dict
 

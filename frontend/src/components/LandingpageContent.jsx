@@ -1,16 +1,18 @@
+import IntroImg from "../images/intro.jpg"
+import AboutImg from "../images/about.jpg"
+
 const LandingpageContent = () => {
     return (
-        <div>
+        <div className="mt-10 p-10">
             <div>
                 {/* Intro Section*/}
-                <div>
-                    {/* Intro Image*/}
-                    <div>
-                    </div>
+                <div className="md:grid grid-cols-12 gap-4 text-grey">
                     {/* Intro Content */}
-                    <div>
-                        <h2>Welcome to PLD+: Empowering Your Peer Learning Experience</h2>
-                        <p>
+                    <div className="col-span-8 max-w-xl flex justify-center items-center mx-auto text-justify">
+                        <div>
+                        <h2 className="text-2xl font-medium">Welcome to PLD<sup>+</sup></h2>
+                        <h6 className="font-medium text-lightgrey text-sm">Empowering Your Peer Learning Experience</h6>
+                        <p className="mt-1">
                              At PLD+, we believe that collaborative learning is the
                             key to unlocking your full potential as a software engineering
                             student. With PLD+, you can seamlessly connect with peers from
@@ -19,17 +21,24 @@ const LandingpageContent = () => {
                             innovation, and growth as we revolutionize the way you approach
                             peer learning.           
                         </p>
+                        </div>
+                    </div>
+                    {/* Intro Image*/}
+                    <div className="rounded-md overflow-hidden shadow-md col-span-4 max-w-lg">
+                        <img src={IntroImg} className="object-cover w-full h-full"/>
                     </div>
                 </div>
                 {/* About Section */}
-                <div>
-                    {/* Intro Image*/}
-                    <div>
+                <div className="md:grid grid-cols-12 gap-4 text-grey mt-24 bg-pri text-white2 rounded-md p-4">
+                    {/* About Image*/}
+                    <div className="rounded-md overflow-hidden shadow-md col-span-4 max-w-lg">
+                        <img src={AboutImg} className="object-cover w-full h-full"/>
                     </div>
-                    {/* Intro Content */}
-                    <div>
-                        <h2>About PLD+</h2>
-                        <p>
+                    {/* About Content */}
+                    <div className="col-span-8 max-w-xl flex justify-center items-center mx-auto text-justify">
+                        <div>
+                        <h2 className="text-2xl font-medium">About PLD<sup>+</sup></h2>
+                        <p className="mt-1">
                             PLD+ is a revolutionary web application designed to
                             enhance the Peer Learning Day (PLD) experience for students
                             enrolled in the ALX Software Engineering Program. Built with
@@ -41,12 +50,14 @@ const LandingpageContent = () => {
                             collaboration, creativity, and success in their software
                             engineering journey.
                         </p>
+                        </div>
                     </div>
                 </div>
                 {/* Features Section */}
-                <div>
+                <div className="mt-24">
                     {/* Intro Image*/}
                     <div>
+                        <h2 className="font-medium text-2xl">Productivity and Organisation at it's peak</h2>
                     </div>
                     {/* Intro Content */}
                     <div>
@@ -76,7 +87,7 @@ const LandingpageContent = () => {
             </div>
 
             {/* Footer */}
-            <div>
+            <div className="bg-pri text-white2 mt-4">
                 <div>
                     
                 </div>

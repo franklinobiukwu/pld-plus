@@ -47,7 +47,7 @@ const Base = () => {
 
             </div>
             {/* Body */}
-            <div className="mt-[-20%] md:mt-[-5%] z-20 w-[90%] mx-auto relative">
+            <div className="mt-[-20%] md:mt-[-5%] lg:mt-[-3%] z-20 w-[90%] mx-auto relative">
                 <BannerFeatures />
             </div>
                 {/* Other page content */}
