@@ -2,6 +2,7 @@ import { useState } from "react"
 import { FaCircleCheck } from "react-icons/fa6"
 import { Form } from "react-router-dom"
 import ProfileBtns from "./ProfileBtn.jsx";
+import useEditProfile from "../../hooks/useEditProfile.jsx";
 
 
 const AccountInfo = (props) => {
@@ -11,6 +12,8 @@ const AccountInfo = (props) => {
     const [socials, setSocials] = useState(user.socials || {})
     const [accountEdit, setAccountEdit] = useState(false)
     const [accountInfo, setAccountInfo] = useState({})
+    const [loading, setLoading] = useState()
+
 
     const gatherAccountInfo = () => {
         setAccountInfo({"email":email, "socials":socials})
@@ -23,6 +26,24 @@ const AccountInfo = (props) => {
         setSocials(accountInfo["socials"])
     }
 
+    const {editProfile} = useEditProfile()
+
+    const handleEdit = () => {
+        const details = {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            username: user.username,
+            cohort: user.cohort,
+            email: email,
+//            socials: socials,
+            current_user_id: user.id
+        }
+        console.log("Form details to edit", details)        
+        editProfile(details, setLoading).then((newUser)=>setAccountEdit(false)).catch(error =>{
+            console.error(error.message)
+            setLoading(false)
+        })
+    }
 
     return (
         <div>
@@ -50,6 +71,7 @@ const AccountInfo = (props) => {
                     setFormEdit={setAccountEdit}
                     gather={gatherAccountInfo}
                     cancel={cancelAccountEdit}
+                    handleEdit={handleEdit}
                 />
             </div>
         </div>

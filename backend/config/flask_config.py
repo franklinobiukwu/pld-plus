@@ -23,3 +23,6 @@ class Config:
 
     # CORS
     CORS_HEADERS = "Content-Type"
+
+    # UPLOAD FOLDER
+    UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')

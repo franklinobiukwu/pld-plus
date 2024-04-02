@@ -1,12 +1,24 @@
 import { Outlet } from "react-router-dom"
 import SideNav from "../components/Dashboard-components/SideNav"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {AiOutlineClose, AiOutlineMenu} from 'react-icons/ai'
 import Navbar from "../components/Navbar"
 import Aside from "../components/Dashboard-components/Aside"
+import useProfileImage from "../hooks/useProfileImage.jsx"
+import useDispatchUser from "../hooks/useDispatchUser.jsx";
 
 const DashboardBase = () => {
     const [isOpen, setIsOpen] = useState(false)
+    const { fetchProfileImage } = useProfileImage()
+    const { user } = useDispatchUser()
+
+    useEffect(() => {
+        if (user && location.pathname.startsWith("/dashboard")) {
+            console.log("About to run this guy")
+            fetchProfileImage()
+        }
+    }, [])
+
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen)

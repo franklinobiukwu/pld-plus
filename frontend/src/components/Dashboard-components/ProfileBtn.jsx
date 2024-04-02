@@ -20,8 +20,8 @@ const ProfileBtns = (props) => {
         props.cancel()
     }
     const handleAccountSave = () => {
+        props.handleEdit()
         setEdit(false)
-        props.setFormEdit(false)
     }
 
 
@@ -46,7 +46,7 @@ const ProfileBtns = (props) => {
 
                     <button
                         className={`${btnStyle} bg-whiten border-2 border-grey`}
-                        onClick={() => handleAccountSave()}
+                        onClick={handleAccountSave}
                     >
                         <span className="flex justify-center items-center text-grey">
                             <IoCheckmarkDoneCircle className="mr-2"/>

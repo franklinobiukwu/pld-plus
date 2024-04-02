@@ -1,18 +1,20 @@
-import ProfileImg from "../images/girl.png"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { useSelector } from "react-redux"
 import useLogout from "../hooks/useLogout"
 import { IoLogInOutline, IoFingerPrintSharp, IoLogOutOutline } from "react-icons/io5";
 import { HiPresentationChartBar } from "react-icons/hi";
-
+import ScrollIntoView from 'react-scroll-into-view'
+import useDispatchUser from "../hooks/useDispatchUser.jsx";
+import { DNA } from "react-loader-spinner";
+import useDispatchProfileImage from "../hooks/useDispatchProfileImage.jsx";
 
 const Navbar = () => {
-    const user = useSelector(state => state.user.user)
+    const {user} = useDispatchUser()
     const navigate = useNavigate()
     const location = useLocation()
-
     const {logout} = useLogout()
+    const profileImage = useDispatchProfileImage()
 
+    // Logs User Out
     const handleLogout = () => {
        logout() 
     }
@@ -22,11 +24,12 @@ const Navbar = () => {
         navigate('/')
     }
 
+
     return (
         <div 
         className={`flex justify-between h-16 max-w-[90rem] mx-auto px-4
         items-center z-50 text-white  
-            ${location.pathname == "/" ? "": "bg-pri"}`}
+            ${location.pathname === "/" ? "": "bg-pri"}`}
         >
             {/* Login Logo */}
             <div onClick={goHome} className="cursor-pointer mr-5 md:mr-0">
@@ -34,14 +37,28 @@ const Navbar = () => {
             </div>
 
             {/* Navigation Bar */}
-            {location.pathname === '/'? (
+            {location.pathname === '/' && (
             <div className="hidden md:block">
                 <nav className="flex list-none gap-4">
-                    <Link className="hover:text-blue ease-in-out duration-300"><li>Home</li></Link>
-                    <Link className="hover:text-yellow ease-in-out duration-300"><li>About</li></Link>
-                    <Link className="hover:text-green ease-in-out duration-300"><li>How it works</li></Link>
+                   <ScrollIntoView selector="#home" smooth={true}> 
+                        <Link to="/" className="hover:text-blue ease-in-out duration-300">
+                            <li>Home</li>
+                        </Link>
+                    </ScrollIntoView>
+                    
+                    <ScrollIntoView selector="#about" smooth={true}>
+                        <Link to="/" className="hover:text-yellow ease-in-out duration-300" >
+                            <li>About</li>
+                        </Link>
+                    </ScrollIntoView>
+
+                    <ScrollIntoView selector="#features" smooth={true}>
+                        <Link to="/" className="hover:text-green ease-in-out duration-300">
+                            <li>Features</li>
+                        </Link>
+                    </ScrollIntoView>
                 </nav>
-            </div>) : ("")
+            </div>)
             }
 
             {/* Login Buttons*/}
@@ -59,20 +76,31 @@ const Navbar = () => {
                             Signup
                         </button>
                     </Link>
-                </div>) : (
+                </div>
+            ) : (
             
             // Profile Photo 
             <div className="flex items-center">
-                    {location.pathname == "/" ? (
+                    {location.pathname === "/" && (
                         <Link to={"/dashboard"} className="flex justify-center items-center mr-10 group">
                             <HiPresentationChartBar className="mr-1 group-hover:text-blue ease-in-out duration-300"/>
                             Dashboard
-                        </Link>
-                        ) : ""
+                        </Link>)
                     }
                 <Link to="/dashboard/profile">
                     <div className="rounded-full max-w-12 max-h-12 overflow-hidden mr-10">
-                        <img src={ProfileImg} alt="profile-photo"/>
+                        {!profileImage ? (
+                            <DNA 
+                                visible={true}
+                                height={"25"}
+                                width={25}
+                                ariaLabel="profile-loading"
+                                wrapperStyle={{}}
+                                wrapperClass="dna-wrapper"
+                            />
+                        ) : ( 
+                            <img src={profileImage} alt="profile-photo"/>
+                        )}
                     </div>
                 </Link>
                 {/* Logout Buttons */}

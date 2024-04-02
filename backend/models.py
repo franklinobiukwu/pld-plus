@@ -15,9 +15,11 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(45), unique=True, nullable=False)
     firstname = db.Column(db.String(100), nullable=False)
     lastname = db.Column(db.String(100), nullable=False)
+    gender = db.Column(db.String(100), nullable=False)
     cohort = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
+    user_image = db.Column(db.String(255), nullable=True, default='backend/uploads/default.jpg')
     reset_token = db.Column(db.String(60), nullable=True, unique=True)
     socials = db.relationship('Socials', backref='user', lazy=True)
     schedules = db.relationship('Schedule', backref='user', lazy=True)
@@ -33,7 +35,9 @@ class User(db.Model, UserMixin):
             "cohort": self.cohort,
             "firstname": self.firstname,
             "lastname": self.lastname,
+            "gender": self.gender,
             "email": self.email,
+            "user_image": self.user_image
         }
         return user_dict
 
@@ -202,3 +206,6 @@ class GroupMember(db.Model):
             'user_id': self.user_id
         }
         return group_member_dict
+
+
+

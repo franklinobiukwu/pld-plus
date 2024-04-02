@@ -1,10 +1,16 @@
 import IntroImg from "../images/intro.jpg"
 import AboutImg from "../images/about.jpg"
+import { FaGithub, FaMedium } from "react-icons/fa";
+import { BsLinkedin } from "react-icons/bs";
+import { MdEmail } from "react-icons/md";
+import { FaSquareXTwitter } from "react-icons/fa6";
+import { IoPersonCircleSharp } from "react-icons/io5";
+
 
 const LandingpageContent = () => {
     return (
-        <div className="mt-10 p-10">
-            <div>
+        <div>
+            <div className="mt-10 p-10">
                 {/* Intro Section*/}
                 <div className="md:grid grid-cols-12 gap-4 text-grey">
                     {/* Intro Content */}
@@ -29,7 +35,7 @@ const LandingpageContent = () => {
                     </div>
                 </div>
                 {/* About Section */}
-                <div className="md:grid grid-cols-12 gap-4 text-grey mt-24 bg-pri text-white2 rounded-md p-4">
+                <div className="md:grid grid-cols-12 gap-4 text-grey mt-24 bg-pri text-white2 rounded-md p-4" id="about">
                     {/* About Image*/}
                     <div className="rounded-md overflow-hidden shadow-md col-span-4 max-w-lg">
                         <img src={AboutImg} className="object-cover w-full h-full"/>
@@ -54,7 +60,7 @@ const LandingpageContent = () => {
                     </div>
                 </div>
                 {/* Features Section */}
-                <div className="mt-24">
+                <div className="mt-24" id="features">
                     {/* Intro Image*/}
                     <div>
                         <h2 className="font-medium text-2xl">Productivity and Organisation at it's peak</h2>
@@ -87,45 +93,69 @@ const LandingpageContent = () => {
             </div>
 
             {/* Footer */}
-            <div className="bg-pri text-white2 mt-4">
+            <div className="bg-pri text-white2 mt-4 p-4">
                 <div>
                     
                 </div>
+                <div className="flex">
                 {/* Roman */}
-                <div>
-                    <p>Roman Mdima</p>
-                    <div>
+                <div className="mr-4">
+                    <div className="flex justify-center items-center">
+                        <IoPersonCircleSharp  className="text-4xl"/>
+                        <p>Siduduzile Snenhlanhla Mdima</p>
+                    </div>
+                    <div className="flex gap-4 justify-center items-center" target="_blank">
+                        {/* GitHub */}
+                        <a href="https://github.com/MDIMACat" target="_blank">
+                            <FaGithub />
+                        </a>
+                        {/* LinkedIn */}
+                        <a href="http://www.linkedin.com/in/s-nenhlanhla-siduduzile-mdima-a309761aa" target="_blank">
+                            <BsLinkedin />
+                        </a>
+                        {/* Medium */}
+                        <a href="https://medium.com/@romanmdima" target="_blank">
+                            <FaMedium />
+                        </a>
+                        {/* Twitter*/}
                         <a href="">
-                            <img src="" />
+                            <FaSquareXTwitter />
                         </a>
-                        <a>
-                            <img src=""/>
-                        </a>
-                        <a href="">
-                            <img src="" />
-                        </a>
-                        <a>
-                            <img src=""/>
+                        {/* Email */}
+                        <a href="mailto:romanmdima@gmail.com" target="_blank">
+                            <MdEmail />
                         </a>
                     </div>
                 </div>
                 {/* Franklin */}
                 <div>
-                    <p>Franklin Obiukwu</p>
-                    <div>
-                        <a href="">
-                            <img src="" />
+                    <div className="flex justify-center items-center">
+                        <IoPersonCircleSharp className="text-4xl"/>
+                        <p>Franklin Obiukwu</p>
+                    </div>
+                    <div className="flex gap-4 justify-center items-center">
+                        {/* GitHub */}
+                        <a href="https://github.com/franklinobiukwu" target="_blank">
+                            <FaGithub />
                         </a>
-                        <a>
-                            <img src=""/>
+                        {/* LinkedIn */}
+                        <a href="https://www.linkedin.com/in/franklinobiukwu/" target="_blank">
+                            <BsLinkedin />
                         </a>
-                        <a href="">
-                            <img src="" />
+                        {/* Medium */}
+                        <a href="https://medium.com/@franklinobiukwu" target="_blank">
+                            <FaMedium />
                         </a>
-                        <a>
-                            <img src=""/>
+                        {/* Twitter*/}
+                        <a href="https://twitter.com/OfrankC" target="_blank">
+                            <FaSquareXTwitter />
+                        </a>
+                        {/* Email */}
+                        <a href="mailto:obiukwuchibuisi@gmail.com" target="_blank">
+                            <MdEmail />
                         </a>
                     </div>
+                </div>
                 </div>
             </div>
         </div>

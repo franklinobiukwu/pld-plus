@@ -22,6 +22,7 @@
     "react-loading-skeleton": "^3.4.0",
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.22.3",
+    "react-scroll-into-view": "^2.1.2",
     "react-typed": "^2.0.12",
     "sort-by": "^0.0.2"
   },

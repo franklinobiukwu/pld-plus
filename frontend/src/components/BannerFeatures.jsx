@@ -16,7 +16,7 @@ const BannerFeatures = () => {
                     </div>
                 </div>
                 {/* Component Two*/}
-                <div className=" shadow-md rounded-md bg-white2 p-6 flex justify-center items-center text-pri">
+                <div className=" shadow-md rounded-md bg-white2 p-6 flex justify-center items-center text-pri mt-6 md:mt-0">
                     <div className="mr-4 text-2xl">
                         <FaShareFromSquare />
                     </div>
@@ -26,7 +26,7 @@ const BannerFeatures = () => {
                     </div>
                 </div>
                 {/* Component Three*/}
-                <div className=" shadow-md rounded-md bg-white2 p-6 flex justify-center items-center text-pri">
+                <div className=" shadow-md rounded-md bg-white2 p-6 flex justify-center items-center text-pri mt-6 md:mt-0">
                     <div className="mr-4 text-2xl">
                         <FaUsers />
                     </div>

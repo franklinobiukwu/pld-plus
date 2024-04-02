@@ -6,12 +6,14 @@ import { useNavigate } from "react-router-dom"
 const Signup = () => {
     const [firstname, setFirstname] = useState("")
     const [lastname, setLastname] = useState("")
+    const [gender, setGender] = useState("")
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
     const [cohort, setCohort] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
     const dispatch = useDispatch()
 
     const navigate = useNavigate()
@@ -27,6 +29,7 @@ const Signup = () => {
         const formData = {
             "firstname": firstname,
             "lastname": lastname,
+            "gender": gender,
             "email": email,
             "username": username,
             "cohort": cohort,
@@ -47,7 +50,8 @@ const Signup = () => {
                     setLoading(false)
                     const data = await response.json()
                     console.log(data)
-                    throw new Error("Sorry, couldn't register you")
+                    setError(data.error)
+                    throw new Error("Sorry, couldn't register you:", data.error)
                 }
 
                 const data = await response.json()
@@ -104,6 +108,26 @@ const Signup = () => {
                                     onChange={(e) => setLastname(e.target.value)}
                                     className={``}
                                 />
+                            </div>
+                        </div>
+                        {/* Gender */}
+                        <div>
+                            <div className={genInputStyle}>
+                                <div>
+                                    {/* Face Avater*/}
+                                </div>
+                                <select
+                                    type="text" 
+                                    name="gender"
+                                    placeholder="Gender"
+                                    value={gender}
+                                    onChange={(e) => setGender(e.target.value)}
+                                    className={`w-full`}
+                                >
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                                
                             </div>
                         </div>
                         {/* Email and Username*/}
@@ -184,6 +208,7 @@ const Signup = () => {
                                 className="bg-green w-full py-2 rounded-md text-white font-medium"
                             >Registar</button>
                         </div>
+                        <div>{error && error}</div>
                     </form>
                 </div>
             </div>

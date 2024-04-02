@@ -27,6 +27,7 @@ def register():
         username = request.get_json().get('username')
         firstname = request.get_json().get('firstname')
         lastname = request.get_json().get('lastname')
+        gender = request.get_json().get('gender')
         cohort = request.get_json().get('cohort')
         email = request.get_json().get('email')
         password = request.get_json().get('password')
@@ -38,13 +39,17 @@ def register():
 
         hashed_paswrd = generate_password_hash(password).decode('utf-8')
 
+        default_image_name='default.jpg'
+
         user = User(
             username=request.get_json().get('username'),
             firstname=request.get_json().get('firstname'),
             lastname=request.get_json().get('lastname'),
+            gender=request.get_json().get('gender'),
             cohort=request.get_json().get('cohort'),
             email=request.get_json().get('email'),
             password=hashed_paswrd,
+            user_image=default_image_name
         )
 
         db.session.add(user)
@@ -53,10 +58,12 @@ def register():
         user_dict = user.to_dict()
         secret_key = os.environ.get('SECRET_KEY')
         token = jwt.encode({'User Object': user_dict}, secret_key).decode('utf-8')
+        # user_dict['user_image'] = default_image_name
 
         return jsonify({'message': 'User registered successfully', 'token': token, 'user' : user_dict}), 201
 
     return jsonify({'error': "Invalid Request"}), 400
+
 
 @auth_blueprint.route('/auth/login', methods=['GET', 'POST'], strict_slashes=False)
 @cross_origin()

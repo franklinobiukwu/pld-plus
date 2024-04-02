@@ -5,6 +5,8 @@ import Banner from "../components/Bannar.jsx";
 import BannerImg from "../images/pld-plus-banner.jpg"
 import BannerFeatures from "../components/BannerFeatures.jsx";
 import LandingpageContent from "../components/LandingpageContent.jsx";
+import { IoIosArrowDropupCircle } from "react-icons/io";
+import ScrollIntoView from 'react-scroll-into-view'
 
 // ... (other imports and code)
 
@@ -23,7 +25,7 @@ const Base = () => {
         <div>
         {location.pathname=='/'?(
             <>
-            <div className="flex flex-col h-screen">
+            <div className="flex flex-col h-screen" id="home">
                 {/* Banner */}
                 <div
                     className="bg-cover bg-center w-full h-svh relative"
@@ -54,6 +56,12 @@ const Base = () => {
             <div>
                 <LandingpageContent />
             </div>
+            {/* Button to scroll up*/}
+            <ScrollIntoView selector="#home" smooth={true}>
+                <button className="fixed bottom-2 right-2 text-blue hover:text-pri">
+                   <IoIosArrowDropupCircle className="text-3xl"/> 
+                </button>
+            </ScrollIntoView>
             </>
         ):(
             <div className="grow bg-white h-full w-full">

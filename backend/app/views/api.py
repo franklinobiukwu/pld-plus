@@ -1,12 +1,13 @@
-from flask import jsonify, current_app, request
+from flask import jsonify, current_app, request, send_from_directory
 from backend.app.views import api_blueprint
-from flask_login import login_required, current_user
+from flask_login import current_user
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 import jwt
 import os
 from functools import wraps
 from flask_cors import cross_origin
+from werkzeug.utils import secure_filename
 
 
 def token_required(f):
@@ -456,7 +457,7 @@ def add_socials():
     db = current_app.db
 
     if request.method == 'POST':
-        data = request.form
+        data = request.get_json()
 
         phone_number = data.get('phone_number')
         discord = data.get('discord')
@@ -517,16 +518,20 @@ def update_user():
     db = current_app.db
 
     if request.method == 'PUT':
-        data = request.form
+        data = request.get_json()
+        print(f"Request from frontend {data}")
 
         username = data.get('username')
         firstname = data.get('firstname')
         lastname = data.get('lastname')
         cohort = data.get('cohort')
         email = data.get('email')
+        current_user_id = data.get('current_user_id')
 
         try:
-            user = User.query.get(current_user.id)
+            print("This")
+            user = User.query.get(current_user_id)
+            print("That")
 
             if not user:
                 return jsonify({'error': 'User not found'}), 404
@@ -551,3 +556,96 @@ def update_user():
 
     else:
         return jsonify({'error': 'Invalid Request Method'}), 405
+
+
+@api_blueprint.route('/dashboard/profile/user', methods=['GET'])
+@cross_origin()
+@token_required
+def get_user():
+    """Get information of the current user."""
+    from backend.models import User
+    db = current_app.db
+
+    if request.method == 'GET':
+        try:
+            data = request.get_json()
+            current_user_id = data.get('current_user_id')
+            user = User.query.get(current_user_id)
+
+            if not user:
+                return jsonify({'error': 'User not found'}), 404
+
+            user_dict = user.to_dict()
+            return jsonify({'user': user_dict}), 200
+        except Exception as e:
+            print(f"Error retrieving user: {str(e)}")
+            return jsonify({'error': 'Failed to retrieve user'}), 500
+    else:
+        return jsonify({'error': 'Invalid Request Method'}), 405
+
+
+# PROFILES
+@api_blueprint.route('/dashboard/profile/socials', methods=['GET'])
+@cross_origin()
+@token_required
+def get_socials():
+    """Get Socials of the current user."""
+    from backend.models import Socials
+    db = current_app.db
+
+    if request.method == 'GET':
+        try:
+            data = request.get_json()
+            current_user_id = data.get('current_user_id')
+            socials = Socials.query.filter_by(user_id=current_user_id).first()
+
+            if not socials:
+                return jsonify({'error': 'Socials not found'}), 404
+
+            socials_dict = socials.to_dict()
+            return jsonify({'socials': socials_dict}), 200
+        except Exception as e:
+            print(f"Error retrieving socials: {str(e)}")
+            return jsonify({'error': 'Failed to retrieve socials'}), 500
+    else:
+        return jsonify({'error': 'Invalid Request Method'}), 405
+
+
+
+
+# PROFILE IMAGE
+@api_blueprint.route('/dashboard/profile/img/upload', methods=['POST'])
+@cross_origin()
+@token_required
+def upload_profile_picture():
+
+    db = current_app.db
+    if 'image' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+
+    file = request.files['image']
+
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    filename = secure_filename(file.filename)
+
+    uploads_dir = current_app.config['UPLOAD_FOLDER']
+    if not os.path.exists(uploads_dir):
+        os.makedirs(uploads_dir)
+
+    file_path = os.path.join(uploads_dir, filename)
+    file.save(file_path)
+
+    current_user.user_image = filename
+    db.session.commit()
+
+    user_dict = current_user.to_dict()
+    return jsonify({'message': 'Profile picture uploaded successfully', 'user': user_dict}), 200
+
+
+@api_blueprint.route('/dashboard/profile/img/<path:filename>')
+@cross_origin()
+@token_required
+def get_profile_picture(filename):
+    return send_from_directory('uploads', filename)
