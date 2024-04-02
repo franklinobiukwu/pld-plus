@@ -618,12 +618,20 @@ def get_socials():
 @cross_origin()
 @token_required
 def upload_profile_picture():
+    """Get User"""
+    from backend.models import User
 
     db = current_app.db
     if 'image' not in request.files:
         return jsonify({'error': 'No file part'}), 400
 
     file = request.files['image']
+    user_id = request.form.get('user_id')
+    print("Got image file")
+    print(user_id)
+
+    user = User.query.get(user_id)
+    print(user)
 
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
@@ -637,10 +645,12 @@ def upload_profile_picture():
     file_path = os.path.join(uploads_dir, filename)
     file.save(file_path)
 
-    current_user.user_image = filename
+    user.user_image = filename
+    print(user)
     db.session.commit()
 
-    user_dict = current_user.to_dict()
+    user_dict = user.to_dict()
+    print(user_dict)
     return jsonify({'message': 'Profile picture uploaded successfully', 'user': user_dict}), 200
 
 
@@ -648,4 +658,5 @@ def upload_profile_picture():
 @cross_origin()
 @token_required
 def get_profile_picture(filename):
+    print(f"ABout to get image {filename}")
     return send_from_directory('uploads', filename)

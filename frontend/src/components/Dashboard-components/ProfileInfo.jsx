@@ -1,32 +1,36 @@
 import { Form } from "react-router-dom";
 import ProfileBtns from "../../components/Dashboard-components/ProfileBtn.jsx";
 import ProfileBg from "../../images/pld-plud-profile-bg.png";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useDispatchUser from "../../hooks/useDispatchUser.jsx";
-import useProfileImage from "../../hooks/useProfileImage.jsx";
-import { useSelector } from "react-redux";
+import useDispatchProfileImage from "../../hooks/useDispatchProfileImage.jsx";
+import { FaEdit } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { loginState } from "../../features/userSlice.jsx";
+
 
 const ProfileInfo = () => {
-  const { user } = useDispatchUser();
-  console.log(user);
+    const { user } = useDispatchUser();
 
-  const [firstname, setFirstname] = useState(user.firstname || "");
-  const [lastname, setLastname] = useState(user.lastname || "");
-  const [username, setUsername] = useState(user.username || "");
-  const [cohort, setCohort] = useState(user.cohort || "");
-  const [profileEdit, setProfileEdit] = useState(false);
-  const [profileInfo, setProfileInfo] = useState({});
+    const [firstname, setFirstname] = useState(user.firstname || "");
+    const [lastname, setLastname] = useState(user.lastname || "");
+    const [username, setUsername] = useState(user.username || "");
+    const [cohort, setCohort] = useState(user.cohort || "");
+    const [profileEdit, setProfileEdit] = useState(false);
+    const [profileInfo, setProfileInfo] = useState({});
     const [selectedFile, setSelectedFile] = useState(null)
+    const dispatch = useDispatch()
         
 
 
     const uploadProfileImageEndpoint = `${import.meta.env.VITE_BASE_API}/dashboard/profile/img/upload`
 
-    const profileImage = useSelector(state => state.profileImage.profileImage)
+    const profileImage = useDispatchProfileImage()
+    const fileInputRef = useRef(null)
 
-  const backgroundStyle = {
-    backgroundImage: `url(${ProfileBg})`,
-  };
+    const backgroundStyle = {
+        backgroundImage: `url(${ProfileBg})`,
+    };
 
   const gatherProfileInfo = () => {
     setProfileInfo({
@@ -36,13 +40,15 @@ const ProfileInfo = () => {
     });
   }; 
 
+    
   const cancelProfileEdit = () => {
     setFirstname(profileInfo["firstname"]);
     setLastname(profileInfo["lastname"]);
     setUsername(profileInfo["username"]);
   };
-  // Upload Profile Picture
 
+
+  // Upload Profile Picture
     const handleUpload = async () => {
         if (!selectedFile) {
             alert("Please select a file")
@@ -52,6 +58,7 @@ const ProfileInfo = () => {
         try{
             const formData = new FormData()
             formData.append("image", selectedFile)
+            formData.append("user_id", user.id)
 
             const response = await fetch(uploadProfileImageEndpoint, {
                 "method": "POST",
@@ -61,22 +68,38 @@ const ProfileInfo = () => {
                 "body": formData,
             })
 
+            console.log("This is formdata", formData)
             if (!response.ok){
                 const data = await response.json()
                 console.log(data)
                 throw new Error("Couldn't upload file", data.error)
             }
 
+            const data = await response.json()
+            console.log(data)
+            const newUser = {...user, ...data.user}
+            console.log(newUser)
+           dispatch(loginState(newUser)) 
+
         } catch(error){
-            console.error(error.message)
+            console.error(`Error uploading file: ${error.message}`)
         }
     }
 
-  const handleFileChange = (e) => {
-      setSelectedFile(e.target.files[0])
-      handleUpload()
-  };
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0])
+    }
 
+    useEffect(() => {
+        if (selectedFile){
+            handleUpload()
+        }
+    }, [selectedFile])
+
+
+const handleEditClick = () => {
+    fileInputRef.current.click()
+}
 
   return (
     <div>
@@ -90,15 +113,24 @@ const ProfileInfo = () => {
       <div className="flex flex-col justify-center items-center bg-white2 
                             relative shadow-md rounded-md mt-[-25%] md:mt-[-5%] md:w-[90%] px-10 py-5 md:block mx-auto">
         <div className="flex items-center justify-center md:block">
-          <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden
+        <div className="relative">
+          <div className="w-24 h-24 md:w-32 md:h-32 rounded-full
                             absolute  top-0 mt-[-23%] md:mt-[-8%]">
             <img src={profileImage} alt="profile-photo" />
-            <input
-              type="file"
-              onChange={handleFileChange}
-              name="profile-image"
-            />
+                <label htmlFor="profile-image" className="right-0 bottom-0 absolute">
+                  <FaEdit className="text-pri cursor-pointer"/>
+                </label>
           </div>
+          <input
+            type="file"
+            onChange={handleFileChange}
+            name="profile-image"
+            id="profile-image"
+            className="hidden"
+            ref={fileInputRef}
+            />
+      </div>
+
           <Form className="md:ml-36 md:mt-0 md:block">
             {profileEdit
               ? (
