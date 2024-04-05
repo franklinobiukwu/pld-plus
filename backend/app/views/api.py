@@ -308,6 +308,7 @@ def get_groups():
     from backend.models import Schedule
     from backend.models import PLDGroups
     from backend.models import GroupMember
+    from backend.models import User
     db = current_app.db
 
     if request.method == 'GET':
@@ -325,15 +326,28 @@ def get_groups():
                 member_count = GroupMember.query.filter_by(pld_group_id=pld_group.id).count()
                 members = GroupMember.query.filter_by(pld_group_id=pld_group.id).all()
                 members_array = []
+                members_info_array = []
                 for member in members:
                     if member.pld_group_id == pld_group.id:
                         members_array.append(member.user_id)
+                    member_info = User.query.filter_by(id=member.user_id).first()
+                    if member_info:
+                        member_info_dict = member_info.to_dict()
+                        members_info_array.append({
+                            'firstname': member_info_dict['firstname'],
+                            'lastname': member_info_dict['lastname'],
+                            'username': member_info_dict['username'],
+                            'email': member_info_dict['email'],
+                            'cohort': member_info_dict['cohort'],
+                            'role': member.role
+                            })
 
                 schedule_dict = schedule.to_dict()
                 schedule_dict.update({
                     'unique_group_id': unique_group_id,
                     'member_count': member_count,
-                    'members_id': members_array
+                    'members_id': members_array,
+                    'members_details': members_info_array
                 })
                 schedules_list.append(schedule_dict)
 
@@ -627,11 +641,8 @@ def upload_profile_picture():
 
     file = request.files['image']
     user_id = request.form.get('user_id')
-    print("Got image file")
-    print(user_id)
 
     user = User.query.get(user_id)
-    print(user)
 
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
@@ -646,11 +657,9 @@ def upload_profile_picture():
     file.save(file_path)
 
     user.user_image = filename
-    print(user)
     db.session.commit()
 
     user_dict = user.to_dict()
-    print(user_dict)
     return jsonify({'message': 'Profile picture uploaded successfully', 'user': user_dict}), 200
 
 
@@ -658,5 +667,4 @@ def upload_profile_picture():
 @cross_origin()
 @token_required
 def get_profile_picture(filename):
-    print(f"ABout to get image {filename}")
     return send_from_directory('uploads', filename)

@@ -88,7 +88,7 @@ const Navbar = () => {
                         </Link>)
                     }
                 <Link to="/dashboard/profile">
-                    <div className="rounded-full max-w-12 max-h-12 overflow-hidden mr-10">
+                    <div className="rounded-full w-12 h-12 overflow-hidden mr-10">
                         {!profileImage ? (
                             <DNA 
                                 visible={true}
@@ -99,7 +99,7 @@ const Navbar = () => {
                                 wrapperClass="dna-wrapper"
                             />
                         ) : ( 
-                            <img src={profileImage} alt="profile-photo"/>
+                            <img src={profileImage} alt="profile-photo" className="object-cover h-full w-full"/>
                         )}
                     </div>
                 </Link>

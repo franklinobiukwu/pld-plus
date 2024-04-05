@@ -33,11 +33,12 @@ const useEditProfile = () => {
             console.log(newUser)
             localStorage.setItem("user", JSON.stringify(newUser))
             dispatch(loginState(newUser))
+            return newUser
         } catch(error){
             console.error(error.message)
+            console.log(error.message)
         }
 
-        return newUser
     }
 
 

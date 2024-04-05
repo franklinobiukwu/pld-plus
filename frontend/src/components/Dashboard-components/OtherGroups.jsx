@@ -2,29 +2,29 @@ import Skeleton from "react-loading-skeleton";
 import GroupCard from "./GroupCard.jsx";
 import { useEffect, useState } from "react";
 import 'react-loading-skeleton/dist/skeleton.css'
+import useLoadGroup from "../../hooks/useLoadGroup.jsx";
+import { useSelector } from "react-redux";
+import useDispatchUser from "../../hooks/useDispatchUser.jsx";
 
 
 const OtherGroups = () => {
-    const [groups, setGroups] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
+    const {loading, error, loadGroup} = useLoadGroup()
+    const groups = useSelector(state => state.pldGroups.pldGroups)
+    const {user} = useDispatchUser() 
+    const [otherGroups, setOtherGroups] = useState([])
 
-    const endpoint = `${import.meta.env.VITE_BASE_API}/groups`
 
     {/* Load Groups Data From Backend Database */}
     useEffect(()=>{
-        const getGroup = async () => {
-            const res = await fetch(endpoint)
-            if (!res.ok){
-                setIsLoading(false)
-                throw new Error("Couldn't load groups")
-            }
-            const data = await res.json()
-            setGroups(data)
-            setIsLoading(false)
-        }
-
-        getGroup()
+       loadGroup() 
     }, [])
+
+    useEffect(() => {
+        if (groups.length > 0){
+            const filteredGroups = groups.filter(group => !group.members_id.includes(user.id))
+            setOtherGroups(filteredGroups)
+        }
+    },[groups, user.id])
 
     return (
         <div className="min-w-72">
@@ -35,11 +35,15 @@ const OtherGroups = () => {
 
                 <div>
                     {/* Group Member List*/}
-                    {isLoading ? (
+                    {loading ? (
                         <Skeleton count={3}/>
-                    ):groups.map((group, id) => {
-                        return <GroupCard group={group} key={id}/>
-                    })}
+                    ) : 
+                        otherGroups.length > 0 ? 
+                            otherGroups.map((group, id) => <GroupCard group={group} key={id}/>
+                        ) : (
+                            <p className="text-lightgrey mt-2 text-sm">No groups to display</p>
+                        )
+                    }
                 </div>
             </div>
         </div>

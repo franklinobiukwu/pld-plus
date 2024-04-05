@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux"
 import { addMember, deleteMember } from "../../features/pldGroupsSlice"
 
 const GroupCard = (props) => {
+    console.log(props)
     const dispatch = useDispatch()
 
     const {user} = useDispatchUser()
@@ -99,7 +100,7 @@ const GroupCard = (props) => {
     }
     // Convert to local date and time string
     const datePart = utcDateObject.toLocaleDateString(undefined, options)
-    const timePart = utcDateObject.toLocaleTimeString(undefined, { hour12:true })
+    const timePart = utcDateObject.toLocaleTimeString(undefined, { hour12:true, hour: "numeric", minute: "numeric" })
 
 
 

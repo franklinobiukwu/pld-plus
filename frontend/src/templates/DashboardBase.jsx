@@ -14,7 +14,6 @@ const DashboardBase = () => {
 
     useEffect(() => {
         if (user && location.pathname.startsWith("/dashboard")) {
-            console.log("About to run this guy")
             fetchProfileImage()
         }
     }, [])

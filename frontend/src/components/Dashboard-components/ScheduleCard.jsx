@@ -27,7 +27,7 @@ const ScheduleCard = (props) => {
     };
     // Convert to local date and time string
     const datePart = utcDateObject.toLocaleDateString(undefined, options)
-    const timePart = utcDateObject.toLocaleTimeString(undefined, { hour12:true })
+    const timePart = utcDateObject.toLocaleTimeString(undefined, { hour12:true, hour: "numeric", minute: "numeric" })
 
 
     const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/schedule/delete/${props.schedule.id}`

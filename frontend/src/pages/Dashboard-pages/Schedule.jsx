@@ -4,53 +4,21 @@ import { FaPlus } from "react-icons/fa"
 import { useEffect, useMemo, useState } from "react"
 import EditScheduleForm from "../../components/Dashboard-components/EditScheduleForm.jsx"
 import SearchBar from "../../components/Dashboard-components/SearchBar.jsx";
-import { useDispatch, useSelector } from "react-redux"
-import useDispatchUser from "../../hooks/useDispatchUser.jsx"
-import {setSchedule} from "../../features/scheduleSlice.jsx"
+import { useSelector } from "react-redux"
 import Skeleton from "react-loading-skeleton"
+import useLoadSchedules from "../../hooks/useLoadSchedules.jsx";
 
 const Schedule = () => {
     const [openForm, setOpenForm] = useState(false)
     const [openEdit, setOpenEdit] = useState(false)
     const [formData, setFormData] = useState({})
-    const [loading, setLoading] = useState(true)
     const [query, setQuery] = useState("")
-    const dispatch = useDispatch()
+    const {loading, error, loadSchedules} = useLoadSchedules()
 
-    const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/schedules`
     const schedules = useSelector(state => state.schedules.schedules)
 
-    const {user} = useDispatchUser()
-
     useEffect(()=>{
-        const getSchedules = async () => {
-            try {
-                const response = await fetch(endpoint, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${user.token}`
-                    }
-                })
-
-                if (!response.ok){
-                    setLoading(false)
-                    throw Error("Error getting Schedule")
-                }
-
-                const data = await response.json()
-                const allSchedules = data.schedules.map(item => {
-                    const {date, ...rest} = item
-                    return {...rest, datetime: date}
-                })
-                 // Set Schedule
-                dispatch(setSchedule(allSchedules))
-                setLoading(false)
-            } catch (error) {
-                console.error("Error fetching schedules:", error.message)
-            }
-        }
-        getSchedules()
+        loadSchedules()
     }, [])
     
 

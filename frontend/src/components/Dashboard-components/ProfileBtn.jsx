@@ -2,6 +2,7 @@ import { useState } from "react"
 import { FaEdit } from "react-icons/fa"
 import { IoCheckmarkDoneCircle } from "react-icons/io5"
 import { MdCancel } from "react-icons/md"
+import { ThreeDots } from "react-loader-spinner"
 
 
 const ProfileBtns = (props) => {
@@ -59,10 +60,14 @@ const ProfileBtns = (props) => {
             className={`${btnStyle} bg-blue`}
             onClick={() => handleAccountEdit()}
         >
+            {props.loading? (
+            <ThreeDots visible={true} height={40} width={40} color="#ffffff" radius={9} ariaLabel="loading" wrapperStyle={{}} wrapperClass=""/>
+            ) : (
             <span className="flex items-center justify-center">
                 <FaEdit className="mr-2"/>
                 <span>Edit</span>
-            </span>
+            </span>)
+            }
         </button>
         )}
         </div>

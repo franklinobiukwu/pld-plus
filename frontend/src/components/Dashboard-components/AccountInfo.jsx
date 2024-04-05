@@ -3,10 +3,12 @@ import { FaCircleCheck } from "react-icons/fa6"
 import { Form } from "react-router-dom"
 import ProfileBtns from "./ProfileBtn.jsx";
 import useEditProfile from "../../hooks/useEditProfile.jsx";
+import { ThreeDots } from "react-loader-spinner";
+import useDispatchUser from "../../hooks/useDispatchUser.jsx";
 
 
-const AccountInfo = (props) => {
-    const user = props.user
+const AccountInfo = () => {
+    const { user } = useDispatchUser()
 
     const [email, setEmail] = useState(user.email || "")
     const [socials, setSocials] = useState(user.socials || {})
@@ -28,7 +30,9 @@ const AccountInfo = (props) => {
 
     const {editProfile} = useEditProfile()
 
-    const handleEdit = () => {
+    const handleEdit = async () => {
+        setAccountEdit(false)
+        setLoading(true)
         const details = {
             firstname: user.firstname,
             lastname: user.lastname,
@@ -38,11 +42,16 @@ const AccountInfo = (props) => {
 //            socials: socials,
             current_user_id: user.id
         }
-        console.log("Form details to edit", details)        
-        editProfile(details, setLoading).then((newUser)=>setAccountEdit(false)).catch(error =>{
-            console.error(error.message)
+        console.log("Form details update", details)        
+        const newUser = await editProfile(details, setLoading)
+        console.log("The new user update", newUser)
+        if (newUser.id === user.id){
             setLoading(false)
-        })
+        } else {
+            console.log("Error editing fields")
+            setAccountEdit(true)
+        }
+
     }
 
     return (
@@ -61,8 +70,9 @@ const AccountInfo = (props) => {
                             disabled={accountEdit? "": "disabled"}
                             onChange={(e)=>setEmail(e.target.value)}
                         />
-                        {accountEdit?"":
-                            <FaCircleCheck className={"text-green"}/>
+                        {accountEdit?"": loading?(""
+                        ):(
+                            <FaCircleCheck className={"text-green"}/>)
                         }
                     </div>
                 </Form>
@@ -72,6 +82,7 @@ const AccountInfo = (props) => {
                     gather={gatherAccountInfo}
                     cancel={cancelAccountEdit}
                     handleEdit={handleEdit}
+                    loading={loading}
                 />
             </div>
         </div>

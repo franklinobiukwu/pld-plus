@@ -2,42 +2,42 @@ import { useEffect, useState } from "react"
 import UpcomingPldList from "./UpcomingList"
 import Skeleton from "react-loading-skeleton"
 import 'react-loading-skeleton/dist/skeleton.css'
+import { useSelector } from "react-redux"
+import useLoadSchedules from "../../hooks/useLoadSchedules.jsx";
 
 const AsideUpcoming =() => {
-    const [plds, setPlds] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
+    const {loading, error, loadSchedules} = useLoadSchedules()
+    const schedules = useSelector(state => state.schedules.schedules)
+    const [filteredSchedules, setFilteredSchedules] = useState([])
 
-    const endpoint = `${import.meta.env.VITE_BASE_API}/schedules`
 
     useEffect(() => {
-        const loadUpcomingPldList = async () => {
-            const res = await fetch(endpoint)
-
-            if (!res.ok){
-                isLoading(false)
-                console.log("Error loading upcoming pld list")
-                throw new Error("Couldn't load upcoming pld list")
-            }
-
-            const data = await res.json()
-            setPlds(data)
-            setIsLoading(false)
-        }
-
-        loadUpcomingPldList()
+        loadSchedules()
     },[])
+
+    useEffect(() => {
+        if (schedules){
+            const filtered = schedules.filter((schedule) => {
+                const dateObj = new Date(schedule.datetime)
+                const now = new Date()
+                if (dateObj >= now) return schedule
+            })
+            setFilteredSchedules(filtered)
+        }
+    }, [schedules])
 
     return (
         <div>
             <h3 className="text-xs font-semibold border-b border-b-cream2 mt-4">UP COMING PLDS</h3>
             <div className="mt-2">
-                { isLoading?(
+                { loading?(
                     <Skeleton/>
-                ):(
-                    plds.map((pld) => {
-                        return <UpcomingPldList pld={pld} key={pld.id}/>
-                    })
-                )}
+                ):
+                    filteredSchedules.length > 0 ?
+                        filteredSchedules.map((schedule) => {
+                            return <UpcomingPldList pld={schedule} key={schedule.id}/>
+                    }) : (<p className="text-sm mt-2 text-lightgrey">No up coming plds</p>)
+                }
             </div>
         </div>
     )

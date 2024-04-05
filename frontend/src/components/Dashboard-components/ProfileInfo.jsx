@@ -4,9 +4,13 @@ import ProfileBg from "../../images/pld-plud-profile-bg.png";
 import { useEffect, useRef, useState } from "react";
 import useDispatchUser from "../../hooks/useDispatchUser.jsx";
 import useDispatchProfileImage from "../../hooks/useDispatchProfileImage.jsx";
-import { FaEdit } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { loginState } from "../../features/userSlice.jsx";
+import useProfileImage from "../../hooks/useProfileImage.jsx";
+import { DNA } from "react-loader-spinner";
+import { current } from "@reduxjs/toolkit";
+import useEditProfile from "../../hooks/useEditProfile.jsx";
 
 
 const ProfileInfo = () => {
@@ -20,31 +24,42 @@ const ProfileInfo = () => {
     const [profileInfo, setProfileInfo] = useState({});
     const [selectedFile, setSelectedFile] = useState(null)
     const dispatch = useDispatch()
+    const { profileImage, loading, fetchProfileImage } = useProfileImage()
+    const [isLoading, setIsLoading] = useState(false)
+//    const [profileImg, setProfileImg] = useState(profileImage)
         
 
 
     const uploadProfileImageEndpoint = `${import.meta.env.VITE_BASE_API}/dashboard/profile/img/upload`
 
-    const profileImage = useDispatchProfileImage()
-    const fileInputRef = useRef(null)
+    useEffect(() => {
+        fetchProfileImage()
+    }, [])
 
+    // Use Edit Hook: Handle Profile update
+    const {editProfile} = useEditProfile()
+
+    // Profile Page Background Image
     const backgroundStyle = {
         backgroundImage: `url(${ProfileBg})`,
     };
 
+    // Gather Profile Info
   const gatherProfileInfo = () => {
     setProfileInfo({
       "firstname": firstname,
       "lastname": lastname,
       "username": username,
+        "cohort": cohort,
     });
   }; 
 
-    
+    // Cancel Edit 
   const cancelProfileEdit = () => {
     setFirstname(profileInfo["firstname"]);
     setLastname(profileInfo["lastname"]);
     setUsername(profileInfo["username"]);
+      setCohort(profileInfo["cohort"])
   };
 
 
@@ -68,19 +83,15 @@ const ProfileInfo = () => {
                 "body": formData,
             })
 
-            console.log("This is formdata", formData)
             if (!response.ok){
                 const data = await response.json()
-                console.log(data)
                 throw new Error("Couldn't upload file", data.error)
             }
 
             const data = await response.json()
-            console.log(data)
             const newUser = {...user, ...data.user}
-            console.log(newUser)
            dispatch(loginState(newUser)) 
-
+            fetchProfileImage()
         } catch(error){
             console.error(`Error uploading file: ${error.message}`)
         }
@@ -97,9 +108,30 @@ const ProfileInfo = () => {
     }, [selectedFile])
 
 
-const handleEditClick = () => {
-    fileInputRef.current.click()
-}
+    // Handle Edit
+    const handleEdit = async () => {
+        setProfileEdit(false)
+        setIsLoading(true)
+        const details = {
+            firstname: firstname,
+            lastname: lastname,
+            username: username,
+            cohort: cohort,
+            email: user.email,
+//            socials: user.socials,
+            current_user_id: user.id
+        }
+
+        console.log("Form updates", details)
+        const newUser = await editProfile(details, setIsLoading) 
+        console.log("The new user updeated is ", newUser)
+        if (newUser.id === user.id){
+            setIsLoading(false)
+        } else {
+            console.log("Error Editing Fields")
+            setProfileEdit(true)
+        }
+    }
 
   return (
     <div>
@@ -116,9 +148,23 @@ const handleEditClick = () => {
         <div className="relative">
           <div className="w-24 h-24 md:w-32 md:h-32 rounded-full
                             absolute  top-0 mt-[-23%] md:mt-[-8%]">
-            <img src={profileImage} alt="profile-photo" />
-                <label htmlFor="profile-image" className="right-0 bottom-0 absolute">
-                  <FaEdit className="text-pri cursor-pointer"/>
+            <div className="h-full w-full rounded-full overflow-hidden">
+                { loading? (
+                    <DNA 
+                        visible={true}
+                        height={"25"}
+                        width={25}
+                        ariaLabel="profile-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="dna-wrapper"
+                    />
+
+                ) : (
+                <img src={profileImage} alt="profile-photo" className="object-cover w-full h-full" />
+                )}
+            </div>
+                <label htmlFor="profile-image" className="right-0 bottom-[20%] absolute bg-blue p-1 rounded-full text-white2">
+                  <MdEdit className="cursor-pointer"/>
                 </label>
           </div>
           <input
@@ -127,7 +173,6 @@ const handleEditClick = () => {
             name="profile-image"
             id="profile-image"
             className="hidden"
-            ref={fileInputRef}
             />
       </div>
 
@@ -224,7 +269,7 @@ const handleEditClick = () => {
                   </div>
                 )
                 : ""}
-              {profileEdit ? "" : <span>Cohort</span>}
+              {profileEdit ? "" : <span>Cohort </span>}
               <input
                 className={profileEdit ? "" : "text-md text-grey"}
                 placeholder="17"
@@ -241,6 +286,8 @@ const handleEditClick = () => {
           setFormEdit={setProfileEdit}
           gather={gatherProfileInfo}
           cancel={cancelProfileEdit}
+            handleEdit={handleEdit}
+      loading={isLoading}
         />
       </div>
     </div>
