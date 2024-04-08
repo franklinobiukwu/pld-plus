@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux"
 import { addMember, deleteMember } from "../../features/pldGroupsSlice"
 
 const GroupCard = (props) => {
-    console.log(props)
     const dispatch = useDispatch()
 
     const {user} = useDispatchUser()
@@ -46,8 +45,7 @@ const GroupCard = (props) => {
 
                 if (!response.ok){
                     const data = await response.json()
-                    console.log(data)
-                    throw new Error("Error adding you to group")
+                    throw new Error(`Error adding you to group: ${data}`)
                 }
                 const data = await response.json()
                 dispatch(addMember({"user_id": user.id, "pld_group_id": data.added_member.pld_group_id}))
@@ -127,8 +125,8 @@ const GroupCard = (props) => {
 
                     {/* Buttons */}
                     <div>
-                    { groupMembers === 10 || (String(user.id).toLowerCase() === String(props.group.user_id).toLowerCase())
-                        || props.group.members_id.includes(user.id)? ("") : (
+        {/*{ groupMembers === 10 || (String(user.id).toLowerCase() === String(props.group.user_id).toLowerCase())*/}
+                    { groupMembers === 10 || props.group.members_id.includes(user.id)? ("") : (
                             <button
                                 className={`shadow-md p-2 rounded-full bg-pri hover:bg-[#07001b] ease-in-out duration-300 ${joined?"hidden":""}`}
                                 onClick={handleAddToGroup}

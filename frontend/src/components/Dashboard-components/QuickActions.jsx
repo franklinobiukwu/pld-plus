@@ -11,7 +11,7 @@ const QuickActions = () => {
                 <h3 className="text-xs font-medium border-b border-b-cream2">QUICK ACTIONS</h3>
                 <div className="shadow-md rounded-md px-6 py-6 flex mt-2 justify-between bg-white2">
                     {/* Host PLD Component*/}
-                    <Link to="/dashboard/group">
+                    <Link to="/dashboard/my-groups">
                     <div className="flex flex-col justify-center items-center">
                         <div 
                             className="flex rounded-md p-2 bg-green
@@ -22,7 +22,7 @@ const QuickActions = () => {
                     </div>
                     </Link>
                     {/* Discover Groups Component*/}
-                    <Link to="/dashboard/groups">
+                    <Link to="/dashboard/discover-groups">
                     <div className="flex flex-col justify-center items-center">
                         <div 
                             className="flex rounded-md p-2 bg-yellow

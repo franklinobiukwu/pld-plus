@@ -12,7 +12,7 @@ import LandingPage from './pages/LandingPage';
 // DASHBOARD PAGES
 import DashboardBase from './templates/DashboardBase';
 import Home from './pages/Dashboard-pages/Home';
-import PldGroup from './pages/Dashboard-pages/PldGroup';
+import MyGroups from './pages/Dashboard-pages/MyGroups';
 import DiscoverGroup from './pages/Dashboard-pages/DiscoverGroup';
 import Schedule from './pages/Dashboard-pages/Schedule';
 import Resources from './pages/Dashboard-pages/Resources';
@@ -37,8 +37,8 @@ const router = createBrowserRouter(
                     index
                     element={<Home/>}
                 />
-                <Route path='group' element={<PldGroup/>}/>
-                <Route path='groups' element={<DiscoverGroup/>}/>
+                <Route path='my-groups' element={<MyGroups/>}/>
+                <Route path='discover-groups' element={<DiscoverGroup/>}/>
                 <Route
                     path='schedule'
                     element={<Schedule/>}

@@ -1,13 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import {useMemo, useState } from "react";
 import GroupCard from "../../components/Dashboard-components/GroupCard.jsx";
 import SearchBar from "../../components/Dashboard-components/SearchBar.jsx";
 import { useSelector } from "react-redux";
-import useLoadGroup from "../../hooks/useLoadGroup.jsx";
 import Skeleton from "react-loading-skeleton";
 
 const DiscoverGroup = () => {
     const [query, setQuery] = useState("")
-    const {loading, error, loadGroup} = useLoadGroup()
     const groups = useSelector(state => state.pldGroups.pldGroups)
 
     const filteredGroups = useMemo(() => { 
@@ -19,14 +17,12 @@ const DiscoverGroup = () => {
     })}, [groups, query])
 
 
-    // Load Groups Data From Backend Database
-    useEffect(()=>{
-        loadGroup()
-    },[])
-
     return (
         <div className="flex flex-col justify-center items-center md:block">
-            <SearchBar useQuery={{'query': query, 'setQuery': setQuery}} placeholder="search id or topic"/>
+            <SearchBar
+                useQuery={{'query': query, 'setQuery': setQuery}}
+                placeholder="search id or topic"
+            />
             {/* Search Results*/}
             <div className="md:grid grid-cols-2 gap-4 mt-10">
                 <div className="border-t-8 border-t-pri rounded-t-md h-4 bg-white2 md:mb-[-4rem] max-w-sm"></div>
@@ -35,7 +31,7 @@ const DiscoverGroup = () => {
                 ):(
                     <div></div>
                 )}
-                {loading ? (<Skeleton count={3}/>
+                {!groups ? (<Skeleton count={3}/>
                 ):(
                     filteredGroups.map(( group, id) => (
                         <GroupCard group={group} key={id}/>

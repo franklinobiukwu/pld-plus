@@ -8,7 +8,6 @@ import { updateSchedule } from "../../features/scheduleSlice.jsx";
 import { Hourglass } from "react-loader-spinner";
 
 const EditScheduleForm = (props) => {
-    console.log(props.formData)
     const utcDateString = props.formData.datetime
     const formattedDataString = utcDateString?new Date(utcDateString).toISOString().slice(0, 16):""
 

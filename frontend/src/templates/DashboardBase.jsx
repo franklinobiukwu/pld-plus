@@ -6,15 +6,21 @@ import Navbar from "../components/Navbar"
 import Aside from "../components/Dashboard-components/Aside"
 import useProfileImage from "../hooks/useProfileImage.jsx"
 import useDispatchUser from "../hooks/useDispatchUser.jsx";
+import useLoadGroups from "../hooks/useLoadGroups.jsx"
+import useLoadSchedules from "../hooks/useLoadSchedules.jsx"
 
 const DashboardBase = () => {
     const [isOpen, setIsOpen] = useState(false)
     const { fetchProfileImage } = useProfileImage()
+    const {loadGroups} = useLoadGroups()
+    const {loadSchedules} = useLoadSchedules()
     const { user } = useDispatchUser()
 
     useEffect(() => {
         if (user && location.pathname.startsWith("/dashboard")) {
             fetchProfileImage()
+            loadGroups()
+            loadSchedules()
         }
     }, [])
 

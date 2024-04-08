@@ -3,7 +3,7 @@ import useDispatchUser from "./useDispatchUser.jsx";
 import { useDispatch } from "react-redux";
 import { setGroups } from "../features/pldGroupsSlice.jsx";
 
-const useLoadGroup = () => {
+const useLoadGroups = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const {user} = useDispatchUser()
@@ -11,7 +11,7 @@ const useLoadGroup = () => {
 
     const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/discover-groups`
 
-    const loadGroup = async () => {
+    const loadGroups = async () => {
         setLoading(true)
        try{
             const response = await fetch(endpoint, {
@@ -40,7 +40,7 @@ const useLoadGroup = () => {
        } 
     }
 
-    return {loading, error, loadGroup}
+    return {loading, error, loadGroups}
 }
 
-export default useLoadGroup
+export default useLoadGroups

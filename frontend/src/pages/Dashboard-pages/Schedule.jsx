@@ -1,26 +1,20 @@
 import ScheduleForm from "../../components/Dashboard-components/ScheduleForm"
 import ScheduleCard from "../../components/Dashboard-components/ScheduleCard"
 import { FaPlus } from "react-icons/fa"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import EditScheduleForm from "../../components/Dashboard-components/EditScheduleForm.jsx"
 import SearchBar from "../../components/Dashboard-components/SearchBar.jsx";
 import { useSelector } from "react-redux"
 import Skeleton from "react-loading-skeleton"
-import useLoadSchedules from "../../hooks/useLoadSchedules.jsx";
 
 const Schedule = () => {
     const [openForm, setOpenForm] = useState(false)
     const [openEdit, setOpenEdit] = useState(false)
     const [formData, setFormData] = useState({})
     const [query, setQuery] = useState("")
-    const {loading, error, loadSchedules} = useLoadSchedules()
 
     const schedules = useSelector(state => state.schedules.schedules)
 
-    useEffect(()=>{
-        loadSchedules()
-    }, [])
-    
 
     const filteredSchedules = useMemo(() => {
         return schedules.filter(schedule => {
@@ -54,7 +48,7 @@ const Schedule = () => {
             </div>
             {/* Schedule Cards*/}
             <div className="md:grid sm:grid-cols-2 gap-4 mt-10 ease-in-out duration-300">
-                {loading?(
+                {!schedules?(
                     <Skeleton count={3}/>
                 ):(
                     filteredSchedules?filteredSchedules.map((schedule) => {

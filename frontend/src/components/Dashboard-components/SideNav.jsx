@@ -29,12 +29,12 @@ const SideNav = () => {
                         <span className={`${liStyle} hover:cursor-pointer`}><FaUsers className={riStyle}/>PLD Groups</span>
                         <div className={drop ? `h-auto ${trans}`:`h-0 overflow-hidden ${trans}`} >
                             <div>
-                                <NavLink to={`/dashboard/group`} className={liStyle}>
+                                <NavLink to={`/dashboard/my-groups`} className={liStyle}>
                                     <FaUserFriends className={`${riStyle} ml-4`}/>My Groups
                                 </NavLink>
                             </div>
                             <div>
-                                <NavLink to={`/dashboard/groups`} className={liStyle}>
+                                <NavLink to={`/dashboard/discover-groups`} className={liStyle}>
                                     <RiMenuSearchLine className={`${riStyle} ml-4`}/>Discover Groups
                                 </NavLink>
                             </div>

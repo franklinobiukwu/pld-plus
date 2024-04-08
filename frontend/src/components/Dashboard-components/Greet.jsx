@@ -5,7 +5,6 @@ import { ReactTyped } from "react-typed"
 const Greet = () => {
 
     const user = useSelector(state => state.user.user)
-    console.log("from greet:", user)
 
     const backgroundStyle = {
         backgroundImage: `url(${greetImg})`
