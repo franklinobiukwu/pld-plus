@@ -5,10 +5,14 @@ import useDispatchUser from "../../hooks/useDispatchUser"
 import { useState } from "react"
 import { FaMinus } from "react-icons/fa6";
 import { useDispatch } from "react-redux"
-import { addMember, deleteMember } from "../../features/pldGroupsSlice"
+import { addMember, addMemberDetails, deleteMember, deleteMemberDetails } from "../../features/pldGroupsSlice"
+import useProfileImage from "../../hooks/useProfileImage.jsx";
+import { useLocation } from "react-router-dom"
 
 const GroupCard = (props) => {
     const dispatch = useDispatch()
+    const {profileImage} = useProfileImage()
+    const location = useLocation()
 
     const {user} = useDispatchUser()
 
@@ -49,6 +53,10 @@ const GroupCard = (props) => {
                 }
                 const data = await response.json()
                 dispatch(addMember({"user_id": user.id, "pld_group_id": data.added_member.pld_group_id}))
+                dispatch(addMemberDetails({
+                    "user_details": {"cohort": user.cohort, "email": user.email, "firstname": user.firstname,
+                        "lastname": user.lastname, "role": "member", "username": user.username, "image": profileImage},
+                    "pld_group_id": data.added_member.pld_group_id}))
                 setJoined(true)
             } catch (error) {
             console.error(error)
@@ -78,6 +86,7 @@ const GroupCard = (props) => {
 
                 const data = await response.json()
                 dispatch(deleteMember({"user_id": user.id, "pld_group_id": data.deleted_member.deleted_member.pld_group_id}))
+                dispatch(deleteMemberDetails({"pld_group_id": data.deleted_member.deleted_member.pld_group_id, "user_email": user.email}))
                 setJoined(false)
             } catch (error) {
                 console.error(error)
@@ -103,7 +112,7 @@ const GroupCard = (props) => {
 
 
     return (
-        <div className="shadow-md rounded-md px-4 py-4 mt-2 bg-white2 max-w-sm">
+        <div className="shadow-md rounded-md px-4 py-4 mt-2 bg-white2 max-w-sm hover:bg-cream2 ease-in-out duration-300">
             <div className="flex items-center">
                 <FaUsers className="mr-2"/>
                 <span className="font-medium text-md">{props.group.unique_group_id}</span>
@@ -126,7 +135,7 @@ const GroupCard = (props) => {
                     {/* Buttons */}
                     <div>
         {/*{ groupMembers === 10 || (String(user.id).toLowerCase() === String(props.group.user_id).toLowerCase())*/}
-                    { groupMembers === 10 || props.group.members_id.includes(user.id)? ("") : (
+                    { location.pathname !== "/dashboard/my-groups" && groupMembers === 10 || props.group.members_id.includes(user.id)? ("") : (
                             <button
                                 className={`shadow-md p-2 rounded-full bg-pri hover:bg-[#07001b] ease-in-out duration-300 ${joined?"hidden":""}`}
                                 onClick={handleAddToGroup}
@@ -134,7 +143,7 @@ const GroupCard = (props) => {
                                 <FaPlus className="text-white"/>
                             </button>)
                     }
-                    { props.group.members_id.includes(user.id) ? ( 
+                    { location.pathname !== "/dashboard/my-groups" && props.group.members_id.includes(user.id) ? ( 
 
                             <button
                                 className={`shadow-md p-2 rounded-full bg-red hover:bg-[#af3737] ease-in-out duration-300`}

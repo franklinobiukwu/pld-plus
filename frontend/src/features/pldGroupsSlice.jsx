@@ -35,8 +35,28 @@ const pldGroupsSlice = createSlice({
                 return group
             })
         },
+        addMemberDetails: (state, action) => {
+            const pldGroupId = action.payload.pld_group_id
+            const userDetails = action.payload.user_details
+            state.pldGroups = state.pldGroups.map(group => {
+                if (group.id === pldGroupId){
+                    group.members_details=[...group.members_details, userDetails]
+                }
+                return group
+            })
+        },
+        deleteMemberDetails: (state, action) => {
+            const pldGroupId = action.payload.pld_group_id
+            const userEmail = action.payload.user_email
+            state.pldGroups = state.pldGroups.map(group => {
+                if (group.id === pldGroupId){
+                    group.members_details = group.members_details.filter(member => member.email !== userEmail)
+                }
+                return group
+            })
+        },
     }
 })
 
-export const {setGroups, addMember, deleteMember } = pldGroupsSlice.actions
+export const {setGroups, addMember, deleteMember, addMemberDetails, deleteMemberDetails } = pldGroupsSlice.actions
 export default pldGroupsSlice.reducer

@@ -23,8 +23,7 @@ const GroupMembers = (props) => {
         }
     }, [props.group])
 
-    if (loading) return (<p>Loading</p>)
-    console.log(props)
+    if (loading || !props.group) return (<p>Loading</p>)
 
     // Convert datetime string to datetime object
     const dateObject = new Date(props.group.datetime)
@@ -67,6 +66,10 @@ const GroupMembers = (props) => {
             }
             const data = await response.json()
             dispatch(deleteMember({"user_id": user.id, "pld_group_id": data.deleted_member.deleted_member.pld_group_id}))
+            // Close Group Members Display if open
+            if (props.close){
+                props.close()
+            }
         } catch (error) {
             console.error(error)
         }
