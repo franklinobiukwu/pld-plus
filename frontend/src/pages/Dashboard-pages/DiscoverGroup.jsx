@@ -7,8 +7,11 @@ import Skeleton from "react-loading-skeleton";
 const DiscoverGroup = () => {
     const [query, setQuery] = useState("")
     const groups = useSelector(state => state.pldGroups.pldGroups)
+    const isLoading = groups === null
+    
 
     const filteredGroups = useMemo(() => { 
+        if (!groups) return []
         return groups.filter(group => {
             return (
                 String(group.group_id).toLowerCase().includes(query.toLowerCase()) ||
@@ -31,7 +34,7 @@ const DiscoverGroup = () => {
                 ):(
                     <div></div>
                 )}
-                {!groups ? (<Skeleton count={3}/>
+                {isLoading ? (<Skeleton count={3}/>
                 ):(
                     filteredGroups.map(( group, id) => (
                         <GroupCard group={group} key={id}/>

@@ -1,7 +1,7 @@
 import ScheduleForm from "../../components/Dashboard-components/ScheduleForm"
 import ScheduleCard from "../../components/Dashboard-components/ScheduleCard"
 import { FaPlus } from "react-icons/fa"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import EditScheduleForm from "../../components/Dashboard-components/EditScheduleForm.jsx"
 import SearchBar from "../../components/Dashboard-components/SearchBar.jsx";
 import { useSelector } from "react-redux"
@@ -12,6 +12,7 @@ const Schedule = () => {
     const [openEdit, setOpenEdit] = useState(false)
     const [formData, setFormData] = useState({})
     const [query, setQuery] = useState("")
+    const [loading, setLoading] = useState(true)
 
     const schedules = useSelector(state => state.schedules.schedules)
 
@@ -21,6 +22,11 @@ const Schedule = () => {
         return (String(schedule.unique_group_id).toLowerCase().includes(query.toLowerCase()) ||
             String(schedule.topic).toLowerCase().includes(query.toLowerCase()) || String(schedule.cohort).toLowerCase().includes(query.toLowerCase()))
     })}, [schedules, query])
+
+    useEffect(() => {
+        setLoading(false)
+    }, [])
+
 
     const handleOpenForm = () => {
         setOpenForm(prevOpenForm => !prevOpenForm)
@@ -48,17 +54,19 @@ const Schedule = () => {
             </div>
             {/* Schedule Cards*/}
             <div className="md:grid sm:grid-cols-2 gap-4 mt-10 ease-in-out duration-300">
-                {!schedules?(
-                    <Skeleton count={3}/>
+                {loading?(
+                    <div className="w-96">
+                        <Skeleton count={3}/>
+                    </div>
                 ):(
-                    filteredSchedules?filteredSchedules.map((schedule) => {
+                    filteredSchedules.length > 0?filteredSchedules.map((schedule) => {
                         return (<ScheduleCard
                                     schedule={schedule}
                                     openForm={setOpenEdit}
                                     handleEdit={handleEdit}
                                     key={schedule.id}
                                 />)
-                }):"No Schedule")}
+                }):<p className="text-lightgrey text-sm">No Schedule</p>)}
             </div>
             {/* Schedule Form */}
             <div  className={openForm?`${genStyle} absolute top-0 bg-[#ffffffe6] w-full h-full flex

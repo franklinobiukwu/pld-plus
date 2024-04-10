@@ -32,7 +32,7 @@ const Navbar = () => {
             ${location.pathname === "/" ? "": "bg-pri"}`}
         >
             {/* Login Logo */}
-            <div onClick={goHome} className="cursor-pointer mr-5 md:mr-0">
+            <div onClick={goHome} className="cursor-pointer mr-5 md:mr-0 ml-8 md:ml-0">
                 <h1 className="font-bold text-3xl">PLD<sup>+</sup></h1>
             </div>
 

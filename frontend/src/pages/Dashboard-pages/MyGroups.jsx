@@ -1,11 +1,12 @@
 import { useSelector } from "react-redux"
 import GroupCard from "../../components/Dashboard-components/GroupCard"
 import { HiMiniRocketLaunch } from "react-icons/hi2"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import SearchBar from "../../components/Dashboard-components/SearchBar.jsx";
 import useDispatchUser from "../../hooks/useDispatchUser.jsx";
 import GroupMembers from "../../components/Dashboard-components/GroupMembers.jsx";
 import { IoIosClose } from "react-icons/io";
+import Skeleton from "react-loading-skeleton";
 
 const MyGroups = () => {
     const [query, setQuery] = useState("")
@@ -13,10 +14,18 @@ const MyGroups = () => {
     const {user} = useDispatchUser()
     const [group, setGroup] = useState("")
     const [isOpen, setIsOpen] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [myGroups, setMyGroups] = useState([])
 
-    const myGroups = groups.filter((group) => {
-        if (group.members_id.includes(user.id)) return group
-    })
+    useEffect(() => {
+        if (groups !== null){
+            const myGroups = groups.filter((group) => {
+                if (group.members_id.includes(user.id)) return group
+            })
+            setMyGroups(myGroups)
+            setLoading(false)
+        }
+    }, [groups])
 
     const filteredGroups = useMemo(() => {
         return myGroups.filter(group => {
@@ -69,7 +78,7 @@ const MyGroups = () => {
                 ):(
                     <div></div>
                 )}
-                {!groups ? (<Skeleton count={3}/>
+                {loading ? (<Skeleton count={3}/>
                 ):(
                     filteredGroups.map((group) => (
                         <div onClick={() => handleOpen(group)} className="cursor-pointer">

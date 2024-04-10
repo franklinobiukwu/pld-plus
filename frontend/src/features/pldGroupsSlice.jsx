@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState = {
-    pldGroups: []
+    pldGroups: null
 }
 
 const pldGroupsSlice = createSlice({

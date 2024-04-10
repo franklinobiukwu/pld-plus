@@ -32,23 +32,23 @@ const DashboardBase = () => {
     const show = 'left-0'
     const hide = `left-[-100%]`
     const genStyle = `fixed md:static h-full ease-in-out duration-500
-                        md:col-span-2 lg:col-span-2`
+                        md:col-span-2 lg:col-span-2 bg-yellow overflow-hidden z-10`
 
 
     return (
         <div className="h-screen flex flex-col">
-            <div className="fixed left-0 right-0 bg-white">
+            <div className="fixed left-0 right-0 bg-white z-20">
                 <Navbar />
             </div>
 
-            <div className="max-w-[90rem] md:w-full mx-auto md:grid md:grid-cols-8
-                    lg:grid-cols-12 mt-20 flex-grow">
+            <div className="max-w-[90rem] w-full mx-auto md:grid md:grid-cols-8
+                    lg:grid-cols-12 mt-16 flex-grow">
                 {/* Dashboard SideNav */}
                 <aside className={isOpen ? `${genStyle} ${show}` : `${genStyle} ${hide}`}>
                     <SideNav />
                 </aside>
                 {/* Dashboard Content */}
-                <div className="bg-gray-100 md:col-span-6 lg:col-span-8">
+                <div className="bg-gray-100 col-span-12 md:col-span-6 lg:col-span-8 p-4 h-full">
                     <Outlet/>
                 </div>
                 {/* Dashboard Aside */}
@@ -60,7 +60,7 @@ const DashboardBase = () => {
 
             {/* Hamburger Button (for smaller screens)*/}
             <button
-                className="fixed top-4 left-4 md:hidden focus:outline-none"
+                className="fixed top-6 left-4 md:hidden focus:outline-none text-white"
                 onClick={toggleSidebar}
             >
                 {isOpen ? (

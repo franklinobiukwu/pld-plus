@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import useDispatchUser from "../../hooks/useDispatchUser.jsx";
 import { useDispatch } from "react-redux"
 import { deleteMember } from "../../features/pldGroupsSlice.jsx";
+import Skeleton from "react-loading-skeleton"
 
 
 const GroupMembers = (props) => {
@@ -23,7 +24,17 @@ const GroupMembers = (props) => {
         }
     }, [props.group])
 
-    if (loading || !props.group) return (<p>Loading</p>)
+    if (loading || !props.group){
+        return (
+        <div>
+            <h3 className="text-xs font-medium border-b border-b-cream2">YOUR GROUP MEMBERS</h3>
+            <div className="shadow-md border-t-8 rounded-md border-pri mt-2 bg-white2">
+                <hr className="text-cream2 mt-4"/>
+                <Skeleton count={3}/>
+            </div>
+         </div>
+        )
+    }
 
     // Convert datetime string to datetime object
     const dateObject = new Date(props.group.datetime)
