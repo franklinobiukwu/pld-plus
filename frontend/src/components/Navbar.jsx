@@ -6,6 +6,9 @@ import ScrollIntoView from 'react-scroll-into-view'
 import useDispatchUser from "../hooks/useDispatchUser.jsx";
 import { DNA } from "react-loader-spinner";
 import useDispatchProfileImage from "../hooks/useDispatchProfileImage.jsx";
+import { TbSmartHome } from "react-icons/tb";
+import { GrTechnology } from "react-icons/gr";
+import { RiCompassDiscoverLine } from "react-icons/ri";
 
 const Navbar = () => {
     const {user} = useDispatchUser()
@@ -23,7 +26,8 @@ const Navbar = () => {
     const goHome = () => {
         navigate('/')
     }
-
+    
+    const navStyle = "flex justify-center items-center group"
 
     return (
         <div 
@@ -41,19 +45,22 @@ const Navbar = () => {
             <div className="hidden md:block">
                 <nav className="flex list-none gap-4">
                    <ScrollIntoView selector="#home" smooth={true}> 
-                        <Link to="/" className="hover:text-blue ease-in-out duration-300">
+                        <Link to="/" className={`group ${navStyle}`}>
+                            <TbSmartHome className="mr-2 group-hover:text-blue ease-in-out duration-300"/>
                             <li>Home</li>
                         </Link>
                     </ScrollIntoView>
                     
                     <ScrollIntoView selector="#about" smooth={true}>
-                        <Link to="/" className="hover:text-yellow ease-in-out duration-300" >
+                        <Link to="/" className={` ease-in-out duration-300 ${navStyle}`} >
+                            <RiCompassDiscoverLine className="mr-2 group-hover:text-blue ease-in-out duration-300"/>
                             <li>About</li>
                         </Link>
                     </ScrollIntoView>
 
                     <ScrollIntoView selector="#features" smooth={true}>
-                        <Link to="/" className="hover:text-green ease-in-out duration-300">
+                        <Link to="/" className={`ease-in-out duration-300 ${navStyle}`}>
+                            <GrTechnology className="mr-2 group-hover:text-blue ease-in-out duration-300"/>
                             <li>Features</li>
                         </Link>
                     </ScrollIntoView>
@@ -64,15 +71,15 @@ const Navbar = () => {
             {/* Login Buttons*/}
             { !user ? (
                 <div className="flex">
-                    <Link to="/login" className="mr-6">
+                    <Link to="/login" className="mr-6 group">
                         <button className="flex justify-center items-center">
-                            <IoLogInOutline className="mr-1"/>
+                            <IoLogInOutline className="mr-2 group-hover:text-green ease-in-out duration-300"/>
                             Login
                         </button>
                     </Link>
-                    <Link to="/signup">
+                    <Link to="/signup" className="group ease-in-out duration-300">
                         <button className="flex justify-center items-center">
-                            <IoFingerPrintSharp className="mr-1"/>
+                            <IoFingerPrintSharp className="mr-2 group-hover:text-green ease-in-out duration-300"/>
                             Signup
                         </button>
                     </Link>

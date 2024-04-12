@@ -58,7 +58,7 @@ const Base = () => {
             </div>
             {/* Button to scroll up*/}
             <ScrollIntoView selector="#home" smooth={true}>
-                <button className="fixed bottom-2 right-2 text-blue hover:text-pri">
+                <button className="fixed bottom-2 right-2 text-red hover:text-pri">
                    <IoIosArrowDropupCircle className="text-3xl"/> 
                 </button>
             </ScrollIntoView>

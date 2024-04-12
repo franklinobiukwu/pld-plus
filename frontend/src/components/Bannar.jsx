@@ -33,8 +33,10 @@ const Banner = () => {
                     </h1>
                     <h5 className="mt-5">Unlock Collaborative Learning</h5>
                     <button
-                        className="bg-gradient-to-r from-blue to-pri px-4 py-3 pr-6
-                            rounded-full mt-10 font-medium shadow-md flex justify-center items-center"
+                        className="transition ease-in-out duration-300 bg-gradient-to-r from-blue to-pri
+                            hover:-translate-y-1 hover:scale-105 hover:bg-blue rounded-full 
+                            mt-10 font-medium shadow-md uppercase flex justify-center 
+                            items-center p-5"
                         onClick={handleSchedule}
                     >
                         <FaCalendarAlt className="mr-2 ml-2"/>

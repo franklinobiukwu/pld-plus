@@ -1,24 +1,71 @@
 import IntroImg from "../images/intro.jpg"
 import AboutImg from "../images/about.jpg"
-import { FaGithub, FaMedium } from "react-icons/fa";
-import { BsLinkedin } from "react-icons/bs";
-import { MdEmail } from "react-icons/md";
-import { FaSquareXTwitter } from "react-icons/fa6";
-import { IoPersonCircleSharp } from "react-icons/io5";
+import Footer from "./Footer.jsx";
+import CarouselCard from "./CarouselCard.jsx";
+import Slider from "react-slick";
+
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+// Images
+import TimeImg from "../images/time2.jpg"
+import { MdMarkEmailUnread } from "react-icons/md";
+import ConnectImg from "../images/connect.jpg"
+import HostImg from "../images/host.jpg"
+import EmailImg from "../images/email.jpg"
 
 
 const LandingpageContent = () => {
+
+    const carouselData = [
+        {
+            img: TimeImg,
+            title: "Time Zone Coordination",
+            subtitle: "Say goodbye to scheduling conflicts!",
+            content: "PLD+ automatically adjusts meeting times to accommodate participants across different time zones, ensuring everyone can join PLD sessions at a convenient time.",
+        },
+        {
+            img: HostImg,
+            title: "Leadership Facilitation",
+            subtitle: "Take the lead in your PLD sessions!",
+            content: "With PLD+, hosts can easily create and facilitate productive discussions, empowering students to share knowledge, ask questions, and learn from each other.",
+        },
+        {
+            img: ConnectImg,
+            title: "Seamless Integration",
+            subtitle: "Join meetings with ease!",
+            content: "PLD+ seamlessly integrates with third-party meeting platforms like Google Meet and Discord, providing one-click access to meeting groups and eliminating the hassle of navigating multiple platforms",
+        },
+        {
+            img: EmailImg,
+            title: "Email Reminders (Coming Soon)",
+            subtitle: "Never miss a PLD session again!",
+            content: "PLD+ sends email reminders to participants before scheduled sessions, keeping you informed and prepared to join meetings on time.",
+        }
+    ]
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 100,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        accessibility: true,
+        arrows: true
+    }
+
+
     return (
         <div>
             <div className="mt-10 p-10">
                 {/* Intro Section*/}
                 <div className="md:grid grid-cols-12 gap-4 text-grey">
                     {/* Intro Content */}
-                    <div className="col-span-8 max-w-xl flex justify-center items-center mx-auto text-justify">
+                    <div className="col-span-8 max-w-xl flex justify-center items-center mx-auto text-center md:text-justify">
                         <div>
                         <h2 className="text-2xl font-medium">Welcome to PLD<sup>+</sup></h2>
-                        <h6 className="font-medium text-lightgrey text-sm">Empowering Your Peer Learning Experience</h6>
-                        <p className="mt-1">
+                        <h6 className="font-medium text-lightgrey text-sm mb-2">Empowering Your Peer Learning Experience</h6>
+                        <p className="mt-1 mb-4 md:mb-0">
                              At PLD+, we believe that collaborative learning is the
                             key to unlocking your full potential as a software engineering
                             student. With PLD+, you can seamlessly connect with peers from
@@ -35,15 +82,15 @@ const LandingpageContent = () => {
                     </div>
                 </div>
                 {/* About Section */}
-                <div className="md:grid grid-cols-12 gap-4 text-grey mt-24 bg-pri text-white2 rounded-md p-4" id="about">
+                <div className="md:grid grid-cols-12 gap-4 mt-24 bg-white2  rounded-md p-10 md:py-20 shadow-md" id="about">
                     {/* About Image*/}
                     <div className="rounded-md overflow-hidden shadow-md col-span-4 max-w-lg">
                         <img src={AboutImg} className="object-cover w-full h-full"/>
                     </div>
                     {/* About Content */}
-                    <div className="col-span-8 max-w-xl flex justify-center items-center mx-auto text-justify">
+                    <div className="col-span-8 max-w-xl flex justify-center items-center mx-auto text-center md:text-justify">
                         <div>
-                        <h2 className="text-2xl font-medium">About PLD<sup>+</sup></h2>
+                        <h2 className="text-2xl font-medium mt-4 md:mt-0">About PLD<sup>+</sup></h2>
                         <p className="mt-1">
                             PLD+ is a revolutionary web application designed to
                             enhance the Peer Learning Day (PLD) experience for students
@@ -63,100 +110,20 @@ const LandingpageContent = () => {
                 <div className="mt-24" id="features">
                     {/* Intro Image*/}
                     <div>
-                        <h2 className="font-medium text-2xl">Productivity and Organisation at it's peak</h2>
+                        <h2 className="font-medium text-2xl mb-6 text-center text-grey">Productivity and Organisation at it's peak</h2>
                     </div>
                     {/* Intro Content */}
-                    <div>
-                        <h2>Unlock Your Learning Potential with PLD+</h2>
-                        <div>
-                            <h3>Time Zone Coordination</h3>
-                            <p>
-                                Say goodbye to scheduling conflicts! PLD+ automatically adjusts meeting times to accommodate participants across different time zones, ensuring everyone can join PLD sessions at a convenient time.
-                            </p>                                     
-                        </div>
-                        <div>
-                            <h3>Leadership Facilitation</h3>
-                            <p>
-                                 Take the lead in your PLD sessions! With PLD+, hosts can easily create and facilitate productive discussions, empowering students to share knowledge, ask questions, and learn from each other.
-                            </p>
-                        </div>
-                        <div>
-                            <h3>Seamless Integration</h3>
-                            <p>Join meetings with ease! PLD+ seamlessly integrates with third-party meeting platforms like Google Meet and Discord, providing one-click access to meeting groups and eliminating the hassle of navigating multiple platforms.</p>
-                        </div>
-                        <div>
-                            <h3>Email Reminders (Coming Soon)</h3>
-                            <p>Never miss a PLD session again! PLD+ sends email reminders to participants before scheduled sessions, keeping you informed and prepared to join meetings on time.</p>
-                        </div>
+                    <div className="">
+                        <Slider {...settings} >
+                        {carouselData.map((data, id) => <CarouselCard data={data} key={id}/>)}
+                        </Slider>
                     </div>
                 </div>
             </div>
 
             {/* Footer */}
-            <div className="bg-pri text-white2 mt-4 p-4">
-                <div>
-                    
-                </div>
-                <div className="flex">
-                {/* Roman */}
-                <div className="mr-4">
-                    <div className="flex justify-center items-center">
-                        <IoPersonCircleSharp  className="text-4xl"/>
-                        <p>Siduduzile Snenhlanhla Mdima</p>
-                    </div>
-                    <div className="flex gap-4 justify-center items-center" target="_blank">
-                        {/* GitHub */}
-                        <a href="https://github.com/MDIMACat" target="_blank">
-                            <FaGithub />
-                        </a>
-                        {/* LinkedIn */}
-                        <a href="http://www.linkedin.com/in/s-nenhlanhla-siduduzile-mdima-a309761aa" target="_blank">
-                            <BsLinkedin />
-                        </a>
-                        {/* Medium */}
-                        <a href="https://medium.com/@romanmdima" target="_blank">
-                            <FaMedium />
-                        </a>
-                        {/* Twitter*/}
-                        <a href="">
-                            <FaSquareXTwitter />
-                        </a>
-                        {/* Email */}
-                        <a href="mailto:romanmdima@gmail.com" target="_blank">
-                            <MdEmail />
-                        </a>
-                    </div>
-                </div>
-                {/* Franklin */}
-                <div>
-                    <div className="flex justify-center items-center">
-                        <IoPersonCircleSharp className="text-4xl"/>
-                        <p>Franklin Obiukwu</p>
-                    </div>
-                    <div className="flex gap-4 justify-center items-center">
-                        {/* GitHub */}
-                        <a href="https://github.com/franklinobiukwu" target="_blank">
-                            <FaGithub />
-                        </a>
-                        {/* LinkedIn */}
-                        <a href="https://www.linkedin.com/in/franklinobiukwu/" target="_blank">
-                            <BsLinkedin />
-                        </a>
-                        {/* Medium */}
-                        <a href="https://medium.com/@franklinobiukwu" target="_blank">
-                            <FaMedium />
-                        </a>
-                        {/* Twitter*/}
-                        <a href="https://twitter.com/OfrankC" target="_blank">
-                            <FaSquareXTwitter />
-                        </a>
-                        {/* Email */}
-                        <a href="mailto:obiukwuchibuisi@gmail.com" target="_blank">
-                            <MdEmail />
-                        </a>
-                    </div>
-                </div>
-                </div>
+            <div className="bg-gradient-to-br from-pri to-blue text-white2 mt-4 p-10 px-20">
+                <Footer/>
             </div>
         </div>
     )
