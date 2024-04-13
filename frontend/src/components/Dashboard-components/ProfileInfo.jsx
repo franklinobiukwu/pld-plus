@@ -1,6 +1,9 @@
 import { Form } from "react-router-dom";
 import ProfileBtns from "../../components/Dashboard-components/ProfileBtn.jsx";
-import ProfileBg from "../../images/pld-plud-profile-bg.png";
+import ProfileBg1 from "../../images/pld-plud-profile-bg.png";
+import ProfileBg2 from "../../images/learning.jpg";
+import ProfileBg3 from "../../images/learning2.jpg";
+import ProfileBg4 from "../../images/learning3.jpg";
 import { useEffect, useRef, useState } from "react";
 import useDispatchUser from "../../hooks/useDispatchUser.jsx";
 import useDispatchProfileImage from "../../hooks/useDispatchProfileImage.jsx";
@@ -26,6 +29,7 @@ const ProfileInfo = () => {
     const dispatch = useDispatch()
     const { profileImage, loading, fetchProfileImage } = useProfileImage()
     const [isLoading, setIsLoading] = useState(false)
+    const [profileBg, setProfileBg] = useState()
 //    const [profileImg, setProfileImg] = useState(profileImage)
         
 
@@ -40,8 +44,14 @@ const ProfileInfo = () => {
     const {editProfile} = useEditProfile()
 
     // Profile Page Background Image
+    useEffect(() => {
+        const profileBgs = [ProfileBg1, ProfileBg2, ProfileBg3, ProfileBg4]
+        const randomIndex = Math.floor(Math.random() * profileBgs.length)
+        const profileBg = profileBgs[randomIndex]
+        setProfileBg(profileBg)
+    }, [])
     const backgroundStyle = {
-        backgroundImage: `url(${ProfileBg})`,
+        backgroundImage: `url(${profileBg})`,
     };
 
     // Gather Profile Info
@@ -200,7 +210,7 @@ const ProfileInfo = () => {
                         : `text-2xl font-semibold`}
                       placeholder="Franklin"
                       value={firstname}
-                      disabled={profileEdit ? "" : "disabled"}
+                      disabled={profileEdit ? false : true}
                       onChange={(e) => setFirstname(e.target.value)}
                     />
                   </div>
@@ -221,7 +231,7 @@ const ProfileInfo = () => {
                       className={profileEdit ? "" : "text-2xl font-semibold"}
                       placeholder="Mdima"
                       value={lastname}
-                      disabled={profileEdit ? "" : "disabled"}
+                      disabled={profileEdit ? false : true}
                       onChange={(e) => setLastname(e.target.value)}
                     />
                   </div>
@@ -253,7 +263,7 @@ const ProfileInfo = () => {
                 className={profileEdit ? "" : "text-md text-grey"}
                 placeholder="@franklinmdima"
                 value={username}
-                disabled={profileEdit ? "" : "disabled"}
+                disabled={profileEdit ? false : true}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
@@ -274,7 +284,7 @@ const ProfileInfo = () => {
                 className={profileEdit ? "" : "text-md text-grey"}
                 placeholder="17"
                 value={cohort}
-                disabled={profileEdit ? "" : "disabled"}
+                disabled={profileEdit ? true : false}
                 onChange={(e) => setCohort(e.target.value)}
               />
             </div>
@@ -283,11 +293,11 @@ const ProfileInfo = () => {
 
         {/* Profile Page Button */}
         <ProfileBtns
-          setFormEdit={setProfileEdit}
-          gather={gatherProfileInfo}
-          cancel={cancelProfileEdit}
+            setFormEdit={setProfileEdit}
+            gather={gatherProfileInfo}
+            cancel={cancelProfileEdit}
             handleEdit={handleEdit}
-      loading={isLoading}
+            loading={isLoading}
         />
       </div>
     </div>

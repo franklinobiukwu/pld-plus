@@ -64,8 +64,13 @@ const Base = () => {
             </ScrollIntoView>
             </>
         ):(
-            <div className="grow bg-white h-full w-full">
-                <Outlet />
+            <div className="h-screen flex flex-col">
+                <div>
+                    <Navbar/>
+                </div>
+                <div className="flex-grow bg-white h-full w-full">
+                    <Outlet />
+                </div>
             </div>
         )}
         </div>

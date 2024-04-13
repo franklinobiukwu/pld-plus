@@ -31,7 +31,7 @@ const Navbar = () => {
 
     return (
         <div 
-        className={`flex justify-between h-16 max-w-[90rem] mx-auto px-4
+        className={`flex justify-between h-16 mx-auto px-4
         items-center z-50 text-white  
             ${location.pathname === "/" ? "": "bg-pri"}`}
         >

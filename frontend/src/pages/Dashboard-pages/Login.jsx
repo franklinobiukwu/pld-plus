@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { FaEnvelope, FaLock } from "react-icons/fa6";
 import useLogin from "../../hooks/useLogin";
+import { TailSpin } from "react-loader-spinner";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
 
@@ -28,8 +29,8 @@ const Login = () => {
         <div className="w-full h-full">
                 <div className="w-full h-full flex items-center justify-center">
             <div 
-                className="shadow-md rounded-md w-10/12 md:w-7/12 max-w-md bg-white2 flex flex-col
-        justify-center items-center py-10"
+                className="shadow-md rounded-md w-10/12 md:w-7/12 max-w-md flex flex-col
+        justify-center items-center py-10 bg-gradient-to-b from-white2 to-white"
             >
                 <h1 className="font-medium text-pri text-2xl">Login</h1>
                 <form
@@ -38,7 +39,7 @@ const Login = () => {
                 >
                     {/* Email */}
                     <div
-                        className="flex items-center bg-white2 rounded-md"
+                        className="flex items-center rounded-md overflow-hidden"
                     >
                         <div>
                             <FaEnvelope/> 
@@ -54,17 +55,17 @@ const Login = () => {
 
                     {/* Password */}
                     <div
-                        className="flex items-center rounded-md"
+                        className="flex items-center rounded-md overflow-hidden"
                     >
                         <div>
-                            <FaLock />
+                            <FaLock/>
                         </div>
                         <input
                             placeholder="Password"
                             value={password}
                             type="password"
                             onChange={(e) => setPassword(e.target.value)}
-                            className="bg-white2 rounded-md px-2 py-1 w-full mt-4"
+                            className=" px-2 py-1 w-full mt-4 rounded-md"
                         />
                     </div>
                     {/* Remember me */}
@@ -83,9 +84,21 @@ const Login = () => {
                     {/* Submit Button*/}
                     <button
                         type="submit"
-                        className="bg-green px-4 py-2 font-medium text-white
-                                rounded-md w-full mt-10"
-                    >Login</button>
+                        className={`${isLoading? "bg-[#05af2b8f]" : "bg-green"} px-4 py-2 font-medium text-white
+                                rounded-md w-full mt-10 flex justify-center items-center`}
+                        disabled={isLoading}
+                    >
+                        { isLoading? (<TailSpin
+                                        visible={true}
+                                        height="20"
+                                        width="20"
+                                        color="#ffffff"
+                                        ariaLabel="tail-spin-loading"
+                                        radius="1"
+                                        wrapperStyle={{}}
+                                        wrapperClass=""
+                                        />) : "Login"}
+                    </button>
 
                     <div className="flex flex-col justify-center items-center">
                         <div className="mt-6 text-center">or</div>

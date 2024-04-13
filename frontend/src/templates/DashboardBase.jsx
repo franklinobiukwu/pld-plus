@@ -41,7 +41,7 @@ const DashboardBase = () => {
                 <Navbar />
             </div>
 
-            <div className="max-w-[90rem] w-full mx-auto md:grid md:grid-cols-8
+            <div className="w-full mx-auto md:grid md:grid-cols-8
                     lg:grid-cols-12 mt-16 flex-grow">
                 {/* Dashboard SideNav */}
                 <aside className={isOpen ? `${genStyle} ${show}` : `${genStyle} ${hide}`}>

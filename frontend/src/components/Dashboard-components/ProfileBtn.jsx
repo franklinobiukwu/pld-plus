@@ -57,11 +57,12 @@ const ProfileBtns = (props) => {
         </div>
         ):(
         <button
-            className={`${btnStyle} bg-blue`}
+            className={`${btnStyle} ${props.isLoading ? "bg-[#1127e396]" : "bg-blue" }`}
             onClick={() => handleAccountEdit()}
+            disabled={props.isLoading}
         >
             {props.loading? (
-            <ThreeDots visible={true} height={40} width={40} color="#ffffff" radius={9} ariaLabel="loading" wrapperStyle={{}} wrapperClass=""/>
+            <ThreeDots visible={true} height={20} width={20} color="#ffffff" radius={9} ariaLabel="loading" wrapperStyle={{}} wrapperClass=""/>
             ) : (
             <span className="flex items-center justify-center">
                 <FaEdit className="mr-2"/>

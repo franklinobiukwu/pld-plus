@@ -194,8 +194,10 @@ def get_schedules():
     db = current_app.db 
 
     if request.method == 'GET':
+        page = request.args.get('page', 1, type=int)
+        per_page = 5
         try:
-            schedules = Schedule.query.all()
+            schedules = Schedule.query.paginate(page=page, per_page=per_page)
 
             if not schedules:
                 return jsonify({'error': 'No Schedules found'}), 404
@@ -209,7 +211,10 @@ def get_schedules():
                 schedule_dict.update({'unique_group_id': unique_group_id})
                 schedules_list.append(schedule_dict)
 
-            return jsonify({'schedules': schedules_list}), 200
+            return jsonify({'schedules': schedules_list,
+                            'current_page': schedules.page,
+                            'total_pages': schedules.pages,
+                            'total_schedules': schedules.total}), 200
         except Exception as e:
             print(f"Error retrieving schedules: {str(e)}")
             return jsonify({'error': 'Failed to retrieve schedules'}), 500
@@ -312,8 +317,10 @@ def get_groups():
     db = current_app.db
 
     if request.method == 'GET':
+        page = request.args.get('page', 1, type=int)
+        per_page = 5
         try:
-            schedules = Schedule.query.all()
+            schedules = Schedule.query.paginate(page=page, per_page=per_page)
 
             if not schedules:
                 return jsonify({'error': 'No Schedules found'}), 404
@@ -351,7 +358,10 @@ def get_groups():
                 })
                 schedules_list.append(schedule_dict)
 
-            return jsonify({'schedules': schedules_list}), 200
+            return jsonify({'schedules': schedules_list,
+                            'current_page': schedules.page,
+                            'total_pages': schedules.pages,
+                            'total_groups': schedules.total}), 200
         except Exception as e:
             print(f"Error retrieving schedules: {str(e)}")
             return jsonify({'error': 'Failed to retrieve schedules'}), 500

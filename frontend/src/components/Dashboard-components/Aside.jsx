@@ -9,10 +9,10 @@ const Aside = () => {
     const [value, onChange] = useState(new Date())
 
     return (
-        <div className="fixed max-w-[calc(90rem/12*2)]">
+        <div className="fixed max-w-[calc(90rem/12*2)] border-l-white2 border-l h-full">
             {/* Calendar */}
             <div>
-                <h3 className="text-xs font-semibold border-b border-b-cream2">CALENDAR</h3>
+                <h3 className="text-xs font-semibold border-b border-b-cream2 mt-4">CALENDAR</h3>
                 <div className="rounded-md shadow-md px-4 py-2 mt-2 bg-pri text-white">
                     <Calendar onChange={onChange} value={value}/>
                 </div>

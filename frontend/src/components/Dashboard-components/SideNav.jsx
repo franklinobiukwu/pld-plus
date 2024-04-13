@@ -13,11 +13,11 @@ const SideNav = () => {
     }
 
     const liStyle = `flex items-center py-1 px-4 text-nowrap`
-    const riStyle = `mr-2 text-white`
+    const riStyle = `mr-2 text-pri`
     const trans = `ease-in-out duration-500`
 
     return(
-       <div className="h-full bg-pri text-white  w-full max-w-[calc(90rem/12*2)] z-50">
+       <div className="h-full bg-gradient-to-b from-cream2 via-white to-white2 text-pri  w-full z-50 border-r-cream2 border-r">
             <nav className="bg-teal-500 h-full pt-10">
                 <ul>
                     <li>
