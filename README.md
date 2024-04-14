@@ -1,6 +1,3 @@
-Certainly! Here's the README content in Markdown format, including the link to your blog:
-
-```markdown
 # PLD+ (Peer Learning Day Plus)
 
 PLD+ is a collaborative web application developed by Siduduzile Mdima and Franklin Obiukwu to enhance the Peer Learning Day (PLD) experience for students enrolled in the ALX Software Engineering Program. PLD+ facilitates productive peer learning sessions by providing essential features for scheduling meetings, coordinating time zones, and enabling leadership roles within PLD groups.
