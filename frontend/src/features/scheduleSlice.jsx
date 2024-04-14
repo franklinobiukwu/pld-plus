@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    schedules: null,
+    schedules: [],
     schedulesInfo: null
 }
 

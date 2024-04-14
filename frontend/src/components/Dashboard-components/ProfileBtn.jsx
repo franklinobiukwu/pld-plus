@@ -29,6 +29,7 @@ const ProfileBtns = (props) => {
     const btnStyle = `px-4 py-1 bg-gradient-to-t rounded-md font-medium
     text-white flex items-center`
 
+    console.log(props.loading)
     
     return (
         <div className="flex justify-end mt-5 md:mt-10">
@@ -57,9 +58,9 @@ const ProfileBtns = (props) => {
         </div>
         ):(
         <button
-            className={`${btnStyle} ${props.isLoading ? "bg-[#1127e396]" : "bg-blue" }`}
+            className={`${btnStyle} bg-blue ${props.loading && "bg-[#5967df]"}`}
             onClick={() => handleAccountEdit()}
-            disabled={props.isLoading}
+            disabled={props.loading}
         >
             {props.loading? (
             <ThreeDots visible={true} height={20} width={20} color="#ffffff" radius={9} ariaLabel="loading" wrapperStyle={{}} wrapperClass=""/>

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Skeleton from "react-loading-skeleton";
 import Pagination from "../../components/Dashboard-components/Pagination.jsx";
 import useLoadGroups from "../../hooks/useLoadGroups.jsx"
+import useSearch from "../../hooks/useSearch.jsx";
 
 const DiscoverGroup = () => {
     const [query, setQuery] = useState("")
@@ -12,9 +13,11 @@ const DiscoverGroup = () => {
     const pldGroupsInfo = useSelector(state => state.pldGroups.pldGroupsInfo)
     const {loadGroups} = useLoadGroups()
     const isLoading = groups === null
+    const {loading, error, results, search} = useSearch()
     
 
     console.log(pldGroupsInfo)
+    console.log(results)
     const filteredGroups = useMemo(() => { 
         if (!groups) return []
         return groups.filter(group => {
@@ -30,6 +33,7 @@ const DiscoverGroup = () => {
             <SearchBar
                 useQuery={{'query': query, 'setQuery': setQuery}}
                 placeholder="search id or topic"
+                search={search}
             />
             {/* Search Results*/}
             <div className="grow">

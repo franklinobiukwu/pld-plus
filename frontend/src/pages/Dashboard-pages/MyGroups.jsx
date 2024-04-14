@@ -75,13 +75,7 @@ const MyGroups = () => {
                     placeholder="search pld"
                 />
                            {/* Search Results*/}
-            <div className="md:grid grid-cols-2 gap-4 mt-10">
-                <div className="border-t-8 border-t-pri rounded-t-md h-4 bg-white2 md:mb-[-4rem] max-w-sm"></div>
-                {filteredGroups.length > 1 ?   (
-                    <div className="hidden md:block border-t-8 border-t-pri rounded-t-md h-4 bg-white2 md:mb-[-4rem] max-w-sm"></div>
-                ):(
-                    <div></div>
-                )}
+            <div className="md:grid grid-cols-2 xl:grid-cols-3 gap-4 mt-10">
                 {loading ? (<Skeleton count={3}/>
                 ):(
                     filteredGroups.map((group) => (

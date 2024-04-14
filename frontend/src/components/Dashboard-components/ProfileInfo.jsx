@@ -6,13 +6,11 @@ import ProfileBg3 from "../../images/learning2.jpg";
 import ProfileBg4 from "../../images/learning3.jpg";
 import { useEffect, useRef, useState } from "react";
 import useDispatchUser from "../../hooks/useDispatchUser.jsx";
-import useDispatchProfileImage from "../../hooks/useDispatchProfileImage.jsx";
 import { MdEdit } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { loginState } from "../../features/userSlice.jsx";
 import useProfileImage from "../../hooks/useProfileImage.jsx";
 import { DNA } from "react-loader-spinner";
-import { current } from "@reduxjs/toolkit";
 import useEditProfile from "../../hooks/useEditProfile.jsx";
 
 
@@ -30,9 +28,7 @@ const ProfileInfo = () => {
     const { profileImage, loading, fetchProfileImage } = useProfileImage()
     const [isLoading, setIsLoading] = useState(false)
     const [profileBg, setProfileBg] = useState()
-//    const [profileImg, setProfileImg] = useState(profileImage)
         
-
 
     const uploadProfileImageEndpoint = `${import.meta.env.VITE_BASE_API}/dashboard/profile/img/upload`
 
@@ -158,12 +154,12 @@ const ProfileInfo = () => {
         <div className="relative">
           <div className="w-24 h-24 md:w-32 md:h-32 rounded-full
                             absolute  top-0 mt-[-23%] md:mt-[-8%]">
-            <div className="h-full w-full rounded-full overflow-hidden">
+            <div className="h-full w-full rounded-full overflow-hidden flex justify-center items-center">
                 { loading? (
                     <DNA 
                         visible={true}
-                        height={"25"}
-                        width={25}
+                        height={"50%"}
+                        width={"50%"}
                         ariaLabel="profile-loading"
                         wrapperStyle={{}}
                         wrapperClass="dna-wrapper"

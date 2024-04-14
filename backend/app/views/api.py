@@ -265,42 +265,43 @@ def delete_schedule(schedule_id):
 @api_blueprint.route('/dashboard/discover-groups/search-bar/', methods=['POST'])
 @cross_origin()
 @token_required
-def get_schedul_via_search_bar():
-    """Get Schedule based on ID"""
+def get_data_via_search_bar():
+    """Get Schedules and PLDGroups based on search query"""
     db = current_app.db
     from backend.models import PLDGroups
     from backend.models import Schedule
 
-
     if request.method == 'POST':
-        data = request.form
-        unique_id = data.get('unique_group_id')
+        data = request.json
+        search_query = data.get('search_query')
 
-        if unique_id:
-            # Query PLDGroups table to get the group with the provided unique_id
-            pld_group = PLDGroups.query.filter_by(unique_group_id=unique_id).first()
+        if search_query:
+            # Query to join Schedule and PLDGroups tables and filter based on search query
+            query = db.session.query(Schedule, PLDGroups).join(PLDGroups, Schedule.id == PLDGroups.schedule_id).filter(
+                (Schedule.id == search_query) |
+                (Schedule.cohort.ilike(f'%{search_query}%')) |
+                (PLDGroups.unique_group_id == search_query) |
+                (Schedule.title.ilike(f'%{search_query}%'))
+            )
 
-            if pld_group:
-                # Retrieve schedule associated with the found PLD group
-                schedule = Schedule.query.get(pld_group.schedule_id)
+            # Execute the query and fetch results
+            results = query.all()
 
-                if schedule:
-                    # Convert schedule and PLD group objects to dictionaries
-                    schedule_dict = schedule.to_dict()
-                    pld_group_dict = pld_group.to_dict()
+            # Extract schedule and PLD group data from the results
+            data = []
+            for schedule, pld_group in results:
+                data.append({
+                    "schedule": schedule.to_dict(),
+                    "pld_group": pld_group.to_dict()
+                })
 
-                    # Include schedule and PLD group data in the response
-                    response_data = {
-                        "schedule": schedule_dict,
-                        "pld_group": pld_group_dict
-                    }
-                    return jsonify(response_data), 200
-                else:
-                    return jsonify({"error": "Schedule not found"}), 404
-            else:
-                return jsonify({"error": "PLD Group not found"}), 404
+            # Include the data in the response
+            response_data = {
+                "data": data
+            }
+            return jsonify(response_data), 200
         else:
-            return jsonify({"error": "Missing unique_group_id parameter"}), 400
+            return jsonify({"error": "Missing search query"}), 400
     else:
         return jsonify({"error": "Method not allowed"}), 405
 
