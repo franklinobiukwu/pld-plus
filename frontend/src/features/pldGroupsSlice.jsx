@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState = {
-    pldGroups: null
+    pldGroups: null,
+    pldGroupsInfo: null
 }
 
 const pldGroupsSlice = createSlice({
@@ -55,8 +56,11 @@ const pldGroupsSlice = createSlice({
                 return group
             })
         },
+        setPldGroupInfo: (state, action) => {
+            state.pldGroupsInfo = {...action.payload}
+        },
     }
 })
 
-export const {setGroups, addMember, deleteMember, addMemberDetails, deleteMemberDetails } = pldGroupsSlice.actions
+export const {setGroups, addMember, deleteMember, addMemberDetails, deleteMemberDetails, setPldGroupInfo } = pldGroupsSlice.actions
 export default pldGroupsSlice.reducer

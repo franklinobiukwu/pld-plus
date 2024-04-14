@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    schedules: []
+    schedules: null,
+    schedulesInfo: null
 }
 
 const scheduleSlice = createSlice({
@@ -23,9 +24,12 @@ const scheduleSlice = createSlice({
         deleteSchedule: (state, action) => {
             const deletedScheduleId = action.payload
             state.schedules = state.schedules.filter(schedule => schedule.id != deletedScheduleId)
+        },
+        setScheduleInfo: (state, action) => {
+            state.schedulesInfo = {...action.payload}
         }
     }
 })
 
-export const { setSchedule, addSchedule, updateSchedule, deleteSchedule } = scheduleSlice.actions
+export const { setSchedule, addSchedule, updateSchedule, deleteSchedule, setScheduleInfo } = scheduleSlice.actions
 export default scheduleSlice.reducer

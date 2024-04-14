@@ -10,9 +10,12 @@ const profileImageSlice = createSlice( {
     reducers: {
         setImage: (state, action) => {
             state.profileImage = action.payload
+        },
+        clearImage: (state) => {
+            state.profileImage = null
         }
     }
 })
 
-export const { setImage } = profileImageSlice.actions
+export const { setImage, clearImage } = profileImageSlice.actions
 export default profileImageSlice.reducer

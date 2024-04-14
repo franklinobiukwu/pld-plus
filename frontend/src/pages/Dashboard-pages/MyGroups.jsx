@@ -7,15 +7,19 @@ import useDispatchUser from "../../hooks/useDispatchUser.jsx";
 import GroupMembers from "../../components/Dashboard-components/GroupMembers.jsx";
 import { IoIosClose } from "react-icons/io";
 import Skeleton from "react-loading-skeleton";
+import Pagination from "../../components/Dashboard-components/Pagination.jsx";
+import useLoadGroups from "../../hooks/useLoadGroups.jsx";
 
 const MyGroups = () => {
     const [query, setQuery] = useState("")
     const groups = useSelector(state => state.pldGroups.pldGroups)
+    const pldGroupsInfo = useSelector(state => state.pldGroups.pldGroupsInfo)
     const {user} = useDispatchUser()
     const [group, setGroup] = useState("")
     const [isOpen, setIsOpen] = useState(false)
     const [loading, setLoading] = useState(true)
     const [myGroups, setMyGroups] = useState([])
+    const {loadGroups} = useLoadGroups()
 
     useEffect(() => {
         if (groups !== null){
@@ -86,6 +90,16 @@ const MyGroups = () => {
                         </div>
                     ))
                 )}
+            </div>
+            {/* Pagination */}
+            <div>
+                { pldGroupsInfo && <Pagination
+                                        currentPage={pldGroupsInfo.current_page}
+                                        totalPages={pldGroupsInfo.total_pages}
+                                        totalItems={pldGroupsInfo.total_groups}
+                                        loadItems={loadGroups}
+                                    />
+                }
             </div>
  
             </div>

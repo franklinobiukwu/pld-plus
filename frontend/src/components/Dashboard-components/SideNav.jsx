@@ -21,7 +21,7 @@ const SideNav = () => {
             <nav className="bg-teal-500 h-full pt-10">
                 <ul>
                     <li>
-                        <NavLink to={`/dashboard`} className={liStyle}>
+                        <NavLink exact to={`/dashboard`} className={liStyle}>
                             <HiPresentationChartBar className={riStyle}/>Dashboard
                         </NavLink>
                     </li>
