@@ -84,7 +84,7 @@ const Login = () => {
                     {/* Submit Button*/}
                     <button
                         type="submit"
-                        className={`${isLoading? "bg-[#05af2b8f]" : "bg-green"} px-4 py-2 font-medium text-white
+                        className={`${isLoading? "bg-[#0000ff91]" : "bg-blue"} px-4 py-2 font-medium text-white
                                 rounded-md w-full mt-10 flex justify-center items-center`}
                         disabled={isLoading}
                     >

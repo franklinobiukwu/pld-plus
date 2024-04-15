@@ -2,6 +2,11 @@ import { FaSearch } from "react-icons/fa"
 
 const SearchBar = (props) => {
 
+    const handleSearch = (e) => {
+        e.preventDefault()
+        props.search(props.useQuery.query)
+    }
+
     return (
         <div>
             <div>
@@ -15,7 +20,7 @@ const SearchBar = (props) => {
                     />
                     <button
                         className="bg-pri text-white p-2 rounded-md shadow-md"
-                        onClick={() => props.search(props.useQuery.query)}
+                        onClick={handleSearch}
                     >
                         <FaSearch/>
                     </button>

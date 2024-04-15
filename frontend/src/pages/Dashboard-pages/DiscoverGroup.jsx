@@ -13,14 +13,14 @@ const DiscoverGroup = () => {
     const pldGroupsInfo = useSelector(state => state.pldGroups.pldGroupsInfo)
     const {loadGroups} = useLoadGroups()
     const isLoading = groups === null
-    const {loading, error, results, search} = useSearch()
+    const {loading, error, results, search} = useSearch("pld_group")
     
 
-    console.log(pldGroupsInfo)
     console.log(results)
     const filteredGroups = useMemo(() => { 
-        if (!groups) return []
-        return groups.filter(group => {
+        if (!groups && !results) return []
+        const data = groups?groups:results
+        return data.filter(group => {
             return (
                 String(group.group_id).toLowerCase().includes(query.toLowerCase()) ||
                 String(group.topic).toLowerCase().includes(query.toLowerCase()) ||
@@ -34,6 +34,7 @@ const DiscoverGroup = () => {
                 useQuery={{'query': query, 'setQuery': setQuery}}
                 placeholder="search id or topic"
                 search={search}
+                data={"pld_group"}
             />
             {/* Search Results*/}
             <div className="grow">

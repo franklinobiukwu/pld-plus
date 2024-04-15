@@ -71,21 +71,15 @@ const ScheduleCard = (props) => {
         <div>
             <div className="bg-white2 rounded-md p-4 shadow-md mb-4 max-w-sm">
                 {/* Cohort */}
-                <div className="mb-2 text-xs text-white flex justify-between">
-                    <span className="bg-green px-2 py-1 rounded-md">{`Cohort ${props.schedule.cohort}`}</span>
-                    <span className="bg-green px-2 py-1 rounded-md">
-                        {`Group id ${props.schedule.unique_group_id?props.schedule.unique_group_id: "refresh"}`}
-                    </span>
-                </div>
                 {/* Topic */}
                 <div className="flex items-center text-lg font-medium border-l-pri border-l-4 my-2 mt-4">
                     <RiLightbulbFlashLine className="mr-2 ml-2"/>
                     <h3>{props.schedule.topic}</h3>
                 </div>
                 {/* Date and Time */}
-                <div>
+                <div className="flex">
                     {/* Date */}
-                    <div className="flex items-center font-medium border-l-pri border-l-4 my-2">
+                    <div className="flex items-center font-medium border-l-pri border-l-4 my-2 mr-4">
                         <FaCalendarAlt className="mr-2 ml-2"/>
                         <span className="text-sm">{datePart}</span>
                     </div>
@@ -95,27 +89,41 @@ const ScheduleCard = (props) => {
                         <span className="text-sm">{timePart}</span> {/* Time of Meeting*/}
                     </div>
                 </div>
+                {/* Group ID and Cohort */}
+                <div className="mb-2 text-xs text-lightgrey flex">
+                    <span className="bg-gradient-to-br from-cream2 to-cream2 px-2 py-1 rounded-md">
+                        {`Group id ${props.schedule.unique_group_id?props.schedule.unique_group_id: "refresh"}`}
+                    </span>
+                    <span className="text-lightgrey px-2 py-1 rounded-md">
+                        {`Cohort ${props.schedule.cohort}`}
+                    </span>
+                </div>
                 {/* Edit and Delete Button */}
                 { user.id == props.schedule.user_id && (
                 <div className="flex items-center justify-end">
                     <button
-                        className={`rounded-full p-2
-                                        text-white hover:text-white mr-4 ease-in-out duration-300 ${deleting?"bg-cream":"bg-red"}`}
+                        className={`rounded-md px-2 py-1
+                                        text-red hover:text-white hover:bg-red mr-4 ease-in-out duration-300 ${deleting?"":""}`}
                         onClick={handleDelete}
                         disabled={deleting?"disabled":""}
                     >
                         {deleting?(
                             <Hourglass colors={["#0d0031", "#cf4f4f"]} width="15" height={15} visible={true} ariaLabel="falling-circles-loading"/>
                         ):(
-                            <MdDeleteForever />
+                            <div className="flex justify-center items-center">
+                                <MdDeleteForever className="mr-1"/>
+                                <span>Delete</span>
+                            </div>
                         )}
                     </button>
                     <button
-                        className={`bg-pri hover:bg-blue rounded-full p-2
-                                        text-white ease-in-out duration-300`}
+                        className={`text-blue hover:bg-blue rounded-md px-2 py-1
+                                        hover:text-white2 ease-in-out duration-300`}
                         onClick={handleEdit}
                     >
-                        <FaEdit />
+                        <div className="flex justify-center items-center">
+                            <FaEdit className="mr-1"/> <span>Edit</span>
+                        </div>
                     </button>
                 </div>)}
             </div>

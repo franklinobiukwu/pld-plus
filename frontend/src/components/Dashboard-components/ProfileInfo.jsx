@@ -154,7 +154,7 @@ const ProfileInfo = () => {
         <div className="relative">
           <div className="w-24 h-24 md:w-32 md:h-32 rounded-full
                             absolute  top-0 mt-[-23%] md:mt-[-8%]">
-            <div className="h-full w-full rounded-full overflow-hidden flex justify-center items-center">
+            <div className="h-full w-full rounded-full overflow-hidden flex justify-center items-center bg-cream2">
                 { loading? (
                     <DNA 
                         visible={true}
