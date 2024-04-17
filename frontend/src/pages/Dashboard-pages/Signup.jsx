@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { loginState } from "../../features/userSlice"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { TailSpin } from "react-loader-spinner"
 
 const Signup = () => {
@@ -22,7 +22,7 @@ const Signup = () => {
     const genInputStyle = `rounded-md mt-4`
 
     const endpoint = `${import.meta.env.VITE_BASE_API}/auth/register`
-//    console.log(endpoint)
+    console.log(endpoint)
 
     const handleSubmit = (e) => {
         setLoading(true)
@@ -81,7 +81,7 @@ const Signup = () => {
             <div className="w-full h-full flex items-center justify-center">
                 <div className="shadow-md rounded-md w-10/12 md:w-7/12 max-w-md flex flex-col justify-center items-center py-10 bg-gradient-to-b from-white2 to-white ">
                     <h1 className="font-medium text-pri text-2xl">Sign up</h1>
-                    <form className="w-[80%] mt-10" onSubmit={handleSubmit}>
+                    <form className="w-[80%] mt-5" onSubmit={handleSubmit}>
                         {/* Names */}
                         <div>
                             {/* First Name */}
@@ -123,7 +123,6 @@ const Signup = () => {
                                     type="text" 
                                     name="gender"
                                     placeholder="Gender"
-                                    value={gender}
                                     onChange={(e) => setGender(e.target.value)}
                                     className={`w-full ${formInputStyle}`}
                                 >
@@ -229,7 +228,13 @@ const Signup = () => {
                                 }
                             </button>
                         </div>
+                        {/* Error Display */}
                         <div className="text-red text-center text-sm bg-[#ffbdbdb5] mt-4 rounded-sm">{error && error}</div>
+                        {/* or Signin*/}
+                        <div className="flex flex-col justify-center items-center">
+                            <div className="mt-3 text-center">or</div>
+                            <Link to="/login" className="underline text-blue">Login</Link>
+                        </div>
                     </form>
                 </div>
             </div>

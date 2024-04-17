@@ -17,7 +17,7 @@ const Banner = () => {
             >
                 <div
                     className="text-white text-center w-full h-full flex flex-col
-                    items-center mt-[50%] md:mt-[20%] lg:mt-[15%]">
+                    items-center mt-[50%] md:mt-[20%] lg:mt-[9%]">
                     <h1
                         className="text-2xl md:text-3xl font-bold lg:text-6xl lg:leading-[1.3]">
                         Coordinate and Conduct<br/>
