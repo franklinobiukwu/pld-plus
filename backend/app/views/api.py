@@ -272,8 +272,9 @@ def get_data_via_search_bar():
     from backend.models import Schedule
 
     if request.method == 'POST':
-        data = request.json
-        search_query = data.get('search_query')
+        data = request.get_json()
+        print(f"The Search query is : {data}\n\n")
+        search_query = data
 
         if search_query:
             # Query to join Schedule and PLDGroups tables and filter based on search query
@@ -281,7 +282,7 @@ def get_data_via_search_bar():
                 (Schedule.id == search_query) |
                 (Schedule.cohort.ilike(f'%{search_query}%')) |
                 (PLDGroups.unique_group_id == search_query) |
-                (Schedule.title.ilike(f'%{search_query}%'))
+                (Schedule.topic.ilike(f'%{search_query}%'))
             )
 
             # Execute the query and fetch results
@@ -299,6 +300,7 @@ def get_data_via_search_bar():
             response_data = {
                 "data": data
             }
+            print(response_data)
             return jsonify(response_data), 200
         else:
             return jsonify({"error": "Missing search query"}), 400
