@@ -31,7 +31,6 @@ const useLoadSchedules = () => {
                 }
 
                 const data = await response.json()
-                console.log(data)
                 const {schedules, ...rest} = data
                 const allSchedules = schedules.map(item => {
                     const {date, ...rest} = item

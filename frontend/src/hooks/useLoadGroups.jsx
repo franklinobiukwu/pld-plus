@@ -29,7 +29,6 @@ const useLoadGroups = () => {
                 throw new Error("Couldn't load groups")
             }
             const data = await response.json()
-           console.log(data)
             const {schedules, ...rest} = data
             const allGroup = data.schedules.map(schedule => {
                 const { date, ...rest } = schedule

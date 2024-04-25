@@ -1,17 +1,19 @@
 import { useState } from "react"
 import useDispatchUser from "./useDispatchUser"
-import { useDispatch } from "react-redux"
-import { setImage } from "../features/profileImageSlice.jsx";
+import { useDispatch, useSelector } from "react-redux"
+import { clearImage, setImage } from "../features/profileImageSlice.jsx";
 
 const useProfileImage = () => {
     const [profileImage, setProfileImage] = useState(null)
     const [loading, setLoading] = useState(false)
     const {user} = useDispatchUser()
     const dispatch = useDispatch()
+    const currentProfileImage = useSelector(state => state.profileImage.profileImage)
 
     if (!user){
         return {profileImage: null, loading: null, fetchProfileImage:null}
     }
+
     const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/profile/img/${user.user_image}`
 
     const fetchProfileImage = async() => {
@@ -35,13 +37,18 @@ const useProfileImage = () => {
             if (contentType && contentType.startsWith("image")){
                 // If the response is an image, set the profile image directly
                 const blob = await response.blob()
+                // Revoke preious object url
+                if (currentProfileImage) {
+                    URL.revokeObjectURL(currentProfileImage)
+                    dispatch(clearImage())
+                }
+                // Set new object URL
                 setProfileImage(URL.createObjectURL(blob))
                 dispatch(setImage(URL.createObjectURL(blob)))
             } else {
                 // If the response is JSON, parse it and set the profile image
                 const imageData = await response.json()
                 setProfileImage(imageData)
-                dispatch(setProfileImage(imageData))
             }
             setLoading(false)
         } catch (error) {

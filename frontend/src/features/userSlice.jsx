@@ -10,7 +10,6 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         loginState: (state, action) => {
-            console.log("Data to dispatch", action.payload)
             state.user = action.payload
         },
         logoutState: (state) => {

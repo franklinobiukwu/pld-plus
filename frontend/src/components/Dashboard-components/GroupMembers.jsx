@@ -57,6 +57,7 @@ const GroupMembers = (props) => {
         meetingUrl = `http://${meetingUrl}`
     }
 
+    // Remove Member From Group
     const endpoint = `${import.meta.env.VITE_BASE_API}/dashboard/pld-group/delete`
 
     const handleRemoveFromGroup = () =>{
@@ -88,6 +89,19 @@ const GroupMembers = (props) => {
         removeFromGroup()
     }
 
+    // Sort Members List
+    const sortGroup = (group, userEmail) => {
+        const sortedMembers = [...group.members_details]
+        sortedMembers.sort((a, b) => {
+            if (a.role === "Host") return -1;
+           if (a.email === userEmail) return 1;
+           return a.role.localeCompare(b.role);
+       }) 
+        group.members_details = sortedMembers
+    }
+
+    const group = props.group
+    sortGroup(group, user.email)
 
     return (
         <div>
@@ -126,9 +140,9 @@ const GroupMembers = (props) => {
 
             {/* Group Member List*/}
             <div className="mt-4">
-                    {props.group.members_details.map((member) => {
+                    {props.group.members_details.map((member, id) => {
                         const memberName = `${member.firstname} ${member.lastname}`
-                        return <GroupMemberList label={member.role} name={memberName}/>
+                        return <GroupMemberList label={member.role} name={memberName} key={id}/>
                     })}
             </div>
             {/* Buttons */}

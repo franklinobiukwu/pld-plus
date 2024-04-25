@@ -7,7 +7,7 @@ import ProfileBg4 from "../../images/learning3.jpg";
 import { useEffect, useRef, useState } from "react";
 import useDispatchUser from "../../hooks/useDispatchUser.jsx";
 import { MdEdit } from "react-icons/md";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginState } from "../../features/userSlice.jsx";
 import useProfileImage from "../../hooks/useProfileImage.jsx";
 import { DNA } from "react-loader-spinner";
@@ -25,16 +25,16 @@ const ProfileInfo = () => {
     const [profileInfo, setProfileInfo] = useState({});
     const [selectedFile, setSelectedFile] = useState(null)
     const dispatch = useDispatch()
-    const { profileImage, loading, fetchProfileImage } = useProfileImage()
+//    const {profileImage, loading, fetchProfileImage } = useProfileImage()
     const [isLoading, setIsLoading] = useState(false)
+    const [profileImgLoading, setProfileImgLoading] = useState(false)
     const [profileBg, setProfileBg] = useState()
+    const [updatedProfileImage, setUpdatedProfileImage] = useState(false)
+    const [profileImg, setProfileImg] = useState(null)
+    const currentImg = useSelector(state => state.profileImage.profileImage)
         
 
     const uploadProfileImageEndpoint = `${import.meta.env.VITE_BASE_API}/dashboard/profile/img/upload`
-
-    useEffect(() => {
-        fetchProfileImage()
-    }, [])
 
     // Use Edit Hook: Handle Profile update
     const {editProfile} = useEditProfile()
@@ -45,7 +45,13 @@ const ProfileInfo = () => {
         const randomIndex = Math.floor(Math.random() * profileBgs.length)
         const profileBg = profileBgs[randomIndex]
         setProfileBg(profileBg)
+
     }, [])
+
+    // Set Profile Image
+    useEffect(() => {
+        setProfileImg(currentImg)
+    }, [currentImg])
     const backgroundStyle = {
         backgroundImage: `url(${profileBg})`,
     };
@@ -75,12 +81,15 @@ const ProfileInfo = () => {
             alert("Please select a file")
             return
         }
+        setProfileImgLoading(true)
+        console.log("Selected File", selectedFile)
 
         try{
             const formData = new FormData()
             formData.append("image", selectedFile)
             formData.append("user_id", user.id)
 
+            console.log(uploadProfileImageEndpoint)
             const response = await fetch(uploadProfileImageEndpoint, {
                 "method": "POST",
                 "headers": {
@@ -97,9 +106,17 @@ const ProfileInfo = () => {
             const data = await response.json()
             const newUser = {...user, ...data.user}
            dispatch(loginState(newUser)) 
-            fetchProfileImage()
+            // Revoke previous object url
+            if (profileImg) {
+                URL.revokeObjectURL(profileImg)
+            }
+            console.log("filename", selectedFile.name)
+            setProfileImg(selectedFile.name)
+            setProfileImgLoading(false)
         } catch(error){
             console.error(`Error uploading file: ${error.message}`)
+            alert("Profile Image Upload Failed", error.message)
+            setProfileImgLoading(false)
         }
     }
 
@@ -155,7 +172,7 @@ const ProfileInfo = () => {
           <div className="w-24 h-24 md:w-32 md:h-32 rounded-full
                             absolute  top-0 mt-[-23%] md:mt-[-8%]">
             <div className="h-full w-full rounded-full overflow-hidden flex justify-center items-center bg-cream2">
-                { loading? (
+                { profileImgLoading ? (
                     <DNA 
                         visible={true}
                         height={"50%"}
@@ -166,7 +183,7 @@ const ProfileInfo = () => {
                     />
 
                 ) : (
-                <img src={profileImage} alt="profile-photo" className="object-cover w-full h-full" />
+                <img src={profileImg} alt="profile-photo" className="object-cover w-full h-full" />
                 )}
             </div>
                 <label htmlFor="profile-image" className="right-0 bottom-[20%] absolute bg-blue p-1 rounded-full text-white2">

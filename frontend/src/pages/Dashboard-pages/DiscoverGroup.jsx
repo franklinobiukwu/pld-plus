@@ -16,7 +16,6 @@ const DiscoverGroup = () => {
     const {loading, error, results, search} = useSearch("pld_group")
     
 
-    console.log(results)
     const filteredGroups = useMemo(() => { 
         if (!groups && !results) return []
         const data = groups?groups:results

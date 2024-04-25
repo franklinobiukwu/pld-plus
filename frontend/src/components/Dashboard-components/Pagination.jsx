@@ -5,7 +5,6 @@ import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 
 const Pagination = (props) => {
 
-    console.log(props)
     // Items per page
     const itemsPerPage = Math.ceil(props.totalItems/props.totalPages)
     // Set all page info in state

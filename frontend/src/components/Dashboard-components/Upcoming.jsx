@@ -17,7 +17,6 @@ const UpcomingCard = () => {
         // Upcoming PLDs
         if (pldGroups) {
             const filteredUpcoming = pldGroups.filter(pldGroup => {
-                console.log(pldGroup)
                 const dateObj = new Date(pldGroup.datetime)
                 const now = new Date()
                 if (dateObj >= now && pldGroup.members_id.includes(user.id)) return pldGroup

@@ -9,14 +9,38 @@ import useDispatchProfileImage from "../hooks/useDispatchProfileImage.jsx";
 import { TbSmartHome } from "react-icons/tb";
 import { GrTechnology } from "react-icons/gr";
 import { RiCompassDiscoverLine } from "react-icons/ri";
+import useProfileImage from "../hooks/useProfileImage.jsx";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
     const {user} = useDispatchUser()
     const navigate = useNavigate()
     const location = useLocation()
     const {logout} = useLogout()
-    const profileImage = useDispatchProfileImage()
+//    const profileImage = useDispatchProfileImage()
+    const {profileImage, loading, fetchProfileImage} = useProfileImage()
+    const currentProfileImage = useSelector(state => state.profileImage.profileImage)
+    const [profileImg, setProfileImg] = useState(null)
 
+
+    // Load User Profile Image
+    useEffect(() => {
+        const fetchImg = async () => {
+            await fetchProfileImage()
+            console.log(`Loading? ${loading}`)
+            if (profileImage){
+                console.log(`setting profile image ${profileImage}`)
+                setProfileImg(profileImage)
+            }
+        }
+        if (currentProfileImage === null) {
+            fetchImg()
+        } else {
+            setProfileImg(currentProfileImage)
+        }
+
+    }, [profileImage])
     // Logs User Out
     const handleLogout = () => {
        logout() 
@@ -32,7 +56,7 @@ const Navbar = () => {
     return (
         <div 
         className={`flex justify-between h-16 mx-auto px-4
-        items-center z-50 text-white  
+        items-center z-50 text-white w-full 
             ${location.pathname === "/" ? "": "bg-pri"}`}
         >
             {/* Login Logo */}
@@ -95,8 +119,8 @@ const Navbar = () => {
                         </Link>)
                     }
                 <Link to="/dashboard/profile">
-                    <div className="rounded-full w-12 h-12 overflow-hidden mr-10">
-                        {!profileImage ? (
+                    <div className="rounded-full w-12 h-12 overflow-hidden mr-10 bg-cream flex justify-center items-center">
+                        {loading ? (
                             <DNA 
                                 visible={true}
                                 height={"25"}
@@ -106,7 +130,7 @@ const Navbar = () => {
                                 wrapperClass="dna-wrapper"
                             />
                         ) : ( 
-                            <img src={profileImage} alt="profile-photo" className="object-cover h-full w-full"/>
+                            <img src={profileImg} alt="profile-photo" className="object-cover h-full w-full"/>
                         )}
                     </div>
                 </Link>

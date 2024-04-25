@@ -26,7 +26,6 @@ const Home = () => {
         }
     }, [groups, user.id])
 
-    console.log("My groups: ", myGroups)
     // Convert datetime string to date object
     const sortedGroups = myGroups.map(group => ({
         ...group,
@@ -39,9 +38,6 @@ const Home = () => {
         return dateA - dateB
     })
 
-    console.log("Sorted groups: ", myGroups)
-    console.log(sortedGroups)
-    console.log("Group is Loading", loading)
 
 
     return (

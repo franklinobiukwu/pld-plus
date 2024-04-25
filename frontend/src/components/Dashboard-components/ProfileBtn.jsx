@@ -29,7 +29,6 @@ const ProfileBtns = (props) => {
     const btnStyle = `px-4 py-1 bg-gradient-to-t rounded-md font-medium
     text-white flex items-center`
 
-    console.log(props.loading)
     
     return (
         <div className="flex justify-end mt-5 md:mt-10">
