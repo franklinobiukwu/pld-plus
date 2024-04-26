@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { FaEnvelope, FaLock } from "react-icons/fa6";
 import useLogin from "../../hooks/useLogin";
 import { TailSpin } from "react-loader-spinner";
+import ErrorCard from "../../components/ErrorCard.jsx";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
 
@@ -12,12 +13,23 @@ const Login = () => {
     const [rememberMe, setRememberMe] = useState(false)
     // login hook
     const {login, isLoading, error} = useLogin()
+    const [displayError, setDisplayError] = useState(false)
 
     const [validEmail, setValidEmail] = useState(false)
+
+    // Get online status: Know if user is online or not
+    const isOnline = navigator.onLine
+    console.log("Am I online?", isOnline)
 
     useEffect(() => {
         setValidEmail(EMAIL_REGEX.test(email))
     }, [email])
+
+    useEffect(() => {
+        console.log(`This is the ${error.toString()}`)
+        console.log(`This is the ${error}`)
+        setDisplayError(true)
+    }, [error])
 
     const handleSubmit = (e) => {
         console.log(email, password)
@@ -99,6 +111,16 @@ const Login = () => {
                                         wrapperClass=""
                                         />) : "Login"}
                     </button>
+                    <div className="mt-2">
+                        {error &&
+                            displayError &&
+                            <ErrorCard 
+                                message={isOnline?`${error}`:"Please connect to the internet"}
+                                setDisplayError={setDisplayError}
+                                error={error}
+                            />
+                        }
+                    </div>
 
                     <div className="flex flex-col justify-center items-center">
                         <div className="mt-6 text-center">or</div>

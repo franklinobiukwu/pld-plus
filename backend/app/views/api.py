@@ -638,13 +638,12 @@ def get_socials():
         return jsonify({'error': 'Invalid Request Method'}), 405
 
 
-
-
 # PROFILE IMAGE
 @api_blueprint.route('/dashboard/profile/img/upload', methods=['POST'])
 @cross_origin()
 @token_required
 def upload_profile_picture():
+    print("Here to upload")
     """Get User"""
     from backend.models import User
 
@@ -654,6 +653,7 @@ def upload_profile_picture():
 
     file = request.files['image']
     user_id = request.form.get('user_id')
+    print("Secured upload details")
 
     user = User.query.get(user_id)
 
@@ -661,6 +661,7 @@ def upload_profile_picture():
         return jsonify({'error': 'No selected file'}), 400
 
     filename = secure_filename(file.filename)
+    print("got filename fixed")
 
     uploads_dir = current_app.config['UPLOAD_FOLDER']
     if not os.path.exists(uploads_dir):
@@ -668,12 +669,15 @@ def upload_profile_picture():
 
     file_path = os.path.join(uploads_dir, filename)
     file.save(file_path)
+    print("uploaded")
 
     user.user_image = filename
     db.session.commit()
 
     user_dict = user.to_dict()
-    return jsonify({'message': 'Profile picture uploaded successfully', 'user': user_dict}), 200
+    return jsonify({
+        'message': 'Profile picture uploaded successfully',
+        'user': user_dict}), 200
 
 
 @api_blueprint.route('/dashboard/profile/img/<path:filename>')

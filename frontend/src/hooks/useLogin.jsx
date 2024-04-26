@@ -19,34 +19,40 @@ const useLogin = () => {
     const login = async (email, password) => {
         setIsLoading(true)
         setError('')
+        try{
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password })
+            })
 
-        const response = await fetch(endpoint, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password })
-        })
+            const json = await response.json()
 
-        const json = await response.json()
+            if (!response.ok){
+                setIsLoading(false)
+                setError(json.error)
+            }
 
-        if (!response.ok){
+            if (response.ok){
+                const user = json.user
+                user['token'] = json.token
+                // store user info in local storage
+                console.log(user)
+                localStorage.setItem("user", JSON.stringify(user))
+                // update global user
+                dispatch(loginState(user))
+
+                setIsLoading(false)
+                navigate("/dashboard")
+            }
+        } catch(error){
             setIsLoading(false)
-            setError(json.error)
+            setError(error)
+            console.error(error)
         }
 
-        if (response.ok){
-            const user = json.user
-            user['token'] = json.token
-            // store user info in local storage
-            console.log(user)
-            localStorage.setItem("user", JSON.stringify(user))
-            // update global user
-            dispatch(loginState(user))
-
-            setIsLoading(false)
-            navigate("/dashboard")
-        }
     }
 
     return { login, isLoading, error }
