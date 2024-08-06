@@ -95,5 +95,5 @@ Follow Siduduzile Mdima on [LinkedIn](http://www.linkedin.com/in/s-nenhlanhla-si
 ## Blog
 
 Read our blog post about PLD+ on [Medium](https://medium.com/@romanmdima/introducing-pld-revolutionizing-pld-days-for-alx-students-dc6b126a0dd7).
-```
-Please replace the LinkedIn and Medium URLs with the correct ones for Siduduzile Mdima and Franklin Obiukwu. This Markdown content can be saved as `README.md` in your project repository.
+
+
